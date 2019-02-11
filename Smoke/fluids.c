@@ -2,7 +2,7 @@
 //        the velocity field at the mouse location. Press the indicated keys to change options
 //--------------------------------------------------------------------------------------------------
 
-#include <rfftw.h>              //the numerical simulation FFTW library
+#include <fftw-2.1.5/rfftw/>              //the numerical simulation FFTW library
 #include <stdio.h>              //for printing the help text
 #include <math.h>               //for various math functions
 #include <GL/glut.h>            //the GLUT graphics library
