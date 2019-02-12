@@ -38,3 +38,4 @@
 !.vscode/extensions.json
 
 fftw-2.1.5/*
+bin/*

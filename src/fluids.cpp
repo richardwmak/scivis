@@ -1,8 +1,4 @@
-
-
-
-
-
+#include<include/rfftw>
 
 
 // SIMULATION PARAMETERS
