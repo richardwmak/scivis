@@ -3,7 +3,7 @@ CXX_FLAGS := -Wall -Wextra -std=c++17 -ggdb
 
 BIN		:= /usr/local/lib
 SRC		:= src
-INCLUDE	:= $(/usr/local/include) $(include)
+INCLUDE	:= $(/usr/local/include) $(foo/include)
 LIB		:= lib
 
 LIBRARIES	:= -lrfftw -lfftw -lglut -lGL -lGLU -lGLEW -lm
