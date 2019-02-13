@@ -1,7 +1,11 @@
-#include<include/rfftw>
+#include <rfftw.h>
+#include <GL/glut.h>
+#include <math.h>
+#include <variables.h>
 
 
-// SIMULATION PARAMETERS
-const int GRID_SIZE; // size of simulation grid
-double time_step;    // simulation time step
-float visc;          // fluid viscosity
+SimulationState init_simulation()
+{
+    SimulationState new_state;
+    SimulationState
+};
