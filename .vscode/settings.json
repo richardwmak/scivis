@@ -1,0 +1,6 @@
+{
+    "c-cpp-flylint.clang.warnings": [
+        "all",
+        "extra"
+    ]
+}

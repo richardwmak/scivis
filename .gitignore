@@ -35,3 +35,11 @@
 
 fftw-2.1.5/*
 bin/*
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/c_cpp_properties.json
+!.vscode/settings.json
