@@ -1,10 +1,10 @@
 CXX		  := g++
 CXX_FLAGS := -Wall -Wextra -std=c++17 -ggdb
 
-BIN		:= /usr/local/lib
+BIN		:= bin
 SRC		:= src
-INCLUDE	:= $(/usr/local/include) $(foo/include)
-LIB		:= lib
+INCLUDE	:= /usr/local/include include
+LIB		:= /usr/local/lib
 
 LIBRARIES	:= -lrfftw -lfftw -lglut -lGL -lGLU -lGLEW -lm
 EXECUTABLE	:= smoke
@@ -53,9 +53,11 @@ tidy:
 
 all: $(BIN)/$(EXECUTABLE)
 
-run: all
-	clear
+run: clean all
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
 	$(CXX) $(CXX_FLAGS) $(foreach d, $(INCLUDE), -I$d) -L$(LIB) $^ -o $@ $(LIBRARIES)
+
+clean:
+	-rm $(BIN)/*
