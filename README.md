@@ -10,11 +10,9 @@ cd fftw-2.1.5
 make
 sudo make install
 cd ..
-cp /usr/local/include/{fftw.h,rfftw.h} include/
-sudo cp /usr/local/lib/{libfftw.a,libfftw.la,librfftw.a,librfftw.la} lib/
 rm -rf fftw-2.1.5
 `
 
 Install GLUT
 
-`sudo apt install freeglut3`
+`sudo apt install freeglut3-dev`

@@ -1,12 +1,12 @@
 CXX		  := g++
 CXX_FLAGS := -Wall -Wextra -std=c++17 -ggdb
 
-BIN		:= bin
+BIN		:= /usr/local/lib
 SRC		:= src
-INCLUDE	:= include
+INCLUDE	:= $(/usr/local/include) $(include)
 LIB		:= lib
 
-LIBRARIES	:=
+LIBRARIES	:= -lrfftw -lfftw -lglut -lGL -lGLU -lGLEW -lm
 EXECUTABLE	:= smoke
 
 # use clang-tidy to check code
@@ -14,7 +14,7 @@ EXECUTABLE	:= smoke
 style:
 	@for src in $(SOURCES) ; do \
 		echo "Formatting $$src..." ; \
-		clang-format -i "$(SRC_DIR)/$$src" ; \
+		clang-format -i "$(SRC)/$$src" ; \
 		clang-tidy -checks='-*,readability-identifier-naming' \
 		    -config="{CheckOptions: [ \
 		    { key: readability-identifier-naming.NamespaceCase, value: lower_case },\
@@ -23,13 +23,13 @@ style:
 		    { key: readability-identifier-naming.FunctionCase, value: camelBack },\
 		    { key: readability-identifier-naming.VariableCase, value: lower_case },\
 		    { key: readability-identifier-naming.GlobalConstantCase, value: UPPER_CASE }\
-		    ]}" "$(SRC_DIR)/$$src" ; \
+		    ]}" "$(SRC)/$$src" ; \
 	done
 	@echo "Done"
 
 check-style:
 	@for src in $(SOURCES) ; do \
-		var=`clang-format "$(SRC_DIR)/$$src" | diff "$(SRC_DIR)/$$src" - | wc -l` ; \
+		var=`clang-format "$(SRC)/$$src" | diff "$(SRC)/$$src" - | wc -l` ; \
 		if [ $$var -ne 0 ] ; then \
 			echo "$$src does not respect the coding style (diff: $$var lines)" ; \
 			exit 1 ; \
@@ -47,18 +47,15 @@ tidy:
 			modernize-use-using,modernize-loop-convert,\
 			cppcoreguidelines-no-malloc,misc-redundant-expression" \
 			-header-filter=".*" \
-			"$(SRC_DIR)/$$src" ; \
+			"$(SRC)/$$src" ; \
 	done
 	@echo "Done"
 
 all: $(BIN)/$(EXECUTABLE)
 
-run: clean all
+run: all
 	clear
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
-
-clean:
-	-rm $(BIN)/*
+	$(CXX) $(CXX_FLAGS) $(foreach d, $(INCLUDE), -I$d) -L$(LIB) $^ -o $@ $(LIBRARIES)
