@@ -2,7 +2,8 @@
 #include <GL/glut.h>
 #include <iostream>
 #include <math.h>
-#include <variables.h>
+#include "simulation.h"
+#include "config.h"
 
 int main()
 {
