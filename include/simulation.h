@@ -8,22 +8,19 @@
 class SimulationState
 {
   public:
-    // for code readability
-    static const int grid_size = Config::GRID_SIZE;
-    static const int number_of_nodes = Config::NUMBER_OF_NODES;
 
     // if we do the following type of loop:
     //
-    // for (int i = 0; i < grid_size; i++)
+    // for (int i = 0; i < Config::GRID_SIZE; i++)
     // {
-    //     for (int j = 0; j < grid_size; j++)
+    //     for (int j = 0; j < Config::GRID_SIZE; j++)
     //     {
     //         velocity[i + j] <-- this will be the (i, j)th entry
     //     };
     // };
-    fftw_real velocity[number_of_nodes];      // velocity field
-    fftw_real smoke_density[number_of_nodes]; // density at each point
-    fftw_real force[number_of_nodes];         // user-applied force
+    fftw_real velocity[Config::NUM_CELLS];      // velocity field
+    fftw_real smoke_density[Config::NUM_CELLS]; // density at each point
+    fftw_real force[Config::NUM_CELLS];         // user-applied force
 
     void initialise();
 };
@@ -35,10 +32,6 @@ class Simulation
     SimulationState old_state;
 
     rfftwnd_plan plan_rc, plan_cr; // necessary for fftw to do FFT
-
-    // for code readability
-    static const int grid_size;
-    static const int number_of_nodes;
 
     void initialise();
 
