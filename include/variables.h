@@ -7,7 +7,7 @@
 namespace Config
 {
 const int GRID_SIZE = 50;                    // size of simulation grid
-int NUMBER_OF_NODES = GRID_SIZE * GRID_SIZE; // number of nodes we are dealing with
+const int NUMBER_OF_NODES = GRID_SIZE * GRID_SIZE; // number of nodes we are dealing with
 double time_step = 0.01;                     // simulation time step
 float visc = 0.01;                           // fluid viscosityx1
 };                                           // namespace Config
@@ -17,10 +17,11 @@ class SimulationState
 {
   public:
     // for code readability
-    grid_size = Config::GRID_SIZE
-        number_of_nodes = Config::NUMBER_OF_NODES;
+    static const int grid_size = Config::GRID_SIZE;
+    static const int number_of_nodes = Config::NUMBER_OF_NODES;
 
     // if we do the following type of loop:
+    //
     // for (int i = 0; i < grid_size; i++)
     // {
     //     for (int j = 0; j < grid_size; j++)
@@ -38,9 +39,9 @@ class SimulationState
         {
             for (int j = 0; j < grid_size; j++)
             {
-                velocity[i + j] = float 0;
-                smoke_density[i + j] = float 0;
-                force[i + j] = float 0;
+                velocity[i + j] = 0.0;
+                smoke_density[i + j] = 0.0;
+                force[i + j] = 0.0;
             };
         };
     };
@@ -55,8 +56,8 @@ class Simulation
     rfftwnd_plan plan_rc, plan_cr; // necessary for fftw to do FFT
 
     // for code readability
-    grid_size = Config::GRID_SIZE;
-    number_of_nodes = Config::NUMBER_OF_NODES;
+    static const int grid_size = Config::GRID_SIZE;
+    static const int number_of_nodes = Config::NUMBER_OF_NODES;
 
     void initialise()
     {
@@ -69,12 +70,12 @@ class Simulation
 
     void fft_r_to_c(fftw_real *old_dataset, fftw_complex *new_dataset)
     {
-        rfftwnd_one_real_to_complex(plan_rc, fftw_real * old_dataset, fftw_complex * new_dataset);
+        rfftwnd_one_real_to_complex(plan_rc, (fftw_real*) old_dataset, (fftw_complex*) new_dataset);
     };
 
     void fft_c_to_r(fftw_complex *old_dataset, fftw_real *new_dataset)
     {
-        rfftwnd_one_complex_to_real(plan_cr, fftw_complex * old_dataset, fftw_real * new_dataset);
+        rfftwnd_one_complex_to_real(plan_cr, (fftw_complex*) old_dataset, (fftw_real*) new_dataset);
     };
 };
 
