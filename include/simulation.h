@@ -43,6 +43,8 @@ class Simulation
     void compute_next_step();
 
     void diffuse_matter();
+
+    void set_forces();
 };
 
 #endif

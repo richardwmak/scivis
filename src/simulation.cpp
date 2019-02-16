@@ -189,3 +189,15 @@ void Simulation::diffuse_matter()
         };
     };
 };
+
+void Simulation::set_forces()
+{
+    for (int i = 0; i < Config::NUM_CELLS; i++)
+    {
+        old_state.smoke_density[i] = 0.995 * cur_state.smoke_density[i];
+        cur_state.force_x[i] *= 0.85;
+        cur_state.force_y[i] *= 0.85;
+        old_state.velocity_x[i] = cur_state.force_x[i];
+        old_state.velocity_y[i] = cur_state.force_y[i];
+    }
+}
