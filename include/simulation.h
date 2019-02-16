@@ -1,9 +1,9 @@
+
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
 #include "config.h"
 #include <rfftw.h>
-
 // Stores all the current simulation data
 class SimulationState
 {

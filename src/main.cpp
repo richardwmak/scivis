@@ -1,13 +1,16 @@
 #include "config.h"
 #include "simulation.h"
+#include "view.h"
 #include <GL/glut.h>
 #include <iostream>
 #include <math.h>
 #include <rfftw.h>
 
-// main: The main program
 int main(int argc, char **argv)
 {
+    Simulation simulation;
+    Window     window;
+
     printf("Fluid Flow Simulation and Visualization\n");
     printf("=======================================\n");
     printf("Click and drag the mouse to steer the flow!\n");
@@ -25,6 +28,8 @@ int main(int argc, char **argv)
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(500, 500);
     glutCreateWindow("Real-time smoke simulation and visualization");
+    simulation.initialise();
+    window.display(simulation);
     // glutDisplayFunc(display);
     // glutReshapeFunc(reshape);
     // glutIdleFunc(do_one_simulation_step);

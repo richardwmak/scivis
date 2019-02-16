@@ -53,8 +53,8 @@ void Simulation::compute_next_step()
     };
 
     fftw_real x0, y0, s, t;
-    int i0, i1, j0, j1;
-    float x, y;
+    int       i0, i1, j0, j1;
+    float     x, y;
     x = 0.5f / Config::GRID_SIZE;
     y = 0.5f / Config::GRID_SIZE;
 
@@ -160,7 +160,7 @@ void Simulation::compute_next_step()
 void Simulation::diffuse_matter()
 {
     fftw_real x, y, x0, y0, s, t;
-    int i0, j0, i1, j1;
+    int       i0, j0, i1, j1;
 
     x = 0.5f / Config::GRID_SIZE;
     y = 0.5f / Config::GRID_SIZE;
