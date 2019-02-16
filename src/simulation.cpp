@@ -1,5 +1,6 @@
 #include "simulation.h"
 #include "config.h"
+#include <GL/glut.h>
 #include <math.h>
 #include <rfftw.h>
 
@@ -201,3 +202,14 @@ void Simulation::set_forces()
         old_state.velocity_y[i] = cur_state.force_y[i];
     }
 }
+
+void Simulation::do_one_simulation_step()
+{
+    if (!Config::frozen)
+    {
+        Simulation::set_forces();
+        Simulation::compute_next_step();
+        Simulation::diffuse_matter();
+        glutPostRedisplay();
+    };
+};

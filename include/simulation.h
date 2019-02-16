@@ -45,6 +45,8 @@ class Simulation
     void diffuse_matter();
 
     void set_forces();
+
+    void do_one_simulation_step();
 };
 
 #endif
