@@ -15,13 +15,13 @@ void Window::rainbow(float value, float *R, float *G, float *B)
     else if (value > 1)
     {
         value = 1;
-    };
+    }
 
     value = (6 - 2 * dx) * value + dx;
     *R    = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
     *G    = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
     *B    = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
-};
+}
 
 void Window::set_colormap(float vy)
 {
@@ -41,7 +41,7 @@ void Window::set_colormap(float vy)
     }
 
     glColor3f(R, G, B);
-};
+}
 
 void Window::direction_to_color(float x, float y, int method)
 {
@@ -76,9 +76,9 @@ void Window::direction_to_color(float x, float y, int method)
     else
     {
         r = g = b = 1;
-    };
+    }
     glColor3f(r, g, b);
-};
+}
 
 void Window::visualise(Simulation simulation)
 {
@@ -156,4 +156,14 @@ void Window::display(Simulation simulation)
     // Window::visualise();
     glFlush();
     glutSwapBuffers();
-};
+}
+
+void Window::reshape(int w, int h)
+{
+    glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
+    Config::win_width  = w;
+    Config::win_height = h;
+}

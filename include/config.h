@@ -21,6 +21,6 @@ const int   COLOR_RAINBOW = 1;      //
 const int   COLOR_BANDS   = 2;      //
 extern int  scalar_col;             // method for scalar coloring
 extern bool frozen;                 // toggles on/off the animation
-};                                  // namespace Config
+} // namespace Config
 
 #endif

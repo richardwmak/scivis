@@ -17,6 +17,8 @@ class Window
     void visualise(Simulation simulation);
 
     void display(Simulation simulation);
+
+    void reshape(int w, int h);
 };
 
 #endif

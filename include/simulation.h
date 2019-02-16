@@ -15,8 +15,8 @@ class SimulationState
     //     for (int j = 0; j < Config::GRID_SIZE; j++)
     //     {
     //         velocity[i + j] <-- this will be the (i, j)th entry
-    //     };
-    // };
+    //     }
+    // }
     fftw_real velocity_x[Config::NUM_CELLS];    // velocity field
     fftw_real velocity_y[Config::NUM_CELLS];    //
     fftw_real smoke_density[Config::NUM_CELLS]; // density at each point
@@ -47,6 +47,6 @@ class Simulation
     void set_forces();
 
     void do_one_simulation_step();
-};
+}
 
 #endif
