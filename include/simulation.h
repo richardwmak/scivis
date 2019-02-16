@@ -8,7 +8,6 @@
 class SimulationState
 {
   public:
-
     // if we do the following type of loop:
     //
     // for (int i = 0; i < Config::GRID_SIZE; i++)
@@ -18,10 +17,10 @@ class SimulationState
     //         velocity[i + j] <-- this will be the (i, j)th entry
     //     };
     // };
-    fftw_real velocity_x[Config::NUM_CELLS];      // velocity field
-    fftw_real velocity_y[Config::NUM_CELLS];
+    fftw_real velocity_x[Config::NUM_CELLS];    // velocity field
+    fftw_real velocity_y[Config::NUM_CELLS];    //
     fftw_real smoke_density[Config::NUM_CELLS]; // density at each point
-    fftw_real force_x[Config::NUM_CELLS];         // user-applied force
+    fftw_real force_x[Config::NUM_CELLS];       // user-applied force
     fftw_real force_y[Config::NUM_CELLS];
 
     void initialise();
@@ -37,11 +36,13 @@ class Simulation
 
     void initialise();
 
-    void fft_r_to_c(void* dataset);
+    void fft_r_to_c(void *dataset);
 
-    void fft_c_to_r(void* dataset);
+    void fft_c_to_r(void *dataset);
 
     void compute_next_step();
+
+    void diffuse_matter();
 };
 
 #endif
