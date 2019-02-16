@@ -1,4 +1,5 @@
 AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
 AlignOperands: true
 AlignTrailingComments: true
 AllowShortBlocksOnASingleLine: false
