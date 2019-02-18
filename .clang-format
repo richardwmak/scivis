@@ -22,5 +22,6 @@ BraceWrapping:
   BeforeElse:      true
   IndentBraces:    false
 BreakBeforeBraces: Custom
+BreakConstructorInitializers: AfterColon
 ColumnLimit: 100
 IndentWidth: 4
