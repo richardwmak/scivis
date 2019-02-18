@@ -1,4 +1,5 @@
 #include "config.h"
+#include "controller.h"
 #include "simulation.h"
 #include <FL/Fl_Gl_Window.H>
 #include <GL/glut.h>
@@ -11,12 +12,13 @@ class GL_Window : public Fl_Gl_Window
   public:
     // Controller controller;
     static Simulation simulation;
+    static Controller controller;
 
     int    argc;
     char **argv;
 
     void draw();
-    int  handle();
+    int  handle(int);
 
     GL_Window(int X, int Y, int W, int H, const char *L, int argc, char **argv);
 

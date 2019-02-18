@@ -1,6 +1,8 @@
 #include "view.h"
 #include "config.h"
+#include "controller.h"
 #include "simulation.h"
+#include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
 #include <algorithm>
@@ -12,6 +14,7 @@ GL_Window::GL_Window(int X, int Y, int W, int H, const char *L, int argc, char *
 }
 
 Simulation GL_Window::simulation;
+Controller GL_Window::controller;
 
 void GL_Window::draw()
 {
@@ -28,6 +31,17 @@ void GL_Window::draw()
     glLoadIdentity();
     visualise();
     glFlush();
+}
+
+int GL_Window::handle(int event)
+{
+    switch (event)
+    {
+    case (FL_DRAG):
+        controller.drag(Fl::event_x(), Fl::event_y(), simulation);
+    case (FL_KEYBOARD):
+        controller.keyboard((char)Fl::event_key());
+    }
 }
 
 void GL_Window::rainbow(float value, float *R, float *G, float *B)
