@@ -4,7 +4,7 @@
 #include <math.h>
 #include <rfftw.h>
 
-void SimulationState::initialise()
+SimulationState::SimulationState()
 {
     for (int i = 0; i < Config::GRID_SIZE; i++)
     {
@@ -19,11 +19,8 @@ void SimulationState::initialise()
     }
 }
 
-void Simulation::initialise()
+Simulation::Simulation()
 {
-    cur_state.initialise();
-    old_state.initialise();
-
     plan_rc = rfftw2d_create_plan(
         Config::GRID_SIZE, Config::GRID_SIZE, FFTW_REAL_TO_COMPLEX, FFTW_IN_PLACE);
     plan_cr = rfftw2d_create_plan(

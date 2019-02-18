@@ -1,11 +1,36 @@
 #include "view.h"
 #include "config.h"
 #include "simulation.h"
-#include <GL/glut.h>
+#include <FL/Fl_Gl_Window.H>
+#include <FL/gl.h>
 #include <algorithm>
 #include <math.h>
 
-void Window::rainbow(float value, float *R, float *G, float *B)
+GL_Window::GL_Window(int X, int Y, int W, int H, const char *L, int argc, char **argv) :
+    Fl_Gl_Window(X, Y, W, H, L), argc(argc), argv(argv)
+{
+}
+
+Simulation GL_Window::simulation;
+
+void GL_Window::draw()
+{
+    if (!valid())
+    {
+        glutInit(&argc, argv);
+        glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+        reshape();
+        glutIdleFunc(idle_function);
+    }
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    visualise();
+    glFlush();
+}
+
+void GL_Window::rainbow(float value, float *R, float *G, float *B)
 {
     const float dx = 0.8;
     if (value < 0)
@@ -23,27 +48,27 @@ void Window::rainbow(float value, float *R, float *G, float *B)
     *B    = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
 }
 
-void Window::set_colormap(float vy)
+void GL_Window::set_colormap(float vy)
 {
     float R, G, B;
 
     if (Config::scalar_col == Config::COLOR_BLACKWHITE)
         R = G = B = vy;
     else if (Config::scalar_col == Config::COLOR_RAINBOW)
-        Window::rainbow(vy, &R, &G, &B);
+        GL_Window::rainbow(vy, &R, &G, &B);
     else if (Config::scalar_col == Config::COLOR_BANDS)
     {
         const int NLEVELS = 7;
         vy *= NLEVELS;
         vy = (int)(vy);
         vy /= NLEVELS;
-        Window::rainbow(vy, &R, &G, &B);
+        GL_Window::rainbow(vy, &R, &G, &B);
     }
 
     glColor3f(R, G, B);
 }
 
-void Window::direction_to_color(float x, float y, int method)
+void GL_Window::direction_to_color(float x, float y, int method)
 {
     float r, g, b, f;
     if (method)
@@ -80,7 +105,7 @@ void Window::direction_to_color(float x, float y, int method)
     glColor3f(r, g, b);
 }
 
-void Window::visualise(Simulation simulation)
+void GL_Window::visualise()
 {
     int       i, idx;
     double    px, py;
@@ -110,19 +135,19 @@ void Window::visualise(Simulation simulation)
                 px  = wn + (fftw_real)i * wn;
                 py  = hn + (fftw_real)(j + 1) * hn;
                 idx = ((j + 1) * Config::GRID_SIZE) + i;
-                Window::set_colormap(simulation.cur_state.smoke_density[idx]);
+                GL_Window::set_colormap(simulation.cur_state.smoke_density[idx]);
                 glVertex2f(px, py);
                 px  = wn + (fftw_real)(i + 1) * wn;
                 py  = hn + (fftw_real)j * hn;
                 idx = (j * Config::GRID_SIZE) + (i + 1);
-                Window::set_colormap(simulation.cur_state.smoke_density[idx]);
+                GL_Window::set_colormap(simulation.cur_state.smoke_density[idx]);
                 glVertex2f(px, py);
             }
 
             px  = wn + (fftw_real)(Config::GRID_SIZE - 1) * wn;
             py  = hn + (fftw_real)(j + 1) * hn;
             idx = ((j + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
-            Window::set_colormap(simulation.cur_state.smoke_density[idx]);
+            GL_Window::set_colormap(simulation.cur_state.smoke_density[idx]);
             glVertex2f(px, py);
             glEnd();
         }
@@ -135,9 +160,9 @@ void Window::visualise(Simulation simulation)
             for (int j = 0; j < Config::GRID_SIZE; j++)
             {
                 idx = (j * Config::GRID_SIZE) + i;
-                Window::direction_to_color(simulation.cur_state.velocity_x[idx],
-                                           simulation.cur_state.velocity_y[idx],
-                                           Config::color_dir);
+                GL_Window::direction_to_color(simulation.cur_state.velocity_x[idx],
+                                              simulation.cur_state.velocity_y[idx],
+                                              Config::color_dir);
                 glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
                 glVertex2f((wn + (fftw_real)i * wn) +
                                Config::vec_scale * simulation.cur_state.velocity_x[idx],
@@ -148,22 +173,18 @@ void Window::visualise(Simulation simulation)
     }
 }
 
-void Window::display(Simulation simulation)
+// http://seriss.com/people/erco/fltk/
+void GL_Window::reshape()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    // Window::visualise();
-    glFlush();
-    glutSwapBuffers();
-}
-
-void Window::reshape(int w, int h)
-{
-    glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
+    glViewport(0, 0, pixel_w(), pixel_h());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
-    Config::win_width  = w;
-    Config::win_height = h;
+    gluOrtho2D(0, pixel_w(), 0, pixel_h());
+    Config::win_width  = pixel_w();
+    Config::win_height = pixel_h();
+}
+
+void GL_Window::idle_function()
+{
+    simulation.do_one_simulation_step();
 }

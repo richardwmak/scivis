@@ -1,12 +1,12 @@
 CXX		  := g++
-CXX_FLAGS := -Wall -Wextra -Wpedantic -std=c++17 -ggdb
+CXX_FLAGS := -Wall -Wextra -Wpedantic -std=c++17 -ggdb $(shell fltk-config --cxxflags)
 
 BIN		:= bin
 SRC		:= src
-INCLUDE	:= /usr/local/include include
+INCLUDE	:= /usr/local/include /usr/include include
 LIB		:= /usr/local/lib
 
-LIBRARIES	:= -lrfftw -lfftw -lglut -lGL -lGLU -lGLEW -lm
+LIBRARIES	:= -lrfftw -lfftw -lglut -lGL -lGLU -lGLEW -lm -lfltk -lXext -lX11 $(shell fltk-config --use-gl --ldstaticflags)
 EXECUTABLE	:= smoke
 
 # use clang-tidy to check code
@@ -57,7 +57,7 @@ run: clean all
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
-	$(CXX) $(CXX_FLAGS) $(foreach d, $(INCLUDE), -I$d) -L$(LIB) $^ -o $@ $(LIBRARIES)
+	$(CXX) $(shell fltk-config --cxxflags) $(CXX_FLAGS) $(foreach d, $(INCLUDE), -I$d) -L$(LIB) $^ -o $@ $(LIBRARIES)
 
 clean:
 	clear

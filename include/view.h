@@ -1,24 +1,36 @@
 #include "config.h"
 #include "simulation.h"
+#include <FL/Fl_Gl_Window.H>
 #include <GL/glut.h>
 
 #ifndef VIEW_H
 #define VIEW_H
 
-class Window
+class GL_Window : public Fl_Gl_Window
 {
   public:
+    // Controller controller;
+    static Simulation simulation;
+
+    int    argc;
+    char **argv;
+
+    void draw();
+    int  handle();
+
+    GL_Window(int X, int Y, int W, int H, const char *L, int argc, char **argv);
+
     void rainbow(float value, float *R, float *G, float *B);
 
     void set_colormap(float vy);
 
     void direction_to_color(float x, float y, int method);
 
-    void visualise(Simulation simulation);
+    void visualise();
 
-    void display(Simulation simulation);
+    void reshape();
 
-    void reshape(int w, int h);
+    static void idle_function();
 };
 
 #endif

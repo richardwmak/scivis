@@ -23,7 +23,7 @@ class SimulationState
     fftw_real force_x[Config::NUM_CELLS];       // user-applied force
     fftw_real force_y[Config::NUM_CELLS];
 
-    void initialise();
+    SimulationState();
 };
 
 class Simulation
@@ -34,8 +34,7 @@ class Simulation
 
     rfftwnd_plan plan_rc, plan_cr; // necessary for fftw to do FFT
 
-    void initialise();
-
+    Simulation();
     void fft_r_to_c(void *dataset);
 
     void fft_c_to_r(void *dataset);
@@ -47,6 +46,6 @@ class Simulation
     void set_forces();
 
     void do_one_simulation_step();
-}
+};
 
 #endif
