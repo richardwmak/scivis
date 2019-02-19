@@ -1,6 +1,7 @@
 #include "simulation.h"
 #include "config.h"
 #include <GL/glut.h>
+#include <iostream>
 #include <math.h>
 #include <rfftw.h>
 
@@ -39,7 +40,6 @@ void Simulation::fft_c_to_r(void *dataset)
 
 void Simulation::compute_next_step()
 {
-
     for (int i = 0; i < Config::NUM_CELLS; i++)
     {
         cur_state.velocity_x[i] += Config::time_step * old_state.velocity_x[i];

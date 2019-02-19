@@ -5,7 +5,9 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
+#include <Fl/glut.H>
 #include <algorithm>
+#include <iostream>
 #include <math.h>
 
 GL_Window::GL_Window(int X, int Y, int W, int H, const char *L, int argc, char **argv) :
@@ -18,6 +20,7 @@ Controller GL_Window::controller;
 
 void GL_Window::draw()
 {
+    std::cout << "inside draw()";
     if (!valid())
     {
         glutInit(&argc, argv);
@@ -64,7 +67,7 @@ void GL_Window::rainbow(float value, float *R, float *G, float *B)
 
 void GL_Window::set_colormap(float vy)
 {
-    float R, G, B;
+    float R = 0, G = 0, B = 0;
 
     if (Config::scalar_col == Config::COLOR_BLACKWHITE)
         R = G = B = vy;

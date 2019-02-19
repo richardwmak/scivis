@@ -1,6 +1,7 @@
 #include "controller.h"
 #include "config.h"
 #include "simulation.h"
+#include <iostream>
 #include <math.h>
 
 void Controller::keyboard(unsigned char key)
@@ -53,6 +54,10 @@ void Controller::keyboard(unsigned char key)
 
 void Controller::drag(int mx, int my, Simulation &simulation)
 {
+    std::cout << mx;
+    std::cout << ", ";
+    std::cout << my;
+    std::cout << "\n";
     int        xi, yi, X, Y;
     double     dx, dy, len;
     static int lmx = 0, lmy = 0; // remembers last mouse location
