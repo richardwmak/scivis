@@ -5,7 +5,6 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
-#include <Fl/glut.H>
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -13,6 +12,19 @@
 GL_Window::GL_Window(int X, int Y, int W, int H, const char *L, int argc, char **argv) :
     Fl_Gl_Window(X, Y, W, H, L), argc(argc), argv(argv)
 {
+    Fl::add_idle(idle_callback, this);
+}
+
+void idle_callback(void *change_this_var_name)
+{
+    if (change_this_var_name != NULL)
+    {
+        GL_Window *ptr_gl_window = reinterpret_cast<GL_Window *>(change_this_var_name);
+        if (!Config::frozen)
+        {
+            ptr_gl_window->draw();
+        }
+    }
 }
 
 Simulation GL_Window::simulation;
@@ -21,12 +33,13 @@ Controller GL_Window::controller;
 void GL_Window::draw()
 {
     std::cout << "inside draw()";
-    if (!valid())
+    if (Config::first_draw)
     {
         glutInit(&argc, argv);
         glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
         reshape();
         glutIdleFunc(idle_function);
+        Config::first_draw = false;
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

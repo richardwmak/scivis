@@ -7,6 +7,8 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+void idle_callback(void *change_this_var_name);
+
 class GL_Window : public Fl_Gl_Window
 {
   public:

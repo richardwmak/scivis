@@ -11,4 +11,5 @@ int    draw_smoke = 0;
 int    draw_vecs  = 1;
 int    scalar_col = 0;
 bool   frozen     = false;
-}
+bool   first_draw = true;
+} // namespace Config
