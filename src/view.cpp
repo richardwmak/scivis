@@ -23,6 +23,7 @@ void idle_callback(void *change_this_var_name)
         if (!Config::frozen)
         {
             ptr_gl_window->draw();
+            ptr_gl_window->simulation.do_one_simulation_step();
         }
     }
 }
@@ -32,13 +33,11 @@ Controller GL_Window::controller;
 
 void GL_Window::draw()
 {
-    std::cout << "inside draw()";
     if (Config::first_draw)
     {
         glutInit(&argc, argv);
         glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
         reshape();
-        glutIdleFunc(idle_function);
         Config::first_draw = false;
     }
 
@@ -212,9 +211,4 @@ void GL_Window::reshape()
     gluOrtho2D(0, pixel_w(), 0, pixel_h());
     Config::win_width  = pixel_w();
     Config::win_height = pixel_h();
-}
-
-void GL_Window::idle_function()
-{
-    simulation.do_one_simulation_step();
 }
