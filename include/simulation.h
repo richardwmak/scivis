@@ -47,7 +47,7 @@ class Simulation
 
     void set_forces();
 
-    static void do_one_simulation_step();
+    void do_one_simulation_step();
 };
 
 #endif

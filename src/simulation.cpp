@@ -7,6 +7,7 @@
 
 SimulationState::SimulationState()
 {
+    std::cout << "in SimulationState constructor";
     for (int i = 0; i < Config::GRID_SIZE; i++)
     {
         for (int j = 0; j < Config::GRID_SIZE; j++)
