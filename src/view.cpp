@@ -13,27 +13,26 @@
 #include <iostream>
 #include <math.h>
 
+Simulation GL_Window::simulation;
+Controller GL_Window::controller;
+
 GL_Window::GL_Window(int X, int Y, int W, int H, const char *L, int argc, char **argv) :
     Fl_Gl_Window(X, Y, W, H, L), argc(argc), argv(argv)
 {
-    Fl::add_idle(idle_callback, this);
-}
+    Simulation *ptr_simulation = &simulation;
+    global_sim::set_ptr(ptr_simulation);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitWindowSize(500, 500);
+    glutCreateWindow("Real-time smoke simulation and visualization");
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutIdleFunc(simulation.do_one_simulation_step);
+    glutKeyboardFunc(controller.keyboard);
+    glutMotionFunc(controller.drag);
 
-void idle_callback(void *change_this_var_name)
-{
-    if (change_this_var_name != NULL)
-    {
-        GL_Window *ptr_gl_window = reinterpret_cast<GL_Window *>(change_this_var_name);
-        if (!Config::frozen)
-        {
-            ptr_gl_window->redraw();
-            ptr_gl_window->simulation.do_one_simulation_step();
-        }
-    }
+    glutMainLoop();
 }
-
-Simulation GL_Window::simulation;
-Controller GL_Window::controller;
 
 void GL_Window::draw()
 {
@@ -45,19 +44,8 @@ void GL_Window::draw()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    visualise();
+    visualize();
     glFlush();
-}
-
-int GL_Window::handle(int event)
-{
-    switch (event)
-    {
-    case (FL_DRAG):
-        controller.drag(Fl::event_x(), Fl::event_y(), simulation);
-    case (FL_KEYBOARD):
-        controller.keyboard((char)Fl::event_key());
-    }
 }
 
 void GL_Window::rainbow(float value, float *R, float *G, float *B)
@@ -73,9 +61,10 @@ void GL_Window::rainbow(float value, float *R, float *G, float *B)
     }
 
     value = (6 - 2 * dx) * value + dx;
-    *R    = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
-    *G    = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
-    *B    = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
+
+    *R = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
+    *G = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
+    *B = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
 }
 
 void GL_Window::set_colormap(float vy)
@@ -133,11 +122,12 @@ void GL_Window::direction_to_color(float x, float y, int method)
         r = g = b = 1;
     }
     glColor3f(r, g, b);
+    `
 }
 
-void GL_Window::visualise()
+void GL_Window::visualize()
 {
-    int       i, idx;
+    int       i, j, idx;
     double    px, py;
     fftw_real wn =
         (fftw_real)Config::win_width / (fftw_real)(Config::GRID_SIZE + 1); // Grid cell width
@@ -147,7 +137,7 @@ void GL_Window::visualise()
     if (Config::draw_smoke)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        for (int j = 0; j < Config::GRID_SIZE - 1; j++) // draw smoke
+        for (j = 0; j < Config::GRID_SIZE - 1; j++) // draw smoke
         {
             glBegin(GL_TRIANGLE_STRIP);
 
@@ -165,19 +155,19 @@ void GL_Window::visualise()
                 px  = wn + (fftw_real)i * wn;
                 py  = hn + (fftw_real)(j + 1) * hn;
                 idx = ((j + 1) * Config::GRID_SIZE) + i;
-                GL_Window::set_colormap(simulation.cur_state.smoke_density[idx]);
+                set_colormap(simulation.cur_state.smoke_density[idx]);
                 glVertex2f(px, py);
                 px  = wn + (fftw_real)(i + 1) * wn;
                 py  = hn + (fftw_real)j * hn;
                 idx = (j * Config::GRID_SIZE) + (i + 1);
-                GL_Window::set_colormap(simulation.cur_state.smoke_density[idx]);
+                set_colormap(simulation.cur_state.smoke_density[idx]);
                 glVertex2f(px, py);
             }
 
             px  = wn + (fftw_real)(Config::GRID_SIZE - 1) * wn;
             py  = hn + (fftw_real)(j + 1) * hn;
             idx = ((j + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
-            GL_Window::set_colormap(simulation.cur_state.smoke_density[idx]);
+            set_colormap(simulation.cur_state.smoke_density[idx]);
             glVertex2f(px, py);
             glEnd();
         }
@@ -186,13 +176,13 @@ void GL_Window::visualise()
     if (Config::draw_vecs)
     {
         glBegin(GL_LINES); // draw velocities
-        for (int i = 0; i < Config::GRID_SIZE; i++)
-            for (int j = 0; j < Config::GRID_SIZE; j++)
+        for (i = 0; i < Config::GRID_SIZE; i++)
+            for (j = 0; j < Config::GRID_SIZE; j++)
             {
                 idx = (j * Config::GRID_SIZE) + i;
-                GL_Window::direction_to_color(simulation.cur_state.velocity_x[idx],
-                                              simulation.cur_state.velocity_y[idx],
-                                              Config::color_dir);
+                direction_to_color(simulation.cur_state.velocity_x[idx],
+                                   simulation.cur_state.velocity_y[idx],
+                                   Config::color_dir);
                 glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
                 glVertex2f((wn + (fftw_real)i * wn) +
                                Config::vec_scale * simulation.cur_state.velocity_x[idx],
@@ -203,15 +193,23 @@ void GL_Window::visualise()
     }
 }
 
-// http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
-void GL_Window::reshape(GLfloat win_w, GLfloat win_h)
+void GL_Window::display()
 {
-    glViewport(0, 0, (GLsizei)win_w, (GLsizei)win_h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, win_w, 0, win_h);
-    Config::win_width  = win_w;
-    Config::win_height = win_h;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    visualize();
+    glFlush();
+    glutSwapBuffers();
+}
+
+// http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
+void GL_Window::reshape(int w, int h)
+{
+    glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
+    Config::win_width  = win_w;
+    Config::win_height = win_h;
 }

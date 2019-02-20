@@ -30,9 +30,11 @@ class GL_Window : public Fl_Gl_Window
 
     void direction_to_color(float x, float y, int method);
 
-    void visualise();
+    void visualize();
 
-    void reshape(GLfloat win_w, GLfloat win_h);
+    static void display();
+
+    static void reshape(int w, int h);
 
     static void idle_function();
 };

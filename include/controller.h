@@ -3,11 +3,16 @@
 
 #include "simulation.h"
 
+namespace global_sim
+{
+    Simulation *ptr_simulation;
+    void        set_ptr(Simulation *simulation);
+} // namespace global_sim
 class Controller
 {
   public:
-    void keyboard(unsigned char key);
-    void drag(int mx, int my, Simulation &simulation);
+    static void keyboard(unsigned char key, int x, int y);
+    static void drag(int mx, int my);
 };
 
 #endif

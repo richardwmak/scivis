@@ -191,5 +191,6 @@ void Simulation::do_one_simulation_step()
         Simulation::set_forces();
         Simulation::compute_next_step();
         Simulation::diffuse_matter();
+        glutPostRedisplay();
     }
 }

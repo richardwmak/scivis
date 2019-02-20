@@ -18,13 +18,13 @@ fftw_real *  rho, *rho0;   // smoke density at the current (rho) and previous (r
 rfftwnd_plan plan_rc, plan_cr; // simulation domain discretization
 
 //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
-int       winWidth, winHeight;  // size of the graphics window, in pixels
-int       color_dir  = 0;       // use direction color-coding or not
-float     vec_scale  = 1000;    // scaling of hedgehogs
-int       draw_smoke = 0;       // draw the smoke or not
-int       draw_vecs  = 1;       // draw the vector field or not
-const int COLOR_BLACKWHITE = 0; // different types of color mapping: black-and-white, rainbow,
-                                // banded
+int       winWidth, winHeight;     // size of the graphics window, in pixels
+int       color_dir        = 0;    // use direction color-coding or not
+float     vec_scale        = 1000; // scaling of hedgehogs
+int       draw_smoke       = 0;    // draw the smoke or not
+int       draw_vecs        = 1;    // draw the vector field or not
+const int COLOR_BLACKWHITE = 0;    // different types of color mapping: black-and-white, rainbow,
+                                   // banded
 const int COLOR_RAINBOW = 1;
 const int COLOR_BANDS   = 2;
 int       scalar_col    = 0; // method for scalar coloring
@@ -41,7 +41,7 @@ void init_simulation(int n)
     int    i;
     size_t dim;
 
-    dim = n * 2 * (n / 2 + 1) * sizeof(fftw_real); // Allocate data structures
+    dim     = n * 2 * (n / 2 + 1) * sizeof(fftw_real); // Allocate data structures
     vx      = (fftw_real *)malloc(dim);
     vy      = (fftw_real *)malloc(dim);
     vx0     = (fftw_real *)malloc(dim);

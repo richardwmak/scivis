@@ -25,3 +25,4 @@ BreakBeforeBraces: Custom
 BreakConstructorInitializers: AfterColon
 ColumnLimit: 100
 IndentWidth: 4
+NamespaceIndentation: All

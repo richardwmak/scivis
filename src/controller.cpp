@@ -4,7 +4,15 @@
 #include <iostream>
 #include <math.h>
 
-void Controller::keyboard(unsigned char key)
+namespace global_sim
+{
+    void set_ptr(Simulation *simulation)
+    {
+        global_sim::ptr_simulation = simulation;
+    }
+} // namespace global_sim
+
+void Controller::keyboard(unsigned char key, int x, int y)
 {
     switch (key)
     {
@@ -52,13 +60,13 @@ void Controller::keyboard(unsigned char key)
     }
 }
 
-void Controller::drag(int mx, int my, Simulation &simulation)
+void Controller::drag(int mx, int my)
 {
     for (int i = 0; i <= Config::GRID_SIZE; i++)
     {
         for (int j = 0; j <= Config::GRID_SIZE; j++)
         {
-            std::cout << simulation.cur_state.velocity_x[i + j];
+            std::cout << global_sim::ptr_simulation->cur_state.velocity_x[i + j];
             std::cout << ", ";
         }
         std::cout << "\n";
@@ -95,9 +103,9 @@ void Controller::drag(int mx, int my, Simulation &simulation)
         dx *= 0.1 / len;
         dy *= 0.1 / len;
     }
-    simulation.cur_state.force_x[Y * Config::GRID_SIZE + X] += dx;
-    simulation.cur_state.force_y[Y * Config::GRID_SIZE + X] += dy;
-    simulation.cur_state.smoke_density[Y * Config::GRID_SIZE + X] = 10.0f;
+    global_sim::ptr_simulation->cur_state.force_x[Y * Config::GRID_SIZE + X] += dx;
+    global_sim::ptr_simulation->cur_state.force_y[Y * Config::GRID_SIZE + X] += dy;
+    global_sim::ptr_simulation->cur_state.smoke_density[Y * Config::GRID_SIZE + X] = 10.0f;
 
     lmx = mx;
     lmy = my;
