@@ -39,6 +39,8 @@ class Simulation
 
     void fft_c_to_r(void *dataset);
 
+    int clamp(float x);
+
     void compute_next_step();
 
     void diffuse_matter();

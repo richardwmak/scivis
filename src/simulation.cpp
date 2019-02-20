@@ -38,26 +38,28 @@ void Simulation::fft_c_to_r(void *dataset)
     rfftwnd_one_complex_to_real(plan_cr, (fftw_complex *)dataset, (fftw_real *)dataset);
 }
 
+int Simulation::clamp(float x)
+{
+    return ((x) >= 0.0 ? ((int)(x)) : (-((int)(1 - (x)))));
+}
+
 void Simulation::compute_next_step()
 {
-    for (int i = 0; i < Config::NUM_CELLS; i++)
+    fftw_real x, y, x0, y0, f, r, U[2], V[2], s, t;
+    int       i, j, i0, j0, i1, j1;
+
+    for (i = 0; i < Config::NUM_CELLS; i++)
     {
         cur_state.velocity_x[i] += Config::time_step * old_state.velocity_x[i];
         old_state.velocity_x[i] = cur_state.velocity_x[i];
-
         cur_state.velocity_y[i] += Config::time_step * old_state.velocity_y[i];
         old_state.velocity_y[i] = cur_state.velocity_y[i];
     }
 
-    fftw_real x0, y0, s, t;
-    int       i0, i1, j0, j1;
-    float     x, y;
-    x = 0.5f / Config::GRID_SIZE;
-    y = 0.5f / Config::GRID_SIZE;
-
-    for (int i = 0; i < Config::GRID_SIZE; i++)
-    {
-        for (int j = 0; j < Config::GRID_SIZE; j++)
+    for (x = 0.5f / Config::GRID_SIZE, i = 0; i < Config::GRID_SIZE;
+         i++, x += 1.0f / Config::GRID_SIZE)
+        for (y = 0.5f / Config::GRID_SIZE, j = 0; j < Config::GRID_SIZE;
+             j++, y += 1.0f / Config::GRID_SIZE)
         {
             x0 = Config::GRID_SIZE *
                      (x - Config::time_step * old_state.velocity_x[i + Config::GRID_SIZE * j]) -
@@ -65,17 +67,14 @@ void Simulation::compute_next_step()
             y0 = Config::GRID_SIZE *
                      (y - Config::time_step * old_state.velocity_y[i + Config::GRID_SIZE * j]) -
                  0.5f;
-
-            i0 = (int)std::floor(x0);
+            i0 = clamp(x0);
             s  = x0 - i0;
             i0 = (Config::GRID_SIZE + (i0 % Config::GRID_SIZE)) % Config::GRID_SIZE;
             i1 = (i0 + 1) % Config::GRID_SIZE;
-
-            j0 = (int)std::floor(y0);
+            j0 = clamp(y0);
             t  = y0 - j0;
             j0 = (Config::GRID_SIZE + (j0 % Config::GRID_SIZE)) % Config::GRID_SIZE;
             j1 = (j0 + 1) % Config::GRID_SIZE;
-
             cur_state.velocity_x[i + Config::GRID_SIZE * j] =
                 (1 - s) * ((1 - t) * old_state.velocity_x[i0 + Config::GRID_SIZE * j0] +
                            t * old_state.velocity_x[i0 + Config::GRID_SIZE * j1]) +
@@ -86,45 +85,33 @@ void Simulation::compute_next_step()
                            t * old_state.velocity_y[i0 + Config::GRID_SIZE * j1]) +
                 s * ((1 - t) * old_state.velocity_y[i1 + Config::GRID_SIZE * j0] +
                      t * old_state.velocity_y[i1 + Config::GRID_SIZE * j1]);
-
-            y += 1.0f / Config::GRID_SIZE;
         }
-        x += 1.0f / Config::GRID_SIZE;
-    }
 
-    for (int i = 0; i < Config::GRID_SIZE; i++)
-    {
-        for (int j = 0; j < Config::GRID_SIZE; j++)
+    for (i = 0; i < Config::GRID_SIZE; i++)
+        for (j = 0; j < Config::GRID_SIZE; j++)
         {
             old_state.velocity_x[i + (Config::GRID_SIZE + 2) * j] =
                 cur_state.velocity_x[i + Config::GRID_SIZE * j];
             old_state.velocity_y[i + (Config::GRID_SIZE + 2) * j] =
                 cur_state.velocity_y[i + Config::GRID_SIZE * j];
         }
-    }
 
-    Simulation::fft_r_to_c(old_state.velocity_x);
-    Simulation::fft_r_to_c(old_state.velocity_y);
+    fft_r_to_c(old_state.velocity_x);
+    fft_r_to_c(old_state.velocity_y);
 
-    fftw_real r, f, U[2], V[2];
-
-    for (int i = 0; i <= Config::GRID_SIZE; i += 2)
+    for (i = 0; i <= Config::GRID_SIZE; i += 2)
     {
         x = 0.5f * i;
-        for (int j = 0; j < Config::GRID_SIZE; j++)
+        for (j = 0; j < Config::GRID_SIZE; j++)
         {
-            y = j <= Config::GRID_SIZE / 2 ? (fftw_real)j : (fftw_real)(j - Config::GRID_SIZE);
+            y = j <= Config::GRID_SIZE / 2 ? (fftw_real)j : (fftw_real)j - Config::GRID_SIZE;
             r = x * x + y * y;
             if (r == 0.0f)
-            {
                 continue;
-            }
-
             f    = (fftw_real)exp(-r * Config::time_step * Config::visc);
             U[0] = old_state.velocity_x[i + (Config::GRID_SIZE + 2) * j];
-            U[1] = old_state.velocity_x[i + 1 + (Config::GRID_SIZE + 2) * j];
-
             V[0] = old_state.velocity_y[i + (Config::GRID_SIZE + 2) * j];
+            U[1] = old_state.velocity_x[i + 1 + (Config::GRID_SIZE + 2) * j];
             V[1] = old_state.velocity_y[i + 1 + (Config::GRID_SIZE + 2) * j];
 
             old_state.velocity_x[i + (Config::GRID_SIZE + 2) * j] =
@@ -138,32 +125,29 @@ void Simulation::compute_next_step()
         }
     }
 
-    Simulation::fft_c_to_r(old_state.velocity_x);
-    Simulation::fft_c_to_r(old_state.velocity_y);
+    fft_c_to_r(old_state.velocity_x);
+    fft_c_to_r(old_state.velocity_y);
 
     f = 1.0 / (Config::NUM_CELLS);
-    for (int i = 0; i < Config::GRID_SIZE; i++)
-    {
-        for (int j = 0; j < Config::GRID_SIZE; j++)
+    for (i = 0; i < Config::GRID_SIZE; i++)
+        for (j = 0; j < Config::GRID_SIZE; j++)
         {
             cur_state.velocity_x[i + Config::GRID_SIZE * j] =
                 f * old_state.velocity_x[i + (Config::GRID_SIZE + 2) * j];
             cur_state.velocity_y[i + Config::GRID_SIZE * j] =
                 f * old_state.velocity_y[i + (Config::GRID_SIZE + 2) * j];
         }
-    }
 }
 
 void Simulation::diffuse_matter()
 {
     fftw_real x, y, x0, y0, s, t;
-    int       i0, j0, i1, j1;
+    int       i, j, i0, j0, i1, j1;
 
-    x = 0.5f / Config::GRID_SIZE;
-    y = 0.5f / Config::GRID_SIZE;
-    for (int i = 0; i < Config::GRID_SIZE; i++)
-    {
-        for (int j = 0; j < Config::GRID_SIZE; j++)
+    for (x = 0.5f / Config::GRID_SIZE, i = 0; i < Config::GRID_SIZE;
+         i++, x += 1.0f / Config::GRID_SIZE)
+        for (y = 0.5f / Config::GRID_SIZE, j = 0; j < Config::GRID_SIZE;
+             j++, y += 1.0f / Config::GRID_SIZE)
         {
             x0 = Config::GRID_SIZE *
                      (x - Config::time_step * cur_state.velocity_x[i + Config::GRID_SIZE * j]) -
@@ -171,11 +155,11 @@ void Simulation::diffuse_matter()
             y0 = Config::GRID_SIZE *
                      (y - Config::time_step * cur_state.velocity_y[i + Config::GRID_SIZE * j]) -
                  0.5f;
-            i0 = floor(x0);
+            i0 = clamp(x0);
             s  = x0 - i0;
             i0 = (Config::GRID_SIZE + (i0 % Config::GRID_SIZE)) % Config::GRID_SIZE;
             i1 = (i0 + 1) % Config::GRID_SIZE;
-            j0 = floor(y0);
+            j0 = clamp(y0);
             t  = y0 - j0;
             j0 = (Config::GRID_SIZE + (j0 % Config::GRID_SIZE)) % Config::GRID_SIZE;
             j1 = (j0 + 1) % Config::GRID_SIZE;
@@ -185,12 +169,12 @@ void Simulation::diffuse_matter()
                 s * ((1 - t) * old_state.smoke_density[i1 + Config::GRID_SIZE * j0] +
                      t * old_state.smoke_density[i1 + Config::GRID_SIZE * j1]);
         }
-    }
 }
 
 void Simulation::set_forces()
 {
-    for (int i = 0; i < Config::NUM_CELLS; i++)
+    int i;
+    for (i = 0; i < Config::NUM_CELLS; i++)
     {
         old_state.smoke_density[i] = 0.995 * cur_state.smoke_density[i];
         cur_state.force_x[i] *= 0.85;
