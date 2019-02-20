@@ -2,7 +2,7 @@
 #include "controller.h"
 #include "simulation.h"
 #include <FL/Fl_Gl_Window.H>
-#include <GL/glut.h>
+#include <FL/glut.H>
 
 #ifndef VIEW_H
 #define VIEW_H
@@ -32,7 +32,7 @@ class GL_Window : public Fl_Gl_Window
 
     void visualise();
 
-    void reshape();
+    void reshape(GLfloat win_w, GLfloat win_h);
 
     static void idle_function();
 };

@@ -54,10 +54,15 @@ void Controller::keyboard(unsigned char key)
 
 void Controller::drag(int mx, int my, Simulation &simulation)
 {
-    std::cout << mx;
-    std::cout << ", ";
-    std::cout << my;
-    std::cout << "\n";
+    for (int i = 0; i <= Config::GRID_SIZE; i++)
+    {
+        for (int j = 0; j <= Config::GRID_SIZE; j++)
+        {
+            std::cout << simulation.cur_state.velocity_x[i + j];
+            std::cout << ", ";
+        }
+        std::cout << "\n";
+    }
     int        xi, yi, X, Y;
     double     dx, dy, len;
     static int lmx = 0, lmy = 0; // remembers last mouse location

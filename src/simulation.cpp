@@ -1,6 +1,6 @@
 #include "simulation.h"
 #include "config.h"
-#include <GL/glut.h>
+#include <FL/glut.H>
 #include <iostream>
 #include <math.h>
 #include <rfftw.h>
@@ -207,6 +207,5 @@ void Simulation::do_one_simulation_step()
         Simulation::set_forces();
         Simulation::compute_next_step();
         Simulation::diffuse_matter();
-        glutPostRedisplay();
     }
 }

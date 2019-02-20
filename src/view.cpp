@@ -1,3 +1,5 @@
+// http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
+
 #include "view.h"
 #include "config.h"
 #include "controller.h"
@@ -5,6 +7,8 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
+#include <FL/glu.h>
+#include <FL/glut.H>
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -22,7 +26,7 @@ void idle_callback(void *change_this_var_name)
         GL_Window *ptr_gl_window = reinterpret_cast<GL_Window *>(change_this_var_name);
         if (!Config::frozen)
         {
-            ptr_gl_window->draw();
+            ptr_gl_window->redraw();
             ptr_gl_window->simulation.do_one_simulation_step();
         }
     }
@@ -33,16 +37,13 @@ Controller GL_Window::controller;
 
 void GL_Window::draw()
 {
-    if (Config::first_draw)
+    if (!valid())
     {
-        glutInit(&argc, argv);
-        glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-        reshape();
-        Config::first_draw = false;
+        valid(1);
+        reshape((GLfloat)w(), (GLfloat)h());
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     visualise();
     glFlush();
@@ -202,13 +203,15 @@ void GL_Window::visualise()
     }
 }
 
-// http://seriss.com/people/erco/fltk/
-void GL_Window::reshape()
+// http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
+void GL_Window::reshape(GLfloat win_w, GLfloat win_h)
 {
-    glViewport(0, 0, pixel_w(), pixel_h());
+    glViewport(0, 0, (GLsizei)win_w, (GLsizei)win_h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, pixel_w(), 0, pixel_h());
-    Config::win_width  = pixel_w();
-    Config::win_height = pixel_h();
+    gluOrtho2D(0, win_w, 0, win_h);
+    Config::win_width  = win_w;
+    Config::win_height = win_h;
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
