@@ -29,6 +29,7 @@ Controller::Controller()
     window     = new Fl_Window(600, 600);
 }
 
+// http://webcache.googleusercontent.com/search?q=cache:MsCYe9ordKkJ:www.fltk.org/strfiles/2590/glut_with_fltk2.cxx
 int Controller::begin(int argc, char **argv)
 {
     Fl::gl_visual(FL_RGB);
@@ -107,13 +108,21 @@ void Controller::drag(int mx, int my)
     Y = yi;
 
     if (X > (Config::GRID_SIZE - 1))
+    {
         X = Config::GRID_SIZE - 1;
+    }
     if (Y > (Config::GRID_SIZE - 1))
+    {
         Y = Config::GRID_SIZE - 1;
+    }
     if (X < 0)
+    {
         X = 0;
+    }
     if (Y < 0)
+    {
         Y = 0;
+    }
 
     // Add force at the cursor location
     my  = Config::win_height - my;

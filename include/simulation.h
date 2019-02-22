@@ -17,11 +17,11 @@ class SimulationState
     //         velocity[i + j] <-- this will be the (i, j)th entry
     //     }
     // }
-    fftw_real velocity_x[Config::NUM_CELLS];    // velocity field
-    fftw_real velocity_y[Config::NUM_CELLS];    //
-    fftw_real smoke_density[Config::NUM_CELLS]; // density at each point
-    fftw_real force_x[Config::NUM_CELLS];       // user-applied force
-    fftw_real force_y[Config::NUM_CELLS];
+    fftw_real *velocity_x;    // velocity field
+    fftw_real *velocity_y;    //
+    fftw_real *smoke_density; // density at each point
+    fftw_real *force_x;       // user-applied force
+    fftw_real *force_y;
 
     SimulationState();
 };

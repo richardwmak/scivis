@@ -7,15 +7,25 @@
 
 SimulationState::SimulationState()
 {
+    size_t array_size;
+    array_size = Config::GRID_SIZE * 2 * (Config::GRID_SIZE / 2 + 1) * sizeof(fftw_real);
+    velocity_x = (fftw_real *)malloc(array_size);
+    velocity_y = (fftw_real *)malloc(array_size);
+
+    array_size    = Config::NUM_CELLS * sizeof(fftw_real);
+    force_x       = (fftw_real *)malloc(array_size);
+    force_y       = (fftw_real *)malloc(array_size);
+    smoke_density = (fftw_real *)malloc(array_size);
+
     for (int i = 0; i < Config::GRID_SIZE; i++)
     {
         for (int j = 0; j < Config::GRID_SIZE; j++)
         {
-            velocity_x[i + j]    = 0.0;
-            velocity_y[i + j]    = 0.0;
-            smoke_density[i + j] = 0.0;
-            force_x[i + j]       = 0.0;
-            force_y[i + j]       = 0.0;
+            velocity_x[i + j]    = 0.0f;
+            velocity_y[i + j]    = 0.0f;
+            smoke_density[i + j] = 0.0f;
+            force_x[i + j]       = 0.0f;
+            force_y[i + j]       = 0.0f;
         }
     }
 }
@@ -33,6 +43,7 @@ Simulation::Simulation()
 
 void Simulation::FFT(int direction, void *vx)
 {
+
     if (direction == 1)
     {
         rfftwnd_one_real_to_complex(plan_rc, (fftw_real *)vx, (fftw_complex *)vx);
@@ -106,10 +117,9 @@ void Simulation::compute_next_step()
         }
     }
 
-    FFT(1, &old_state.velocity_x);
-    FFT(1, &old_state.velocity_y);
+    FFT(1, old_state.velocity_x);
+    FFT(1, old_state.velocity_y);
 
-    std::cout << old_state.velocity_x[1] << std::endl;
     for (i = 0; i <= Config::GRID_SIZE; i += 2)
     {
         x = 0.5f * i;
@@ -141,8 +151,7 @@ void Simulation::compute_next_step()
     FFT(-1, old_state.velocity_x);
     FFT(-1, old_state.velocity_y);
 
-    Config::frozen = true;
-    f              = 1.0 / (Config::NUM_CELLS);
+    f = 1.0 / (Config::NUM_CELLS);
 
     for (i = 0; i < Config::GRID_SIZE; i++)
     {
