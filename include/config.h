@@ -22,7 +22,7 @@ const int   COLOR_BANDS   = 2;      //
 extern int  scalar_col;             // method for scalar coloring
 extern bool frozen;                 // toggles on/off the animation
                                     //
-extern bool first_draw;             // has GL_Window been initialised?
+extern bool first_draw;             // has GlWindow been initialised?
 } // namespace Config
 
 #endif

@@ -27,3 +27,4 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ColumnLimit: 100
 IndentWidth: 4
 NamespaceIndentation: All
+PointerAlignment: Right

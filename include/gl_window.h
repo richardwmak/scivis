@@ -4,16 +4,23 @@
 #include "config.h"
 #include "controller.h"
 #include "simulation.h"
-#include <FL/Fl_Gl_Window.H>
 #include <FL/glut.H>
 
-class GL_Window : public Fl_Gl_Window
+class Controller;
+class Simulation;
+
+class GlWindow : public Fl_Glut_Window
 {
   public:
-    int    argc;
-    char **argv;
+    int         _argc;
+    char **     _argv;
+    int         X, Y, W, H;
+    const char *L;
 
-    GL_Window(int X, int Y, int W, int H, const char *L);
+    GlWindow(int X, int Y, int W, int H, const char *L);
+
+    void draw();
+    int  handle(int event);
 
     void start_gl_window(Controller *controller, Simulation *simulation, int argc, char **argv);
 };

@@ -7,7 +7,6 @@
 
 SimulationState::SimulationState()
 {
-    std::cout << "in SimulationState constructor";
     for (int i = 0; i < Config::GRID_SIZE; i++)
     {
         for (int j = 0; j < Config::GRID_SIZE; j++)
@@ -23,6 +22,9 @@ SimulationState::SimulationState()
 
 Simulation::Simulation()
 {
+    cur_state = SimulationState();
+    old_state = SimulationState();
+
     plan_rc = rfftw2d_create_plan(
         Config::GRID_SIZE, Config::GRID_SIZE, FFTW_REAL_TO_COMPLEX, FFTW_IN_PLACE);
     plan_cr = rfftw2d_create_plan(
@@ -192,6 +194,5 @@ void Simulation::do_one_simulation_step()
         Simulation::set_forces();
         Simulation::compute_next_step();
         Simulation::diffuse_matter();
-        glutPostRedisplay();
     }
 }

@@ -2,25 +2,27 @@
 #include "config.h"
 #include "gl_window.h"
 #include "simulation.h"
+#include <Fl/glu.h>
 #include <iostream>
 #include <math.h>
 
 Controller::Controller()
 {
     simulation = new Simulation();
-    gl_window  = new GL_Window(0, 0, 500, 500, 0);
+    gl_window  = new GlWindow(0, 0, 500, 500, 0);
     window     = new Fl_Window(600, 600);
 }
 
-void Controller::begin(int argc, char **argv)
+int Controller::begin(int argc, char **argv)
 {
-    gl_window.start_gl_window(this, &simulation, argc, argv);
+    window->begin();
+    gl_window->start_gl_window(this, simulation, argc, argv);
 
     Fl::gl_visual(FL_RGB);
 
-    window.end();
-    window.show(argc, argv);
-    gl_window.show();
+    window->end();
+    window->show(argc, argv);
+    gl_window->show();
 
     return Fl::run();
 }
@@ -79,7 +81,7 @@ void Controller::drag(int mx, int my)
     {
         for (int j = 0; j <= Config::GRID_SIZE; j++)
         {
-            std::cout << GlobalSim::ptr_simulation->cur_state.velocity_x[i + j];
+            std::cout << simulation->cur_state.velocity_x[i + j];
             std::cout << ", ";
         }
         std::cout << "\n";
@@ -116,9 +118,9 @@ void Controller::drag(int mx, int my)
         dx *= 0.1 / len;
         dy *= 0.1 / len;
     }
-    GlobalSim::ptr_simulation->cur_state.force_x[Y * Config::GRID_SIZE + X] += dx;
-    GlobalSim::ptr_simulation->cur_state.force_y[Y * Config::GRID_SIZE + X] += dy;
-    GlobalSim::ptr_simulation->cur_state.smoke_density[Y * Config::GRID_SIZE + X] = 10.0f;
+    simulation->cur_state.force_x[Y * Config::GRID_SIZE + X] += dx;
+    simulation->cur_state.force_y[Y * Config::GRID_SIZE + X] += dy;
+    simulation->cur_state.smoke_density[Y * Config::GRID_SIZE + X] = 10.0f;
 
     lmx = mx;
     lmy = my;
@@ -150,14 +152,14 @@ void Controller::set_colormap(float vy)
     if (Config::scalar_col == Config::COLOR_BLACKWHITE)
         R = G = B = vy;
     else if (Config::scalar_col == Config::COLOR_RAINBOW)
-        GL_Window::rainbow(vy, &R, &G, &B);
+        rainbow(vy, &R, &G, &B);
     else if (Config::scalar_col == Config::COLOR_BANDS)
     {
         const int NLEVELS = 7;
         vy *= NLEVELS;
         vy = (int)(vy);
         vy /= NLEVELS;
-        GL_Window::rainbow(vy, &R, &G, &B);
+        rainbow(vy, &R, &G, &B);
     }
 
     glColor3f(R, G, B);
@@ -220,9 +222,9 @@ void Controller::visualize()
             px  = wn + (fftw_real)i * wn;
             py  = hn + (fftw_real)j * hn;
             idx = (j * Config::GRID_SIZE) + i;
-            glColor3f(simulation.cur_state.smoke_density[idx],
-                      simulation.cur_state.smoke_density[idx],
-                      simulation.cur_state.smoke_density[idx]);
+            glColor3f(simulation->cur_state.smoke_density[idx],
+                      simulation->cur_state.smoke_density[idx],
+                      simulation->cur_state.smoke_density[idx]);
             glVertex2f(px, py);
 
             for (i = 0; i < Config::GRID_SIZE - 1; i++)
@@ -230,19 +232,19 @@ void Controller::visualize()
                 px  = wn + (fftw_real)i * wn;
                 py  = hn + (fftw_real)(j + 1) * hn;
                 idx = ((j + 1) * Config::GRID_SIZE) + i;
-                set_colormap(simulation.cur_state.smoke_density[idx]);
+                set_colormap(simulation->cur_state.smoke_density[idx]);
                 glVertex2f(px, py);
                 px  = wn + (fftw_real)(i + 1) * wn;
                 py  = hn + (fftw_real)j * hn;
                 idx = (j * Config::GRID_SIZE) + (i + 1);
-                set_colormap(simulation.cur_state.smoke_density[idx]);
+                set_colormap(simulation->cur_state.smoke_density[idx]);
                 glVertex2f(px, py);
             }
 
             px  = wn + (fftw_real)(Config::GRID_SIZE - 1) * wn;
             py  = hn + (fftw_real)(j + 1) * hn;
             idx = ((j + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
-            set_colormap(simulation.cur_state.smoke_density[idx]);
+            set_colormap(simulation->cur_state.smoke_density[idx]);
             glVertex2f(px, py);
             glEnd();
         }
@@ -255,14 +257,14 @@ void Controller::visualize()
             for (j = 0; j < Config::GRID_SIZE; j++)
             {
                 idx = (j * Config::GRID_SIZE) + i;
-                direction_to_color(simulation.cur_state.velocity_x[idx],
-                                   simulation.cur_state.velocity_y[idx],
+                direction_to_color(simulation->cur_state.velocity_x[idx],
+                                   simulation->cur_state.velocity_y[idx],
                                    Config::color_dir);
                 glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
                 glVertex2f((wn + (fftw_real)i * wn) +
-                               Config::vec_scale * simulation.cur_state.velocity_x[idx],
+                               Config::vec_scale * simulation->cur_state.velocity_x[idx],
                            (hn + (fftw_real)j * hn) +
-                               Config::vec_scale * simulation.cur_state.velocity_y[idx]);
+                               Config::vec_scale * simulation->cur_state.velocity_y[idx]);
             }
         glEnd();
     }
@@ -288,3 +290,29 @@ void Controller::reshape(int w, int h)
     Config::win_width  = w;
     Config::win_height = h;
 }
+
+namespace Tramp
+{
+    Controller *glob_controller = new Controller();
+
+    void t_display()
+    {
+        return glob_controller->display();
+    }
+    void t_reshape(int w, int h)
+    {
+        return glob_controller->reshape(w, h);
+    }
+    void t_do_one()
+    {
+        return glob_controller->simulation->do_one_simulation_step();
+    }
+    void t_keyboard(uchar key, int x, int y)
+    {
+        return glob_controller->keyboard(key, x, y);
+    }
+    void t_drag(int x, int y)
+    {
+        return glob_controller->drag(x, y);
+    }
+} // namespace Tramp

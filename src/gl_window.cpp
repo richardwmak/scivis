@@ -3,25 +3,47 @@
 #include "gl_window.h"
 #include "controller.h"
 #include "simulation.h"
-#include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
 #include <FL/glut.H>
+#include <iostream>
 
-GL_Window::GL_Window(int X, int Y, int W, int H, const char *L) : X(X), Y(Y), W(W), H(H), L(L) {}
-
-GL_Window::start_gl_window(controller, simulation, argc, argv)
+GlWindow::GlWindow(int X, int Y, int W, int H, const char *L) : Fl_Glut_Window(X, Y, W, H, L)
 {
-    Fl_Gl_Window(X, Y, W, H, L);
+    reshape = Tramp::t_reshape;
+}
+void GlWindow::start_gl_window(Controller *controller,
+                               Simulation *simulation,
+                               int         argc,
+                               char **     argv)
+{
+    _argc = argc;
+    _argv = argv;
+    glutIdleFunc(Tramp::t_do_one);
+}
 
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    glutInitWindowSize(500, 500);
-    glutCreateWindow("Real-time smoke simulation and visualization");
-    glutDisplayFunc(controller->display);
-    glutReshapeFunc(controller->reshape);
-    glutIdleFunc(simulation->do_one_simulation_step);
-    glutKeyboardFunc(controller->keyboard);
-    glutMotionFunc(controller->drag);
+void GlWindow::draw()
+{
+    if (!valid())
+    {
+        valid(1);
+        glutInit(&_argc, _argv);
+        glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+        glutInitWindowSize(500, 500);
+    }
+    glutDisplayFunc(Tramp::t_display);
+}
 
-    glutMainLoop();
+int GlWindow::handle(int event)
+{
+    switch (event)
+    {
+    case FL_DRAG:
+        glutMotionFunc(Tramp::t_drag);
+        return 1;
+    case FL_KEYBOARD:
+        glutKeyboardFunc(Tramp::t_keyboard);
+        return 1;
+    default:
+        return 1;
+    }
 }
