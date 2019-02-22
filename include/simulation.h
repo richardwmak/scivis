@@ -35,9 +35,8 @@ class Simulation
     rfftwnd_plan plan_rc, plan_cr; // necessary for fftw to do FFT
 
     Simulation();
-    void fft_r_to_c(void *dataset);
 
-    void fft_c_to_r(void *dataset);
+    void FFT(int direction, void *vx);
 
     int clamp(float x);
 

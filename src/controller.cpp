@@ -2,9 +2,25 @@
 #include "config.h"
 #include "gl_window.h"
 #include "simulation.h"
+#include <Fl/Fl.H>
+#include <Fl/gl.h>
 #include <Fl/glu.h>
 #include <iostream>
 #include <math.h>
+
+// https://web.cecs.pdx.edu/~fliu/courses/cs447/tutorial5.html
+void idle_callback_sim(void *ptr_data)
+{
+    if (ptr_data != NULL)
+    {
+        GlWindow *ptr_gl_window = reinterpret_cast<GlWindow *>(ptr_data);
+        if (!Config::frozen)
+        {
+            ptr_gl_window->ptr_simulation->do_one_simulation_step();
+            ptr_gl_window->redraw();
+        }
+    }
+}
 
 Controller::Controller()
 {
@@ -15,19 +31,19 @@ Controller::Controller()
 
 int Controller::begin(int argc, char **argv)
 {
+    Fl::gl_visual(FL_RGB);
+    window->show(argc, argv);
     window->begin();
     gl_window->start_gl_window(this, simulation, argc, argv);
+    Fl::add_idle(idle_callback_sim, gl_window);
 
-    Fl::gl_visual(FL_RGB);
-
-    window->end();
-    window->show(argc, argv);
     gl_window->show();
+    window->end();
 
     return Fl::run();
 }
 
-void Controller::keyboard(unsigned char key, int x, int y)
+void Controller::keyboard(unsigned char key)
 {
     switch (key)
     {
@@ -77,15 +93,6 @@ void Controller::keyboard(unsigned char key, int x, int y)
 
 void Controller::drag(int mx, int my)
 {
-    for (int i = 0; i <= Config::GRID_SIZE; i++)
-    {
-        for (int j = 0; j <= Config::GRID_SIZE; j++)
-        {
-            std::cout << simulation->cur_state.velocity_x[i + j];
-            std::cout << ", ";
-        }
-        std::cout << "\n";
-    }
     int        xi, yi, X, Y;
     double     dx, dy, len;
     static int lmx = 0, lmy = 0; // remembers last mouse location
@@ -277,7 +284,6 @@ void Controller::display()
     glLoadIdentity();
     visualize();
     glFlush();
-    glutSwapBuffers();
 }
 
 // http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
@@ -307,9 +313,9 @@ namespace Tramp
     {
         return glob_controller->simulation->do_one_simulation_step();
     }
-    void t_keyboard(uchar key, int x, int y)
+    void t_keyboard(uchar key)
     {
-        return glob_controller->keyboard(key, x, y);
+        return glob_controller->keyboard(key);
     }
     void t_drag(int x, int y)
     {

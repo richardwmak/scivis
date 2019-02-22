@@ -3,14 +3,13 @@
 #include "gl_window.h"
 #include "controller.h"
 #include "simulation.h"
-#include <FL/gl.h>
-#include <FL/glut.H>
+#include <Fl/Fl.H>
+#include <Fl/Fl_Gl_Window.H>
+#include <Fl/gl.h>
 #include <iostream>
 
-GlWindow::GlWindow(int X, int Y, int W, int H, const char *L) : Fl_Glut_Window(X, Y, W, H, L)
-{
-    reshape = Tramp::t_reshape;
-}
+GlWindow::GlWindow(int X, int Y, int W, int H, const char *L) : Fl_Gl_Window(X, Y, W, H, L) {}
+
 void GlWindow::start_gl_window(Controller *controller,
                                Simulation *simulation,
                                int         argc,
@@ -18,19 +17,18 @@ void GlWindow::start_gl_window(Controller *controller,
 {
     _argc = argc;
     _argv = argv;
-    glutIdleFunc(Tramp::t_do_one);
+
+    ptr_controller = controller;
+    ptr_simulation = simulation;
 }
 
 void GlWindow::draw()
 {
-    if (!valid())
-    {
-        valid(1);
-        glutInit(&_argc, _argv);
-        glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-        glutInitWindowSize(500, 500);
-    }
-    glutDisplayFunc(Tramp::t_display);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    ptr_controller->visualize();
+    glFlush();
 }
 
 int GlWindow::handle(int event)
@@ -38,10 +36,10 @@ int GlWindow::handle(int event)
     switch (event)
     {
     case FL_DRAG:
-        glutMotionFunc(Tramp::t_drag);
+        ptr_controller->drag(Fl::event_x(), Fl::event_y());
         return 1;
     case FL_KEYBOARD:
-        glutKeyboardFunc(Tramp::t_keyboard);
+        ptr_controller->keyboard((char)Fl::event_key());
         return 1;
     default:
         return 1;

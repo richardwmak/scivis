@@ -12,7 +12,7 @@ class Controller
   public:
     Controller();
 
-    void keyboard(unsigned char key, int x, int y);
+    void keyboard(unsigned char key);
     void drag(int mx, int my);
 
     void rainbow(float value, float *R, float *G, float *B);
