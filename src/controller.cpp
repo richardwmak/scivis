@@ -87,6 +87,16 @@ void Controller::keyboard(unsigned char key)
     case 'a':
         Config::frozen ? Config::frozen = false : Config::frozen = true;
         break;
+    case 'o':
+        for (int i = 0; i < Config::GRID_SIZE; i++)
+        {
+            for (int j = 0; j < Config::GRID_SIZE; j++)
+            {
+                std::cout << simulation->cur_state.velocity_x[i + j] << ", ";
+            }
+            std::cout << std::endl;
+        }
+        break;
     case 'q':
         exit(0);
     }
@@ -305,29 +315,3 @@ void Controller::reshape(int w, int h)
     Config::win_width  = w;
     Config::win_height = h;
 }
-
-namespace Tramp
-{
-    Controller *glob_controller = new Controller();
-
-    void t_display()
-    {
-        return glob_controller->display();
-    }
-    void t_reshape(int w, int h)
-    {
-        return glob_controller->reshape(w, h);
-    }
-    void t_do_one()
-    {
-        return glob_controller->simulation->do_one_simulation_step();
-    }
-    void t_keyboard(uchar key)
-    {
-        return glob_controller->keyboard(key);
-    }
-    void t_drag(int x, int y)
-    {
-        return glob_controller->drag(x, y);
-    }
-} // namespace Tramp

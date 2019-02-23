@@ -3,6 +3,8 @@
 
 int main(int argc, char **argv)
 {
-    Tramp::glob_controller->begin(argc, argv);
+    Controller *controller = new Controller();
+    controller->begin(argc, argv);
+
     return 0;
 }

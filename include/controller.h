@@ -36,15 +36,4 @@ class Controller
     Fl_Window *window;
 };
 
-namespace Tramp
-{
-    extern Controller *glob_controller;
-
-    extern void t_display();
-    extern void t_reshape(int, int);
-    extern void t_do_one();
-    extern void t_keyboard(uchar, int, int);
-    extern void t_drag(int, int);
-} // namespace Tramp
-
 #endif
