@@ -42,7 +42,6 @@ void GlWindow::start_gl_window(Controller *controller,
 
 void GlWindow::draw()
 {
-    // glViewport(0, 0, Config::win_width, Config::win_height);
     glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -66,6 +65,7 @@ int GlWindow::handle(int event)
         ptr_controller->drag(Fl::event_x(), Fl::event_y());
         return 1;
     case FL_KEYBOARD:
+        // Fl::event_key() ignores capitalisation, so we manually capitalise
         unsigned char key;
         if (Fl::event_shift() == 0)
         {

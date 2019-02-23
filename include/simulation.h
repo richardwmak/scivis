@@ -26,6 +26,9 @@ class SimulationState
     SimulationState();
 };
 
+// this is the class that handles the entirety of the actual simulation it stores the data in
+// cur_state and old_state and upon running do_one_simulation_step() will compute the next timestep
+// in the simulation
 class Simulation
 {
   public:

@@ -317,6 +317,7 @@ void Controller::display()
 }
 
 // http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
+// todo: implement
 void Controller::reshape(int w, int h)
 {
     glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
