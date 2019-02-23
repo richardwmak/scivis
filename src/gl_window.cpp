@@ -6,9 +6,14 @@
 #include <Fl/Fl.H>
 #include <Fl/Fl_Gl_Window.H>
 #include <Fl/gl.h>
+#include <Fl/glu.h>
 #include <iostream>
 
-GlWindow::GlWindow(int X, int Y, int W, int H, const char *L) : Fl_Gl_Window(X, Y, W, H, L) {}
+GlWindow::GlWindow(int X, int Y, int W, int H, const char *L) : Fl_Gl_Window(X, Y, W, H, L)
+{
+    Config::win_height = H;
+    Config::win_width  = W;
+}
 
 void GlWindow::start_gl_window(Controller *controller,
                                Simulation *simulation,
@@ -37,6 +42,12 @@ void GlWindow::start_gl_window(Controller *controller,
 
 void GlWindow::draw()
 {
+    // glViewport(0, 0, Config::win_width, Config::win_height);
+    glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -49,10 +60,23 @@ int GlWindow::handle(int event)
     switch (event)
     {
     case FL_DRAG:
+        // for the OpenGL drawing the viewport starts in the lower left
+        // Fl::event_x() is zero in the left, but
+        // Fl::event_y() is zero at the top
         ptr_controller->drag(Fl::event_x(), Fl::event_y());
         return 1;
     case FL_KEYBOARD:
-        ptr_controller->keyboard((char)Fl::event_key());
+        unsigned char key;
+        if (Fl::event_shift() == 0)
+        {
+            key = Fl::event_key();
+        }
+        else
+        {
+            key = Fl::event_key() - 32;
+        }
+
+        ptr_controller->keyboard((char)key);
         return 1;
     default:
         return 1;

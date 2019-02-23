@@ -26,21 +26,17 @@ Controller::Controller()
 {
     simulation = new Simulation();
     gl_window  = new GlWindow(0, 0, 500, 500, 0);
-    window     = new Fl_Window(600, 600);
 }
 
 // http://webcache.googleusercontent.com/search?q=cache:MsCYe9ordKkJ:www.fltk.org/strfiles/2590/glut_with_fltk2.cxx
 int Controller::begin(int argc, char **argv)
 {
     Fl::gl_visual(FL_RGB);
-    window->show(argc, argv);
-    window->begin();
     gl_window->start_gl_window(this, simulation, argc, argv);
-    Fl::add_idle(idle_callback_sim, gl_window);
-
+    gl_window->end();
     gl_window->show();
-    window->end();
 
+    Fl::add_idle(idle_callback_sim, gl_window);
     return Fl::run();
 }
 
@@ -72,30 +68,26 @@ void Controller::keyboard(unsigned char key)
     case 'x':
         Config::draw_smoke = 1 - Config::draw_smoke;
         if (Config::draw_smoke == 0)
+        {
             Config::draw_vecs = 1;
+        }
         break;
     case 'y':
         Config::draw_vecs = 1 - Config::draw_vecs;
         if (Config::draw_vecs == 0)
+        {
             Config::draw_smoke = 1;
+        }
         break;
     case 'm':
         Config::scalar_col++;
         if (Config::scalar_col > Config::COLOR_BANDS)
+        {
             Config::scalar_col = Config::COLOR_BLACKWHITE;
+        }
         break;
     case 'a':
         Config::frozen ? Config::frozen = false : Config::frozen = true;
-        break;
-    case 'o':
-        for (int i = 0; i < Config::GRID_SIZE; i++)
-        {
-            for (int j = 0; j < Config::GRID_SIZE; j++)
-            {
-                std::cout << simulation->cur_state.velocity_x[i + j] << ", ";
-            }
-            std::cout << std::endl;
-        }
         break;
     case 'q':
         exit(0);
@@ -237,6 +229,9 @@ void Controller::visualize()
     fftw_real hn =
         (fftw_real)Config::win_height / (fftw_real)(Config::GRID_SIZE + 1); // Grid cell heigh
 
+    // https://www.fltk.org/doc-1.3/opengl.html
+    // for double buffered windows we need the following:
+
     if (Config::draw_smoke)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -280,6 +275,7 @@ void Controller::visualize()
     {
         glBegin(GL_LINES); // draw velocities
         for (i = 0; i < Config::GRID_SIZE; i++)
+        {
             for (j = 0; j < Config::GRID_SIZE; j++)
             {
                 idx = (j * Config::GRID_SIZE) + i;
@@ -287,22 +283,37 @@ void Controller::visualize()
                                    simulation->cur_state.velocity_y[idx],
                                    Config::color_dir);
                 glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
+
                 glVertex2f((wn + (fftw_real)i * wn) +
                                Config::vec_scale * simulation->cur_state.velocity_x[idx],
                            (hn + (fftw_real)j * hn) +
                                Config::vec_scale * simulation->cur_state.velocity_y[idx]);
+                // if (i == 0 && j == 0)
+                // {
+                //     std::cout << wn + (fftw_real)i * wn << ", " << hn + (fftw_real)j * hn
+                //               << std::endl;
+                //     std::cout << (wn + (fftw_real)i * wn) +
+                //                      Config::vec_scale * simulation->cur_state.velocity_x[idx]
+                //               << ", "
+                //               << (hn + (fftw_real)j * hn) +
+                //                      Config::vec_scale * simulation->cur_state.velocity_y[idx]
+                //               << std::endl;
+                // }
             }
+        }
         glEnd();
     }
 }
 
 void Controller::display()
 {
+    glDrawBuffer(GL_FRONT_AND_BACK);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     visualize();
     glFlush();
+    glDrawBuffer(GL_BACK);
 }
 
 // http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
