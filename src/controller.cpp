@@ -288,17 +288,6 @@ void Controller::visualize()
                                Config::vec_scale * simulation->cur_state.velocity_x[idx],
                            (hn + (fftw_real)j * hn) +
                                Config::vec_scale * simulation->cur_state.velocity_y[idx]);
-                // if (i == 0 && j == 0)
-                // {
-                //     std::cout << wn + (fftw_real)i * wn << ", " << hn + (fftw_real)j * hn
-                //               << std::endl;
-                //     std::cout << (wn + (fftw_real)i * wn) +
-                //                      Config::vec_scale * simulation->cur_state.velocity_x[idx]
-                //               << ", "
-                //               << (hn + (fftw_real)j * hn) +
-                //                      Config::vec_scale * simulation->cur_state.velocity_y[idx]
-                //               << std::endl;
-                // }
             }
         }
         glEnd();
