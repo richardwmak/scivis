@@ -5,10 +5,10 @@ namespace Config
     double time_step = 0.4;
     float  visc      = 0.001;
     int    win_width, win_height;
-    int    color_dir  = 0;
+    bool   color_dir  = false;
     float  vec_scale  = 1000;
-    int    draw_smoke = 0;
-    int    draw_vecs  = 1;
+    bool   draw_smoke = false;
+    bool   draw_vecs  = true;
     int    scalar_col = 0;
-    int    frozen     = 0;
+    bool   frozen     = false;
 } // namespace Config

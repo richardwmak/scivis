@@ -9,33 +9,14 @@
 #include <Fl/glu.h>
 #include <iostream>
 
-GlWindow::GlWindow(int X, int Y, int W, int H, const char *L) : Fl_Gl_Window(X, Y, W, H, L)
+GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
 {
     Config::win_height = H;
     Config::win_width  = W;
 }
 
-void GlWindow::start_gl_window(Controller *controller,
-                               Simulation *simulation,
-                               int         argc,
-                               char **     argv)
+void GlWindow::start_gl_window(Controller *controller, Simulation *simulation)
 {
-    printf("Fluid Flow Simulation and Visualization\n");
-    printf("=======================================\n");
-    printf("Click and drag the mouse to steer the flow!\n");
-    printf("T/t:   increase/decrease simulation timestep\n");
-    printf("S/s:   increase/decrease hedgehog scaling\n");
-    printf("c:     toggle direction coloring on/off\n");
-    printf("V/v:   increase decrease fluid viscosity\n");
-    printf("x:     toggle drawing matter on/off\n");
-    printf("y:     toggle drawing hedgehogs on/off\n");
-    printf("m:     toggle thru scalar coloring\n");
-    printf("a:     toggle the animation on/off\n");
-    printf("q:     quit\n\n");
-
-    _argc = argc;
-    _argv = argv;
-
     ptr_controller = controller;
     ptr_simulation = simulation;
 }

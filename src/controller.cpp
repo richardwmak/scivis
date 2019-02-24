@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "config.h"
-#include "gl_window.h"
 #include "simulation.h"
+#include "ui.h"
 #include <Fl/Fl.H>
 #include <Fl/gl.h>
 #include <Fl/glu.h>
@@ -25,18 +25,19 @@ void idle_callback_sim(void *ptr_data)
 Controller::Controller()
 {
     simulation = new Simulation();
-    gl_window  = new GlWindow(0, 0, 500, 500, 0);
+    window     = new UserInterface();
 }
 
 // http://webcache.googleusercontent.com/search?q=cache:MsCYe9ordKkJ:www.fltk.org/strfiles/2590/glut_with_fltk2.cxx
-int Controller::begin(int argc, char **argv)
+int Controller::begin()
 {
     Fl::gl_visual(FL_RGB);
-    gl_window->start_gl_window(this, simulation, argc, argv);
-    gl_window->end();
-    gl_window->show();
+    window->make_window();
+    window->gl_window->start_gl_window(this, simulation);
+    window->show();
+    window->gl_window->show();
 
-    Fl::add_idle(idle_callback_sim, gl_window);
+    Fl::add_idle(idle_callback_sim, window->gl_window);
     return Fl::run();
 }
 
@@ -51,7 +52,7 @@ void Controller::keyboard(unsigned char key)
         Config::time_step += 0.001;
         break;
     case 'c':
-        Config::color_dir = 1 - Config::color_dir;
+        Config::color_dir ? Config::color_dir = false : Config::color_dir = true;
         break;
     case 'S':
         Config::vec_scale *= 1.2;
@@ -66,17 +67,25 @@ void Controller::keyboard(unsigned char key)
         Config::visc *= 0.2;
         break;
     case 'x':
-        Config::draw_smoke = 1 - Config::draw_smoke;
-        if (Config::draw_smoke == 0)
+        if (Config::draw_smoke)
         {
-            Config::draw_vecs = 1;
+            Config::draw_smoke = false;
+            Config::draw_vecs  = true;
+        }
+        else
+        {
+            Config::draw_smoke = true;
         }
         break;
     case 'y':
-        Config::draw_vecs = 1 - Config::draw_vecs;
-        if (Config::draw_vecs == 0)
+        if (Config::draw_vecs)
         {
-            Config::draw_smoke = 1;
+            Config::draw_vecs  = false;
+            Config::draw_smoke = true;
+        }
+        else
+        {
+            Config::draw_vecs = true;
         }
         break;
     case 'm':
@@ -183,7 +192,7 @@ void Controller::set_colormap(float vy)
     glColor3f(R, G, B);
 }
 
-void Controller::direction_to_color(float x, float y, int method)
+void Controller::direction_to_color(float x, float y, bool method)
 {
     float r, g, b, f;
     if (method)

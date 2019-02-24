@@ -4,7 +4,7 @@
 int main(int argc, char **argv)
 {
     Controller *controller = new Controller();
-    controller->begin(argc, argv);
+    controller->begin();
 
     return 0;
 }

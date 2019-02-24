@@ -3,9 +3,11 @@
 
 #include "gl_window.h"
 #include "simulation.h"
+#include "ui.h"
 #include <Fl/Fl_Window.H>
 
 class GlWindow;
+class UserInterface;
 
 class Controller
 {
@@ -19,7 +21,7 @@ class Controller
     // various functions that visualize() uses to draw
     void rainbow(float value, float *R, float *G, float *B);
     void set_colormap(float vy);
-    void direction_to_color(float x, float y, int method);
+    void direction_to_color(float x, float y, bool method);
 
     // take the information we have and actually use OpenGL to draw it
     void visualize(void);
@@ -28,13 +30,13 @@ class Controller
     // this is currently not used, but should implement window resizing
     void reshape(int w, int h);
 
-    int begin(int argc, char **argv);
+    int begin();
 
     Simulation *simulation;
 
   private:
-    GlWindow * gl_window;
-    Fl_Window *window;
+    GlWindow *     gl_window;
+    UserInterface *window;
 };
 
 #endif

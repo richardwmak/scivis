@@ -1,0 +1,99 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0304
+header_name {.h}
+code_name {.cpp}
+decl {class GlWindow;} {public global
+}
+
+class UserInterface {open
+} {
+  Function {make_window()} {open
+  } {
+    Fl_Window main_window {
+      label Smoke open
+      xywh {1186 694 800 500} type Double
+      code0 {\#include "config.h"} visible
+    } {
+      Fl_Box gl_window {
+        xywh {0 0 500 500} labeltype NO_LABEL
+        code0 {\#include "gl_window.h"}
+        class GlWindow
+      }
+      Fl_Box separator {
+        label separator
+        xywh {500 0 10 500} box FLAT_BOX color 44 labeltype NO_LABEL
+      }
+      Fl_Box color_map {
+        xywh {515 50 40 400}
+      }
+      Fl_Box text_toggle {
+        label Toggle
+        xywh {570 30 200 20} labelfont 1
+      }
+      Fl_Button toggle_dir_color {
+        label {Toggle direction colour}
+        callback {Config::color_dir ? Config::color_dir = false : Config::color_dir = true;}
+        xywh {570 110 200 20}
+      }
+      Fl_Button toggle_draw_smoke {
+        label {Toggle smoke}
+        callback {if (Config::draw_smoke)
+        {
+            Config::draw_smoke = false;
+            Config::draw_vecs  = true;
+        }
+        else
+        {
+            Config::draw_smoke = true;
+        }}
+        xywh {570 70 200 20}
+      }
+      Fl_Button toggle_draw_vecs {
+        label {Toggle vectors}
+        callback {if (Config::draw_vecs)
+        {
+            Config::draw_vecs  = false;
+            Config::draw_smoke = true;
+        }
+        else
+        {
+            Config::draw_vecs = true;
+        }}
+        xywh {570 90 200 20}
+      }
+      Fl_Button toggle_frozen {
+        label {Toggle play}
+        callback {Config::frozen ? Config::frozen = false : Config::frozen = true;}
+        xywh {570 50 200 20}
+      }
+      Fl_Box text_scalar_col {
+        label {Color mapping}
+        xywh {570 150 200 20} labelfont 1
+      }
+      Fl_Choice menu_color_map {
+        callback {*(o->mvalue())->callback();}
+        comment {*(o->mvalue())->callback() gives us the menu item callback} open
+        xywh {570 170 200 20} down_box BORDER_BOX
+      } {
+        MenuItem option_black_white {
+          label {Black and white}
+          callback {Config::scalar_col = Config::COLOR_BLACKWHITE;}
+          xywh {0 0 36 21}
+        }
+        MenuItem option_rainbow {
+          label Rainbow
+          callback {Config::scalar_col = Config::COLOR_RAINBOW;}
+          xywh {0 0 36 21}
+        }
+        MenuItem option_bands {
+          label Banded
+          callback {Config::scalar_col = Config::COLOR_BANDS;}
+          xywh {0 0 36 21}
+        }
+      }
+    }
+  }
+  Function {show()} {} {
+    code {main_window->show();} {}
+  }
+}

@@ -2,8 +2,8 @@ CXX		  := g++
 CXX_FLAGS := -Wall -Wextra -Wpedantic -std=c++17 -ggdb
 
 BIN		:= bin
-SRC		:= src
-INCLUDE	:= /usr/local/include /usr/include include
+SRC		:= src ui
+INCLUDE	:= /usr/local/include /usr/include include ui
 LIB		:= /usr/local/lib
 
 LIBRARIES	:= -lrfftw -lfftw $(shell fltk-config --use-gl --ldstaticflags)
@@ -56,7 +56,7 @@ all: $(BIN)/$(EXECUTABLE)
 run: clean all
 	./$(BIN)/$(EXECUTABLE)
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
+$(BIN)/$(EXECUTABLE): $(foreach d, $(SRC), $d/*.cpp)
 	$(CXX) $(CXX_FLAGS) $(foreach d, $(INCLUDE), -I$d) -L$(LIB) $^ -o $@ $(LIBRARIES)
 
 clean:
