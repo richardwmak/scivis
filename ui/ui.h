@@ -61,6 +61,40 @@ private:
   inline void cb_option_bands_i(Fl_Menu_*, void*);
   static void cb_option_bands(Fl_Menu_*, void*);
 public:
+  Fl_Box *text_increase_decrease;
+  Fl_Button *btn_decrease_time_step;
+private:
+  inline void cb_btn_decrease_time_step_i(Fl_Button*, void*);
+  static void cb_btn_decrease_time_step(Fl_Button*, void*);
+public:
+  Fl_Box *text_time_step;
+  Fl_Button *btn_increase_time_step;
+private:
+  inline void cb_btn_increase_time_step_i(Fl_Button*, void*);
+  static void cb_btn_increase_time_step(Fl_Button*, void*);
+public:
+  Fl_Button *btn_decrease_visc;
+private:
+  inline void cb_btn_decrease_visc_i(Fl_Button*, void*);
+  static void cb_btn_decrease_visc(Fl_Button*, void*);
+public:
+  Fl_Box *text_viscosity;
+  Fl_Button *btn_increase_visc;
+private:
+  inline void cb_btn_increase_visc_i(Fl_Button*, void*);
+  static void cb_btn_increase_visc(Fl_Button*, void*);
+public:
+  Fl_Button *btn_decrease_vec_scale;
+private:
+  inline void cb_btn_decrease_vec_scale_i(Fl_Button*, void*);
+  static void cb_btn_decrease_vec_scale(Fl_Button*, void*);
+public:
+  Fl_Box *text_vec_scale;
+  Fl_Button *btn_increase_vec_scale;
+private:
+  inline void cb_btn_increase_vec_scale_i(Fl_Button*, void*);
+  static void cb_btn_increase_vec_scale(Fl_Button*, void*);
+public:
   void show();
 };
 #endif

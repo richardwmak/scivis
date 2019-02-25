@@ -10,8 +10,8 @@ class UserInterface {open
   Function {make_window()} {open
   } {
     Fl_Window main_window {
-      label Smoke open
-      xywh {1186 694 800 500} type Double
+      label Smoke open selected
+      xywh {750 425 900 500} type Double
       code0 {\#include "config.h"} visible
     } {
       Fl_Box gl_window {
@@ -24,16 +24,16 @@ class UserInterface {open
         xywh {500 0 10 500} box FLAT_BOX color 44 labeltype NO_LABEL
       }
       Fl_Box color_map {
-        xywh {515 50 40 400}
+        xywh {515 50 40 400} box ENGRAVED_BOX align 16
       }
       Fl_Box text_toggle {
         label Toggle
-        xywh {570 30 200 20} labelfont 1
+        xywh {640 30 200 20} labelfont 1
       }
       Fl_Button toggle_dir_color {
         label {Toggle direction colour}
         callback {Config::color_dir ? Config::color_dir = false : Config::color_dir = true;}
-        xywh {570 110 200 20}
+        xywh {640 110 200 20}
       }
       Fl_Button toggle_draw_smoke {
         label {Toggle smoke}
@@ -46,7 +46,7 @@ class UserInterface {open
         {
             Config::draw_smoke = true;
         }}
-        xywh {570 70 200 20}
+        xywh {640 70 200 20}
       }
       Fl_Button toggle_draw_vecs {
         label {Toggle vectors}
@@ -59,21 +59,21 @@ class UserInterface {open
         {
             Config::draw_vecs = true;
         }}
-        xywh {570 90 200 20}
+        xywh {640 90 200 20}
       }
       Fl_Button toggle_frozen {
         label {Toggle play}
         callback {Config::frozen ? Config::frozen = false : Config::frozen = true;}
-        xywh {570 50 200 20}
+        xywh {640 50 200 20}
       }
       Fl_Box text_scalar_col {
         label {Color mapping}
-        xywh {570 150 200 20} labelfont 1
+        xywh {640 150 200 20} labelfont 1
       }
       Fl_Choice menu_color_map {
         callback {*(o->mvalue())->callback();}
         comment {*(o->mvalue())->callback() gives us the menu item callback} open
-        xywh {570 170 200 20} down_box BORDER_BOX
+        xywh {640 170 200 20} down_box BORDER_BOX
       } {
         MenuItem option_black_white {
           label {Black and white}
@@ -90,6 +90,52 @@ class UserInterface {open
           callback {Config::scalar_col = Config::COLOR_BANDS;}
           xywh {0 0 36 21}
         }
+      }
+      Fl_Box text_increase_decrease {
+        label {Increase/decrease values}
+        xywh {640 210 200 16} labelfont 1
+      }
+      Fl_Button btn_decrease_time_step {
+        label {-}
+        callback {Config::time_step -= 0.001;}
+        xywh {640 225 50 20}
+      }
+      Fl_Box text_time_step {
+        label {Time step}
+        xywh {640 225 100 20}
+      }
+      Fl_Button btn_increase_time_step {
+        label {+}
+        callback {Config::time_step += 0.001;}
+        xywh {640 225 50 20}
+      }
+      Fl_Button btn_decrease_visc {
+        label {-}
+        callback {Config::visc *= 0.2;}
+        xywh {640 245 50 20}
+      }
+      Fl_Box text_viscosity {
+        label Viscosity
+        xywh {640 245 100 20}
+      }
+      Fl_Button btn_increase_visc {
+        label {+}
+        callback {Config::visc *= 5;}
+        xywh {640 245 50 20}
+      }
+      Fl_Button btn_decrease_vec_scale {
+        label {-}
+        callback {Config::vec_scale *=0.8}
+        xywh {640 265 50 20}
+      }
+      Fl_Box text_vec_scale {
+        label {Vector scaling}
+        xywh {640 265 100 20}
+      }
+      Fl_Button btn_increase_vec_scale {
+        label {+}
+        callback {Config::vec_scale *= 1.25;}
+        xywh {640 265 50 20}
       }
     }
   }

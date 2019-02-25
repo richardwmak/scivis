@@ -41,63 +41,12 @@ int Controller::begin()
     return Fl::run();
 }
 
+// most of the handling is done via UI buttons, but we will keep this around in case we want
+// keyboard interaction
 void Controller::keyboard(unsigned char key)
 {
     switch (key)
     {
-    case 't':
-        Config::time_step -= 0.001;
-        break;
-    case 'T':
-        Config::time_step += 0.001;
-        break;
-    case 'c':
-        Config::color_dir ? Config::color_dir = false : Config::color_dir = true;
-        break;
-    case 'S':
-        Config::vec_scale *= 1.2;
-        break;
-    case 's':
-        Config::vec_scale *= 0.8;
-        break;
-    case 'V':
-        Config::visc *= 5;
-        break;
-    case 'v':
-        Config::visc *= 0.2;
-        break;
-    case 'x':
-        if (Config::draw_smoke)
-        {
-            Config::draw_smoke = false;
-            Config::draw_vecs  = true;
-        }
-        else
-        {
-            Config::draw_smoke = true;
-        }
-        break;
-    case 'y':
-        if (Config::draw_vecs)
-        {
-            Config::draw_vecs  = false;
-            Config::draw_smoke = true;
-        }
-        else
-        {
-            Config::draw_vecs = true;
-        }
-        break;
-    case 'm':
-        Config::scalar_col++;
-        if (Config::scalar_col > Config::COLOR_BANDS)
-        {
-            Config::scalar_col = Config::COLOR_BLACKWHITE;
-        }
-        break;
-    case 'a':
-        Config::frozen ? Config::frozen = false : Config::frozen = true;
-        break;
     case 'q':
         exit(0);
     }
