@@ -48,28 +48,28 @@ void ColorBar::draw_rectangle_gradient()
             col_bot[0] = col_bot[1] = col_bot[2] = 1;
             break;
         }
-        case Config::COLOR_RAINBOW:
-        {
-            float   R_top, G_top, B_top;
-            float   R_bot, G_bot, B_bot;
-            GLfloat RGB_top[] = {R_top, G_top, B_top};
-            GLfloat RGB_bot[] = {R_bot, G_bot, B_bot};
+        // case Config::COLOR_RAINBOW:
+        // {
+        //     float R_top, G_top, B_top;
+        //     float R_bot, G_bot, B_bot;
 
-            ptr_controller->rainbow(0.0, &R_top, &G_top, &B_top);
-            ptr_controller->rainbow(1.0, &R_bot, &G_bot, &B_bot);
+        //     ptr_controller->rainbow(0.0, &R_top, &G_top, &B_top);
+        //     ptr_controller->rainbow(1.0, &R_bot, &G_bot, &B_bot);
 
-            for (int i = 0; i < 3; i++)
-            {
-                col_top[i] = RGB_top[i];
-                col_bot[i] = RGB_bot[i];
-            }
-            break;
-        }
+        //     for (int i = 0; i < 3; i++)
+        //     {
+        //         col_top[i] = RGB_top[i];
+        //         col_bot[i] = RGB_bot[i];
+        //     }
+        //     break;
+        // }
         default:
         {
             std::cout << "Something went wrong" << std::endl;
         };
     }
+
+    std::cout << col_top[0] << std::endl;
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_QUADS);

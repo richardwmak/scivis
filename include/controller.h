@@ -20,7 +20,7 @@ class Controller
     void drag(int mx, int my);
 
     // various functions that visualize() uses to draw
-    void rainbow(float value, float *R, float *G, float *B);
+    void rainbow(float value, float RGB[3]);
     void set_colormap(float vy);
     void direction_to_color(float x, float y, bool method);
 

@@ -52,8 +52,8 @@ void Controller::keyboard(unsigned char key)
 {
     switch (key)
     {
-    case 'q':
-        exit(0);
+        case 'q':
+            exit(0);
     }
 }
 
@@ -107,7 +107,7 @@ void Controller::drag(int mx, int my)
     lmy = my;
 }
 
-void Controller::rainbow(float value, float *R, float *G, float *B)
+void Controller::rainbow(float value, float RGB[3])
 {
     const float dx = 0.8;
     if (value < 0)
@@ -121,29 +121,36 @@ void Controller::rainbow(float value, float *R, float *G, float *B)
 
     value = (6 - 2 * dx) * value + dx;
 
-    *R = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
-    *G = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
-    *B = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
+    RGB[0] = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
+    RGB[1] = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
+    RGB[2] = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
 }
 
 void Controller::set_colormap(float vy)
 {
-    float R = 0, G = 0, B = 0;
+    float RGB[3] = {0};
 
     if (Config::scalar_col == Config::COLOR_BLACKWHITE)
-        R = G = B = vy;
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            RGB[i] = vy;
+        }
+    }
     else if (Config::scalar_col == Config::COLOR_RAINBOW)
-        rainbow(vy, &R, &G, &B);
+    {
+        rainbow(vy, RGB);
+    }
     else if (Config::scalar_col == Config::COLOR_BANDS)
     {
         const int NLEVELS = 7;
         vy *= NLEVELS;
         vy = (int)(vy);
         vy /= NLEVELS;
-        rainbow(vy, &R, &G, &B);
+        rainbow(vy, RGB);
     }
 
-    glColor3f(R, G, B);
+    glColor3fv(RGB);
 }
 
 void Controller::direction_to_color(float x, float y, bool method)
@@ -180,7 +187,10 @@ void Controller::direction_to_color(float x, float y, bool method)
     {
         r = g = b = 1;
     }
-    glColor3f(r, g, b);
+
+    float RGB[3] = {r, g, b};
+
+    glColor3fv(RGB);
 }
 
 void Controller::visualize()
