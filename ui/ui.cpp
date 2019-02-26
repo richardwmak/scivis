@@ -48,6 +48,7 @@ void UserInterface::cb_toggle_frozen(Fl_Button* o, void* v) {
 
 void UserInterface::cb_menu_color_map_i(Fl_Choice* o, void*) {
   *(o->mvalue())->callback();
+color_bar->redraw();
 }
 void UserInterface::cb_menu_color_map(Fl_Choice* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_menu_color_map_i(o,v);
@@ -145,10 +146,17 @@ Fl_Double_Window* UserInterface::make_window() {
       separator->color((Fl_Color)44);
       separator->labeltype(FL_NO_LABEL);
     } // Fl_Box* separator
-    { color_map = new Fl_Box(515, 50, 40, 400);
-      color_map->box(FL_ENGRAVED_BOX);
-      color_map->align(Fl_Align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE));
-    } // Fl_Box* color_map
+    { color_bar = new ColorBar(515, 50, 40, 400);
+      color_bar->box(FL_ENGRAVED_BOX);
+      color_bar->color(FL_BACKGROUND_COLOR);
+      color_bar->selection_color(FL_BACKGROUND_COLOR);
+      color_bar->labeltype(FL_NORMAL_LABEL);
+      color_bar->labelfont(0);
+      color_bar->labelsize(14);
+      color_bar->labelcolor(FL_FOREGROUND_COLOR);
+      color_bar->align(Fl_Align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE));
+      color_bar->when(FL_WHEN_RELEASE);
+    } // ColorBar* color_bar
     { text_toggle = new Fl_Box(640, 30, 200, 20, "Toggle");
       text_toggle->labelfont(1);
     } // Fl_Box* text_toggle

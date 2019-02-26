@@ -33,9 +33,14 @@ int Controller::begin()
 {
     Fl::gl_visual(FL_RGB);
     window->make_window();
+    // set up main simulation window
     window->gl_window->start_gl_window(this, simulation);
     window->show();
     window->gl_window->show();
+
+    // initialise the color bar
+    window->color_bar->start_color_bar(this);
+    window->color_bar->show();
 
     Fl::add_idle(idle_callback_sim, window->gl_window);
     return Fl::run();
@@ -187,9 +192,6 @@ void Controller::visualize()
     fftw_real hn =
         (fftw_real)Config::win_height / (fftw_real)(Config::GRID_SIZE + 1); // Grid cell heigh
 
-    // https://www.fltk.org/doc-1.3/opengl.html
-    // for double buffered windows we need the following:
-
     if (Config::draw_smoke)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -250,17 +252,6 @@ void Controller::visualize()
         }
         glEnd();
     }
-}
-
-void Controller::display()
-{
-    glDrawBuffer(GL_FRONT_AND_BACK);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    visualize();
-    glFlush();
-    glDrawBuffer(GL_BACK);
 }
 
 // http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx

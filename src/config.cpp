@@ -11,4 +11,6 @@ namespace Config
     bool   draw_vecs  = true;
     int    scalar_col = 0;
     bool   frozen     = false;
+    bool   gradient   = true;
+    int    num_bands  = 7;
 } // namespace Config

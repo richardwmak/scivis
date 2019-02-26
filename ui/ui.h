@@ -3,13 +3,15 @@
 #ifndef ui_h
 #define ui_h
 #include <FL/Fl.H>
-class GlWindow;
+class GlWindow; class ColorBar;
 #include <FL/Fl_Double_Window.H>
 #include "config.h"
 #include "gl_window.h"
 #include <FL/Fl_Box.H>
+#include "color_bar.h"
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
+#include <iostream>
 
 class UserInterface {
 public:
@@ -17,7 +19,7 @@ public:
   Fl_Double_Window *main_window;
   GlWindow *gl_window;
   Fl_Box *separator;
-  Fl_Box *color_map;
+  ColorBar *color_bar;
   Fl_Box *text_toggle;
   Fl_Button *toggle_dir_color;
 private:

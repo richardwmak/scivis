@@ -2,7 +2,7 @@
 version 1.0304
 header_name {.h}
 code_name {.cpp}
-decl {class GlWindow;} {public global
+decl {class GlWindow; class ColorBar;} {public global
 }
 
 class UserInterface {open
@@ -10,7 +10,7 @@ class UserInterface {open
   Function {make_window()} {open
   } {
     Fl_Window main_window {
-      label Smoke open selected
+      label Smoke open
       xywh {750 425 900 500} type Double
       code0 {\#include "config.h"} visible
     } {
@@ -23,8 +23,10 @@ class UserInterface {open
         label separator
         xywh {500 0 10 500} box FLAT_BOX color 44 labeltype NO_LABEL
       }
-      Fl_Box color_map {
+      Fl_Box color_bar {
         xywh {515 50 40 400} box ENGRAVED_BOX align 16
+        code0 {\#include "color_bar.h"}
+        class ColorBar
       }
       Fl_Box text_toggle {
         label Toggle
@@ -71,9 +73,11 @@ class UserInterface {open
         xywh {640 150 200 20} labelfont 1
       }
       Fl_Choice menu_color_map {
-        callback {*(o->mvalue())->callback();}
-        comment {*(o->mvalue())->callback() gives us the menu item callback} open
+        callback {*(o->mvalue())->callback();
+color_bar->redraw();}
+        comment {*(o->mvalue())->callback() gives us the menu item callback} open selected
         xywh {640 170 200 20} down_box BORDER_BOX
+        code0 {\#include <iostream>}
       } {
         MenuItem option_black_white {
           label {Black and white}

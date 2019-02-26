@@ -20,6 +20,9 @@ namespace Config
     const int   COLOR_BANDS      = 2; //
     extern int  scalar_col;           // method for scalar coloring
     extern bool frozen;               // toggles on/off the animation
+
+    extern bool gradient;  // how to draw color_bar
+    extern int  num_bands; //
 } // namespace Config
 
 #endif

@@ -8,6 +8,7 @@
 
 class GlWindow;
 class UserInterface;
+class ColorBar;
 
 class Controller
 {
@@ -25,7 +26,6 @@ class Controller
 
     // take the information we have and actually use OpenGL to draw it
     void visualize(void);
-    void display();
 
     // this is currently not used, but should implement window resizing
     void reshape(int w, int h);
