@@ -32,7 +32,7 @@ Controller::Controller()
 int Controller::begin()
 {
     Fl::gl_visual(FL_RGB);
-    window->make_window();
+    window->make_window(this);
     // set up main simulation window
     window->gl_window->start_gl_window(this, simulation);
     window->show();
@@ -107,7 +107,7 @@ void Controller::drag(int mx, int my)
     lmy = my;
 }
 
-void Controller::rainbow(float value, float RGB[3])
+void Controller::rainbow(float value, float RGB[3], int index)
 {
     const float dx = 0.8;
     if (value < 0)
@@ -121,9 +121,9 @@ void Controller::rainbow(float value, float RGB[3])
 
     value = (6 - 2 * dx) * value + dx;
 
-    RGB[0] = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
-    RGB[1] = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
-    RGB[2] = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
+    RGB[index + 0] = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
+    RGB[index + 1] = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
+    RGB[index + 2] = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
 }
 
 void Controller::set_colormap(float vy)
@@ -274,4 +274,11 @@ void Controller::reshape(int w, int h)
     gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
     Config::win_width  = w;
     Config::win_height = h;
+}
+
+void Controller::change_map_color(int config_color)
+{
+    // this does not check whether config_color is properly implemented
+    Config::scalar_col = config_color;
+    window->color_bar->redraw();
 }

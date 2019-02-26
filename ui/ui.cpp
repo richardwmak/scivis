@@ -46,30 +46,22 @@ void UserInterface::cb_toggle_frozen(Fl_Button* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_toggle_frozen_i(o,v);
 }
 
-void UserInterface::cb_menu_color_map_i(Fl_Choice* o, void*) {
-  *(o->mvalue())->callback();
-color_bar->redraw();
-}
-void UserInterface::cb_menu_color_map(Fl_Choice* o, void* v) {
-  ((UserInterface*)(o->parent()->user_data()))->cb_menu_color_map_i(o,v);
-}
-
 void UserInterface::cb_option_black_white_i(Fl_Menu_*, void*) {
-  Config::scalar_col = Config::COLOR_BLACKWHITE;
+  ptr_controller->change_map_color(Config::COLOR_BLACKWHITE);
 }
 void UserInterface::cb_option_black_white(Fl_Menu_* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_option_black_white_i(o,v);
 }
 
 void UserInterface::cb_option_rainbow_i(Fl_Menu_*, void*) {
-  Config::scalar_col = Config::COLOR_RAINBOW;
+  ptr_controller->change_map_color(Config::COLOR_RAINBOW);
 }
 void UserInterface::cb_option_rainbow(Fl_Menu_* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_option_rainbow_i(o,v);
 }
 
 void UserInterface::cb_option_bands_i(Fl_Menu_*, void*) {
-  Config::scalar_col = Config::COLOR_BANDS;
+  ptr_controller->change_map_color(Config::COLOR_BANDS);
 }
 void UserInterface::cb_option_bands(Fl_Menu_* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_option_bands_i(o,v);
@@ -127,10 +119,11 @@ void UserInterface::cb_btn_increase_vec_scale(Fl_Button* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_btn_increase_vec_scale_i(o,v);
 }
 
-Fl_Double_Window* UserInterface::make_window() {
-  { main_window = new Fl_Double_Window(900, 500, "Smoke");
+Fl_Double_Window* UserInterface::make_window(Controller *controller) {
+  ptr_controller = controller;
+  { main_window = new Fl_Double_Window(1400, 1000, "Smoke");
     main_window->user_data((void*)(this));
-    { gl_window = new GlWindow(0, 0, 500, 500);
+    { gl_window = new GlWindow(0, 0, 1000, 1000);
       gl_window->box(FL_NO_BOX);
       gl_window->color(FL_BACKGROUND_COLOR);
       gl_window->selection_color(FL_BACKGROUND_COLOR);
@@ -141,12 +134,12 @@ Fl_Double_Window* UserInterface::make_window() {
       gl_window->align(Fl_Align(FL_ALIGN_CENTER));
       gl_window->when(FL_WHEN_RELEASE);
     } // GlWindow* gl_window
-    { separator = new Fl_Box(500, 0, 10, 500, "separator");
+    { separator = new Fl_Box(1000, 0, 10, 1000, "separator");
       separator->box(FL_FLAT_BOX);
       separator->color((Fl_Color)44);
       separator->labeltype(FL_NO_LABEL);
     } // Fl_Box* separator
-    { color_bar = new ColorBar(515, 50, 40, 400);
+    { color_bar = new ColorBar(1010, 70, 40, 800);
       color_bar->box(FL_ENGRAVED_BOX);
       color_bar->color(FL_BACKGROUND_COLOR);
       color_bar->selection_color(FL_BACKGROUND_COLOR);
@@ -157,55 +150,53 @@ Fl_Double_Window* UserInterface::make_window() {
       color_bar->align(Fl_Align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE));
       color_bar->when(FL_WHEN_RELEASE);
     } // ColorBar* color_bar
-    { text_toggle = new Fl_Box(640, 30, 200, 20, "Toggle");
+    { text_toggle = new Fl_Box(1135, 50, 200, 20, "Toggle");
       text_toggle->labelfont(1);
     } // Fl_Box* text_toggle
-    { toggle_dir_color = new Fl_Button(640, 110, 200, 20, "Toggle direction colour");
+    { toggle_dir_color = new Fl_Button(1135, 130, 200, 20, "Toggle direction colour");
       toggle_dir_color->callback((Fl_Callback*)cb_toggle_dir_color);
     } // Fl_Button* toggle_dir_color
-    { toggle_draw_smoke = new Fl_Button(640, 70, 200, 20, "Toggle smoke");
+    { toggle_draw_smoke = new Fl_Button(1135, 90, 200, 20, "Toggle smoke");
       toggle_draw_smoke->callback((Fl_Callback*)cb_toggle_draw_smoke);
     } // Fl_Button* toggle_draw_smoke
-    { toggle_draw_vecs = new Fl_Button(640, 90, 200, 20, "Toggle vectors");
+    { toggle_draw_vecs = new Fl_Button(1135, 110, 200, 20, "Toggle vectors");
       toggle_draw_vecs->callback((Fl_Callback*)cb_toggle_draw_vecs);
     } // Fl_Button* toggle_draw_vecs
-    { toggle_frozen = new Fl_Button(640, 50, 200, 20, "Toggle play");
+    { toggle_frozen = new Fl_Button(1135, 70, 200, 20, "Toggle play");
       toggle_frozen->callback((Fl_Callback*)cb_toggle_frozen);
     } // Fl_Button* toggle_frozen
-    { text_scalar_col = new Fl_Box(640, 150, 200, 20, "Color mapping");
+    { text_scalar_col = new Fl_Box(1135, 170, 200, 20, "Color mapping");
       text_scalar_col->labelfont(1);
     } // Fl_Box* text_scalar_col
-    { // *(o->mvalue())->callback() gives us the menu item callback
-      menu_color_map = new Fl_Choice(640, 170, 200, 20);
+    { menu_color_map = new Fl_Choice(1135, 190, 200, 20);
       menu_color_map->down_box(FL_BORDER_BOX);
-      menu_color_map->callback((Fl_Callback*)cb_menu_color_map);
       menu_color_map->menu(menu_menu_color_map);
     } // Fl_Choice* menu_color_map
-    { text_increase_decrease = new Fl_Box(640, 210, 200, 16, "Increase/decrease values");
+    { text_increase_decrease = new Fl_Box(1135, 230, 200, 16, "Increase/decrease values");
       text_increase_decrease->labelfont(1);
     } // Fl_Box* text_increase_decrease
-    { btn_decrease_time_step = new Fl_Button(640, 225, 50, 20, "-");
+    { btn_decrease_time_step = new Fl_Button(1135, 245, 50, 20, "-");
       btn_decrease_time_step->callback((Fl_Callback*)cb_btn_decrease_time_step);
     } // Fl_Button* btn_decrease_time_step
-    { text_time_step = new Fl_Box(640, 225, 100, 20, "Time step");
+    { text_time_step = new Fl_Box(1185, 245, 100, 20, "Time step");
     } // Fl_Box* text_time_step
-    { btn_increase_time_step = new Fl_Button(640, 225, 50, 20, "+");
+    { btn_increase_time_step = new Fl_Button(1285, 245, 50, 20, "+");
       btn_increase_time_step->callback((Fl_Callback*)cb_btn_increase_time_step);
     } // Fl_Button* btn_increase_time_step
-    { btn_decrease_visc = new Fl_Button(640, 245, 50, 20, "-");
+    { btn_decrease_visc = new Fl_Button(1135, 265, 50, 20, "-");
       btn_decrease_visc->callback((Fl_Callback*)cb_btn_decrease_visc);
     } // Fl_Button* btn_decrease_visc
-    { text_viscosity = new Fl_Box(640, 245, 100, 20, "Viscosity");
+    { text_viscosity = new Fl_Box(1185, 265, 100, 20, "Viscosity");
     } // Fl_Box* text_viscosity
-    { btn_increase_visc = new Fl_Button(640, 245, 50, 20, "+");
+    { btn_increase_visc = new Fl_Button(1285, 265, 50, 20, "+");
       btn_increase_visc->callback((Fl_Callback*)cb_btn_increase_visc);
     } // Fl_Button* btn_increase_visc
-    { btn_decrease_vec_scale = new Fl_Button(640, 265, 50, 20, "-");
+    { btn_decrease_vec_scale = new Fl_Button(1135, 285, 50, 20, "-");
       btn_decrease_vec_scale->callback((Fl_Callback*)cb_btn_decrease_vec_scale);
     } // Fl_Button* btn_decrease_vec_scale
-    { text_vec_scale = new Fl_Box(640, 265, 100, 20, "Vector scaling");
+    { text_vec_scale = new Fl_Box(1185, 285, 100, 20, "Vector scaling");
     } // Fl_Box* text_vec_scale
-    { btn_increase_vec_scale = new Fl_Button(640, 265, 50, 20, "+");
+    { btn_increase_vec_scale = new Fl_Button(1285, 285, 50, 20, "+");
       btn_increase_vec_scale->callback((Fl_Callback*)cb_btn_increase_vec_scale);
     } // Fl_Button* btn_increase_vec_scale
     main_window->end();

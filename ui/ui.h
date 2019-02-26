@@ -3,19 +3,20 @@
 #ifndef ui_h
 #define ui_h
 #include <FL/Fl.H>
-class GlWindow; class ColorBar;
+class GlWindow; class ColorBar; class Controller;
 #include <FL/Fl_Double_Window.H>
 #include "config.h"
+#include <iostream>
 #include "gl_window.h"
 #include <FL/Fl_Box.H>
 #include "color_bar.h"
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
-#include <iostream>
 
 class UserInterface {
+  Controller *ptr_controller; 
 public:
-  Fl_Double_Window* make_window();
+  Fl_Double_Window* make_window(Controller *controller);
   Fl_Double_Window *main_window;
   GlWindow *gl_window;
   Fl_Box *separator;
@@ -43,11 +44,7 @@ private:
 public:
   Fl_Box *text_scalar_col;
   Fl_Choice *menu_color_map;
-private:
-  inline void cb_menu_color_map_i(Fl_Choice*, void*);
-  static void cb_menu_color_map(Fl_Choice*, void*);
   static Fl_Menu_Item menu_menu_color_map[];
-public:
   static Fl_Menu_Item *option_black_white;
 private:
   inline void cb_option_black_white_i(Fl_Menu_*, void*);

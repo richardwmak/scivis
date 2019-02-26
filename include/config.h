@@ -4,7 +4,7 @@
 namespace Config
 {
     // SIMULATION PARAMETERS
-    const int     GRID_SIZE = 50;                    // size of simulation grid
+    const int     GRID_SIZE = 100;                   // size of simulation grid
     const int     NUM_CELLS = GRID_SIZE * GRID_SIZE; // number of nodes we are dealing with
     extern double time_step;                         // simulation time step
     extern float  visc;                              // fluid viscosityx1

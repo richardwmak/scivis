@@ -20,7 +20,7 @@ class Controller
     void drag(int mx, int my);
 
     // various functions that visualize() uses to draw
-    void rainbow(float value, float RGB[3]);
+    void rainbow(float value, float RGB[3], int index = 0);
     void set_colormap(float vy);
     void direction_to_color(float x, float y, bool method);
 
@@ -29,6 +29,9 @@ class Controller
 
     // this is currently not used, but should implement window resizing
     void reshape(int w, int h);
+
+    // this takes settings done in a dropdown menu and applies the relevant changes
+    void change_map_color(int config_color);
 
     int begin();
 

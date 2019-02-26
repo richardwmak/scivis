@@ -2,6 +2,7 @@
 #include "FL/gl.h"
 #include "FL/glu.h"
 #include <iostream>
+#include <vector>
 
 ColorBar::ColorBar(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H), X(X), Y(Y), W(W), H(H) {}
 
@@ -35,60 +36,55 @@ void ColorBar::draw()
     glFlush();
 }
 
-void ColorBar::draw_rectangle_gradient()
+void ColorBar::draw_rectangle_gradient(int num_verts)
 {
-    GLfloat col_top[3], col_bot[3];
+    // divide the bar into num_verts - 1 sections
+    std::vector<GLfloat> color(3 * num_verts, 0.0);
 
-    // set col_top and col_bot
+    int bar_height = pixel_h();
+    int bar_width  = pixel_w();
+
+    float sec_height = bar_height / (num_verts - 1);
+
     switch (Config::scalar_col)
     {
         case Config::COLOR_BLACKWHITE:
         {
-            col_top[0] = col_top[1] = col_top[2] = 0;
-            col_bot[0] = col_bot[1] = col_bot[2] = 1;
+            // set top vertices to be black
+            for (int i = 0; i < 3; i++)
+            {
+                color[i + 3] = 1;
+            }
             break;
         }
-        // case Config::COLOR_RAINBOW:
-        // {
-        //     float R_top, G_top, B_top;
-        //     float R_bot, G_bot, B_bot;
-
-        //     ptr_controller->rainbow(0.0, &R_top, &G_top, &B_top);
-        //     ptr_controller->rainbow(1.0, &R_bot, &G_bot, &B_bot);
-
-        //     for (int i = 0; i < 3; i++)
-        //     {
-        //         col_top[i] = RGB_top[i];
-        //         col_bot[i] = RGB_bot[i];
-        //     }
-        //     break;
-        // }
+        case Config::COLOR_RAINBOW:
+        {
+            for (int i = 0; i < num_verts; i++)
+            {
+            }
+            break;
+        }
         default:
         {
             std::cout << "Something went wrong" << std::endl;
         };
     }
 
-    std::cout << col_top[0] << std::endl;
-
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_QUADS);
 
-    GLfloat bot_left_x  = 0;
-    GLfloat bot_left_y  = 0;
-    GLfloat bot_right_x = (GLfloat)pixel_w();
-    GLfloat bot_right_y = 0;
-    GLfloat top_left_x  = 0;
-    GLfloat top_left_y  = (GLfloat)pixel_h();
-    GLfloat top_right_x = (GLfloat)pixel_w();
-    GLfloat top_right_y = (GLfloat)pixel_h();
+    float h = 0;
 
-    glColor3fv(col_bot);
-    glVertex2f(bot_left_x, bot_left_y);
-    glVertex2f(bot_right_x, bot_right_y);
+    // since we are using GL_QUADS, we need to loop over the nodes in a bit of a weird way
+    for (int i = 0; i < num_verts; i += 2, h += 2 * sec_height)
+    {
+        glColor3f(color[i + 0], color[i + 1], color[i + 2]);
+        glVertex2f(bar_width, h);
+        glVertex2f(0, h);
+        glColor3f(color[i + 3], color[i + 4], color[i + 5]);
+        glVertex2f(0, h + sec_height);
+        glVertex2f(bar_width, h + sec_height);
+    }
 
-    glColor3fv(col_top);
-    glVertex2f(top_right_x, top_right_y);
-    glVertex2f(top_left_x, top_left_y);
     glEnd();
 }
