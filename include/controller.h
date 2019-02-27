@@ -5,6 +5,7 @@
 #include "simulation.h"
 #include "ui.h"
 #include <Fl/Fl_Window.H>
+#include <vector>
 
 class GlWindow;
 class UserInterface;

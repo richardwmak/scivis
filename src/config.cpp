@@ -12,5 +12,5 @@ namespace Config
     int    scalar_col = 0;
     bool   frozen     = false;
     bool   gradient   = true;
-    int    num_bands  = 7;
+    int    num_verts  = 2;
 } // namespace Config

@@ -1,6 +1,7 @@
 #include "color_bar.h"
-#include "FL/gl.h"
-#include "FL/glu.h"
+#include "config.h"
+#include <FL/gl.h>
+#include <FL/glu.h>
 #include <iostream>
 #include <vector>
 
@@ -36,15 +37,15 @@ void ColorBar::draw()
     glFlush();
 }
 
-void ColorBar::draw_rectangle_gradient(int num_verts)
+void ColorBar::draw_rectangle_gradient()
 {
     // divide the bar into num_verts - 1 sections
-    std::vector<GLfloat> color(3 * num_verts, 0.0);
+    std::vector<GLfloat> color(3 * Config::num_verts, 0.0);
 
     int bar_height = pixel_h();
     int bar_width  = pixel_w();
 
-    float sec_height = bar_height / (num_verts - 1);
+    float sec_height = bar_height / (Config::num_verts - 1);
 
     switch (Config::scalar_col)
     {
@@ -59,8 +60,17 @@ void ColorBar::draw_rectangle_gradient(int num_verts)
         }
         case Config::COLOR_RAINBOW:
         {
-            for (int i = 0; i < num_verts; i++)
+            for (int i = 0; i < Config::num_verts; i++)
             {
+                // temporarily convert the bits of the vector we want to an array, then take the
+                // values out later
+                float temp[3] = {color[3 * i], color[3 * i + 1], color[3 * i + 2]};
+
+                float vy = (float)i / (float)Config::num_verts;
+                ptr_controller->rainbow(vy, temp);
+                color[3 * i]     = temp[0];
+                color[3 * i + 1] = temp[1];
+                color[3 * i + 2] = temp[2];
             }
             break;
         }
@@ -76,7 +86,7 @@ void ColorBar::draw_rectangle_gradient(int num_verts)
     float h = 0;
 
     // since we are using GL_QUADS, we need to loop over the nodes in a bit of a weird way
-    for (int i = 0; i < num_verts; i += 2, h += 2 * sec_height)
+    for (int i = 0; i < Config::num_verts; i += 2, h += 2 * sec_height)
     {
         glColor3f(color[i + 0], color[i + 1], color[i + 2]);
         glVertex2f(bar_width, h);

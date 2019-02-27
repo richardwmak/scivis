@@ -22,7 +22,7 @@ namespace Config
     extern bool frozen;               // toggles on/off the animation
 
     extern bool gradient;  // how to draw color_bar
-    extern int  num_bands; //
+    extern int  num_verts; //
 } // namespace Config
 
 #endif

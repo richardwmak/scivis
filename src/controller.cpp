@@ -7,6 +7,7 @@
 #include <Fl/glu.h>
 #include <iostream>
 #include <math.h>
+#include <vector>
 
 // https://web.cecs.pdx.edu/~fliu/courses/cs447/tutorial5.html
 void idle_callback_sim(void *ptr_data)
@@ -109,6 +110,7 @@ void Controller::drag(int mx, int my)
 
 void Controller::rainbow(float value, float RGB[3], int index)
 {
+
     const float dx = 0.8;
     if (value < 0)
     {

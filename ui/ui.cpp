@@ -47,14 +47,16 @@ void UserInterface::cb_toggle_frozen(Fl_Button* o, void* v) {
 }
 
 void UserInterface::cb_option_black_white_i(Fl_Menu_*, void*) {
-  ptr_controller->change_map_color(Config::COLOR_BLACKWHITE);
+  Config::num_verts = 2;
+ptr_controller->change_map_color(Config::COLOR_BLACKWHITE);
 }
 void UserInterface::cb_option_black_white(Fl_Menu_* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_option_black_white_i(o,v);
 }
 
 void UserInterface::cb_option_rainbow_i(Fl_Menu_*, void*) {
-  ptr_controller->change_map_color(Config::COLOR_RAINBOW);
+  Config::num_verts = 11;
+ptr_controller->change_map_color(Config::COLOR_RAINBOW);
 }
 void UserInterface::cb_option_rainbow(Fl_Menu_* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_option_rainbow_i(o,v);

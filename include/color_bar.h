@@ -16,7 +16,7 @@ class ColorBar : public Fl_Gl_Window
 
     void start_color_bar(Controller *controller);
     void draw();
-    void draw_rectangle_gradient(int num_verts = 2);
+    void draw_rectangle_gradient();
 
     int         X, Y, W, H;
     Controller *ptr_controller;
