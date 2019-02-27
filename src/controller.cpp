@@ -110,7 +110,6 @@ void Controller::drag(int mx, int my)
 
 void Controller::rainbow(float value, float RGB[3], int index)
 {
-
     const float dx = 0.8;
     if (value < 0)
     {
@@ -128,28 +127,61 @@ void Controller::rainbow(float value, float RGB[3], int index)
     RGB[index + 2] = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
 }
 
+void Controller::red_to_white(float value, float RGB[3], int index)
+{
+    if (value < 0)
+    {
+        value = 0;
+    }
+    else if (value > 1)
+    {
+        value = 1;
+    }
+
+    RGB[index + 0] = 1;
+    RGB[index + 1] = value;
+    RGB[index + 2] = value;
+}
+
 void Controller::set_colormap(float vy)
 {
     float RGB[3] = {0};
 
-    if (Config::scalar_col == Config::COLOR_BLACKWHITE)
+    switch (Config::scalar_col)
     {
-        for (int i = 0; i < 3; i++)
+
+        case Config::COLOR_BLACKWHITE:
         {
-            RGB[i] = vy;
+            for (int i = 0; i < 3; i++)
+            {
+                RGB[i] = vy;
+            }
+            break;
         }
-    }
-    else if (Config::scalar_col == Config::COLOR_RAINBOW)
-    {
-        rainbow(vy, RGB);
-    }
-    else if (Config::scalar_col == Config::COLOR_BANDS)
-    {
-        const int NLEVELS = 7;
-        vy *= NLEVELS;
-        vy = (int)(vy);
-        vy /= NLEVELS;
-        rainbow(vy, RGB);
+        case Config::COLOR_RAINBOW:
+        {
+            rainbow(vy, RGB);
+            break;
+        }
+        case Config::COLOR_RED_TO_WHITE:
+        {
+            red_to_white(vy, RGB);
+            break;
+        }
+
+        case Config::COLOR_BANDS:
+        {
+            const int NLEVELS = 7;
+            vy *= NLEVELS;
+            vy = (int)(vy);
+            vy /= NLEVELS;
+            rainbow(vy, RGB);
+            break;
+        }
+        default:
+        {
+            std::cout << "Something went wrong" << std::endl;
+        }
     }
 
     glColor3fv(RGB);

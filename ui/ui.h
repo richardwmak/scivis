@@ -60,6 +60,11 @@ private:
   inline void cb_option_bands_i(Fl_Menu_*, void*);
   static void cb_option_bands(Fl_Menu_*, void*);
 public:
+  static Fl_Menu_Item *option_red_to_white;
+private:
+  inline void cb_option_red_to_white_i(Fl_Menu_*, void*);
+  static void cb_option_red_to_white(Fl_Menu_*, void*);
+public:
   Fl_Box *text_increase_decrease;
   Fl_Button *btn_decrease_time_step;
 private:

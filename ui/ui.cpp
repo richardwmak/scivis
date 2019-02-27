@@ -63,21 +63,30 @@ void UserInterface::cb_option_rainbow(Fl_Menu_* o, void* v) {
 }
 
 void UserInterface::cb_option_bands_i(Fl_Menu_*, void*) {
-  ptr_controller->change_map_color(Config::COLOR_BANDS);
+  ptr_controller->change_map_color(Config::COLOR_RED_TO_WHITE);
 }
 void UserInterface::cb_option_bands(Fl_Menu_* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_option_bands_i(o,v);
+}
+
+void UserInterface::cb_option_red_to_white_i(Fl_Menu_*, void*) {
+  ptr_controller->change_map_color(Config::COLOR_RED_TO_WHITE);
+}
+void UserInterface::cb_option_red_to_white(Fl_Menu_* o, void* v) {
+  ((UserInterface*)(o->parent()->user_data()))->cb_option_red_to_white_i(o,v);
 }
 
 Fl_Menu_Item UserInterface::menu_menu_color_map[] = {
  {"Black and white", 0,  (Fl_Callback*)UserInterface::cb_option_black_white, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Rainbow", 0,  (Fl_Callback*)UserInterface::cb_option_rainbow, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Banded", 0,  (Fl_Callback*)UserInterface::cb_option_bands, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Red to white", 0,  (Fl_Callback*)UserInterface::cb_option_red_to_white, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0}
 };
 Fl_Menu_Item* UserInterface::option_black_white = UserInterface::menu_menu_color_map + 0;
 Fl_Menu_Item* UserInterface::option_rainbow = UserInterface::menu_menu_color_map + 1;
 Fl_Menu_Item* UserInterface::option_bands = UserInterface::menu_menu_color_map + 2;
+Fl_Menu_Item* UserInterface::option_red_to_white = UserInterface::menu_menu_color_map + 3;
 
 void UserInterface::cb_btn_decrease_time_step_i(Fl_Button*, void*) {
   Config::time_step -= 0.001;

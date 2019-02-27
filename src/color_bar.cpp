@@ -68,6 +68,24 @@ void ColorBar::draw_rectangle_gradient()
 
                 float vy = (float)i / (float)Config::num_verts;
                 ptr_controller->rainbow(vy, temp);
+
+                color[3 * i]     = temp[0];
+                color[3 * i + 1] = temp[1];
+                color[3 * i + 2] = temp[2];
+            }
+            break;
+        }
+        case Config::COLOR_RED_TO_WHITE:
+        {
+            for (int i = 0; i < Config::num_verts; i++)
+            {
+                // temporarily convert the bits of the vector we want to an array, then take the
+                // values out later
+                float temp[3] = {color[3 * i], color[3 * i + 1], color[3 * i + 2]};
+
+                float vy = (float)i / (float)Config::num_verts;
+                ptr_controller->red_to_white(vy, temp);
+
                 color[3 * i]     = temp[0];
                 color[3 * i + 1] = temp[1];
                 color[3 * i + 2] = temp[2];
@@ -86,12 +104,13 @@ void ColorBar::draw_rectangle_gradient()
     float h = 0;
 
     // since we are using GL_QUADS, we need to loop over the nodes in a bit of a weird way
-    for (int i = 0; i < Config::num_verts; i += 2, h += 2 * sec_height)
+    for (int i = 0; i < Config::num_verts - 1; i++, h += sec_height)
     {
-        glColor3f(color[i + 0], color[i + 1], color[i + 2]);
+        int index = 3 * i;
+        glColor3f(color[index + 0], color[index + 1], color[index + 2]);
         glVertex2f(bar_width, h);
         glVertex2f(0, h);
-        glColor3f(color[i + 3], color[i + 4], color[i + 5]);
+        glColor3f(color[index + 3], color[index + 4], color[index + 5]);
         glVertex2f(0, h + sec_height);
         glVertex2f(bar_width, h + sec_height);
     }

@@ -17,9 +17,10 @@ namespace Config
     extern bool  draw_vecs;             // draw the vector field or not
     const int   COLOR_BLACKWHITE = 0; // different types of color mapping: black-and-white, rainbow,
     const int   COLOR_RAINBOW    = 1; // banded
-    const int   COLOR_BANDS      = 2; //
-    extern int  scalar_col;           // method for scalar coloring
-    extern bool frozen;               // toggles on/off the animation
+    const int   COLOR_RED_TO_WHITE = 2; //
+    const int   COLOR_BANDS        = 3; //
+    extern int  scalar_col;             // method for scalar coloring
+    extern bool frozen;                 // toggles on/off the animation
 
     extern bool gradient;  // how to draw color_bar
     extern int  num_verts; //

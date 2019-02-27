@@ -22,6 +22,7 @@ class Controller
 
     // various functions that visualize() uses to draw
     void rainbow(float value, float RGB[3], int index = 0);
+    void red_to_white(float value, float RGB[3], int index = 0);
     void set_colormap(float vy);
     void direction_to_color(float x, float y, bool method);
 

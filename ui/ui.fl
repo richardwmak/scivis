@@ -13,7 +13,7 @@ class UserInterface {open
   } {
     code {ptr_controller = controller;} {}
     Fl_Window main_window {
-      label Smoke open
+      label Smoke open selected
       xywh {932 225 1400 1000} type Double
       code0 {\#include "config.h"}
       code1 {\#include <iostream>} visible
@@ -89,12 +89,17 @@ ptr_controller->change_map_color(Config::COLOR_BLACKWHITE);}
         MenuItem option_rainbow {
           label Rainbow
           callback {Config::num_verts = 11;
-ptr_controller->change_map_color(Config::COLOR_RAINBOW);} selected
+ptr_controller->change_map_color(Config::COLOR_RAINBOW);}
           xywh {0 0 36 21}
         }
         MenuItem option_bands {
           label Banded
-          callback {ptr_controller->change_map_color(Config::COLOR_BANDS);}
+          callback {ptr_controller->change_map_color(Config::COLOR_RED_TO_WHITE);}
+          xywh {0 0 36 21}
+        }
+        MenuItem option_red_to_white {
+          label {Red to white}
+          callback {ptr_controller->change_map_color(Config::COLOR_RED_TO_WHITE);}
           xywh {0 0 36 21}
         }
       }
