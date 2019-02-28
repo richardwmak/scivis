@@ -99,6 +99,17 @@ private:
   inline void cb_btn_increase_vec_scale_i(Fl_Button*, void*);
   static void cb_btn_increase_vec_scale(Fl_Button*, void*);
 public:
+  Fl_Button *btn_decrease_num_glyphs;
+private:
+  inline void cb_btn_decrease_num_glyphs_i(Fl_Button*, void*);
+  static void cb_btn_decrease_num_glyphs(Fl_Button*, void*);
+public:
+  Fl_Box *text_num_glyphs;
+  Fl_Button *btn_increase_num_glyphs;
+private:
+  inline void cb_btn_increase_num_glyphs_i(Fl_Button*, void*);
+  static void cb_btn_increase_num_glyphs(Fl_Button*, void*);
+public:
   void show();
 };
 #endif

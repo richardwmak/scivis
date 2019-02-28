@@ -229,48 +229,65 @@ void Controller::direction_to_color(float x, float y, bool method)
 
 void Controller::visualize()
 {
-    int       i, j, idx;
-    double    px, py;
+    int       glyph_i, glyph_j, grid_i, grid_j, idx;
+    float     glyph_to_grid_ratio = Config::GRID_SIZE / Config::num_glyphs;
+    double    pt_x, pt_y;
     fftw_real wn =
-        (fftw_real)Config::win_width / (fftw_real)(Config::GRID_SIZE + 1); // Grid cell width
+        (fftw_real)Config::win_width / (fftw_real)(Config::num_glyphs - 1); // Grid cell width
     fftw_real hn =
-        (fftw_real)Config::win_height / (fftw_real)(Config::GRID_SIZE + 1); // Grid cell heigh
+        (fftw_real)Config::win_height / (fftw_real)(Config::num_glyphs - 1); // Grid cell heigh
+
+    int win_height = window->gl_window->pixel_h();
+    int win_width  = window->gl_window->pixel_w();
 
     if (Config::draw_smoke)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        for (j = 0; j < Config::GRID_SIZE - 1; j++) // draw smoke
+        for (glyph_j = 0; glyph_j < Config::num_glyphs - 1; glyph_j++) // draw smoke
         {
             glBegin(GL_TRIANGLE_STRIP);
 
-            i   = 0;
-            px  = wn + (fftw_real)i * wn;
-            py  = hn + (fftw_real)j * hn;
-            idx = (j * Config::GRID_SIZE) + i;
+            glyph_i = 0;
+            pt_x    = wn + (fftw_real)glyph_i * wn;
+            pt_y    = hn + (fftw_real)glyph_j * hn;
+
+            grid_i = std::round(glyph_i * glyph_to_grid_ratio);
+            grid_j = std::round(glyph_j * glyph_to_grid_ratio);
+
+            idx = (grid_j * Config::GRID_SIZE) + grid_i;
             glColor3f(simulation->cur_state.smoke_density[idx],
                       simulation->cur_state.smoke_density[idx],
                       simulation->cur_state.smoke_density[idx]);
-            glVertex2f(px, py);
+            glVertex2f(pt_x, pt_y);
 
-            for (i = 0; i < Config::GRID_SIZE - 1; i++)
+            for (glyph_i = 0; glyph_i < Config::num_glyphs - 1; glyph_i++)
             {
-                px  = wn + (fftw_real)i * wn;
-                py  = hn + (fftw_real)(j + 1) * hn;
-                idx = ((j + 1) * Config::GRID_SIZE) + i;
+                pt_x = wn + (fftw_real)glyph_i * wn;
+                pt_y = hn + (fftw_real)(glyph_j + 1) * hn;
+
+                grid_i = std::round(glyph_i * glyph_to_grid_ratio);
+                grid_j = std::round(glyph_j * glyph_to_grid_ratio);
+                idx    = ((grid_j + 1) * Config::GRID_SIZE) + grid_i;
                 set_colormap(simulation->cur_state.smoke_density[idx]);
-                glVertex2f(px, py);
-                px  = wn + (fftw_real)(i + 1) * wn;
-                py  = hn + (fftw_real)j * hn;
-                idx = (j * Config::GRID_SIZE) + (i + 1);
+                glVertex2f(pt_x, pt_y);
+                pt_x = wn + (fftw_real)(glyph_i + 1) * wn;
+                pt_y = hn + (fftw_real)glyph_j * hn;
+
+                idx = (grid_j * Config::GRID_SIZE) + (grid_i + 1);
                 set_colormap(simulation->cur_state.smoke_density[idx]);
-                glVertex2f(px, py);
+                glVertex2f(pt_x, pt_y);
             }
 
-            px  = wn + (fftw_real)(Config::GRID_SIZE - 1) * wn;
-            py  = hn + (fftw_real)(j + 1) * hn;
-            idx = ((j + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
+            pt_x = wn + (fftw_real)(Config::GRID_SIZE - 1) * wn;
+            pt_y = hn + (fftw_real)(glyph_j + 1) * hn;
+
+            grid_i = std::round(glyph_i * glyph_to_grid_ratio);
+            grid_j = std::round(glyph_j * glyph_to_grid_ratio);
+            idx    = ((grid_j + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
             set_colormap(simulation->cur_state.smoke_density[idx]);
-            glVertex2f(px, py);
+            glVertex2f(pt_x, pt_y);
+            glEnd();
+
             glEnd();
         }
     }
@@ -278,19 +295,19 @@ void Controller::visualize()
     if (Config::draw_vecs)
     {
         glBegin(GL_LINES); // draw velocities
-        for (i = 0; i < Config::GRID_SIZE; i++)
+        for (glyph_i = 0; glyph_i < Config::GRID_SIZE; glyph_i++)
         {
-            for (j = 0; j < Config::GRID_SIZE; j++)
+            for (glyph_j = 0; glyph_j < Config::GRID_SIZE; glyph_j++)
             {
-                idx = (j * Config::GRID_SIZE) + i;
+                idx = (glyph_j * Config::GRID_SIZE) + glyph_i;
                 direction_to_color(simulation->cur_state.velocity_x[idx],
                                    simulation->cur_state.velocity_y[idx],
                                    Config::color_dir);
-                glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
+                glVertex2f(wn + (fftw_real)glyph_i * wn, hn + (fftw_real)glyph_j * hn);
 
-                glVertex2f((wn + (fftw_real)i * wn) +
+                glVertex2f((wn + (fftw_real)glyph_i * wn) +
                                Config::vec_scale * simulation->cur_state.velocity_x[idx],
-                           (hn + (fftw_real)j * hn) +
+                           (hn + (fftw_real)glyph_j * hn) +
                                Config::vec_scale * simulation->cur_state.velocity_y[idx]);
             }
         }

@@ -13,8 +13,8 @@ class UserInterface {open
   } {
     code {ptr_controller = controller;} {}
     Fl_Window main_window {
-      label Smoke open selected
-      xywh {932 225 1400 1000} type Double
+      label Smoke open
+      xywh {949 229 1400 1000} type Double
       code0 {\#include "config.h"}
       code1 {\#include <iostream>} visible
     } {
@@ -148,6 +148,20 @@ ptr_controller->change_map_color(Config::COLOR_RAINBOW);}
         label {+}
         callback {Config::vec_scale *= 1.25;}
         xywh {1285 285 50 20}
+      }
+      Fl_Button btn_decrease_num_glyphs {
+        label {-}
+        callback {Config::num_glyphs -= 1;}
+        xywh {1135 305 50 20}
+      }
+      Fl_Box text_num_glyphs {
+        label {\#glyphs} selected
+        xywh {1185 305 100 20}
+      }
+      Fl_Button btn_increase_num_glyphs {
+        label {+}
+        callback {Config::num_glyphs += 1;}
+        xywh {1285 305 50 20}
       }
     }
   }

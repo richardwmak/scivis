@@ -13,4 +13,6 @@ namespace Config
     bool   frozen     = false;
     bool   gradient   = true;
     int    num_verts  = 2;
+    bool   scaling    = false;
+    int    num_glyphs = 100;
 } // namespace Config

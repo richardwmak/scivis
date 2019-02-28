@@ -130,6 +130,20 @@ void UserInterface::cb_btn_increase_vec_scale(Fl_Button* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_btn_increase_vec_scale_i(o,v);
 }
 
+void UserInterface::cb_btn_decrease_num_glyphs_i(Fl_Button*, void*) {
+  Config::num_glyphs -= 1;
+}
+void UserInterface::cb_btn_decrease_num_glyphs(Fl_Button* o, void* v) {
+  ((UserInterface*)(o->parent()->user_data()))->cb_btn_decrease_num_glyphs_i(o,v);
+}
+
+void UserInterface::cb_btn_increase_num_glyphs_i(Fl_Button*, void*) {
+  Config::num_glyphs += 1;
+}
+void UserInterface::cb_btn_increase_num_glyphs(Fl_Button* o, void* v) {
+  ((UserInterface*)(o->parent()->user_data()))->cb_btn_increase_num_glyphs_i(o,v);
+}
+
 Fl_Double_Window* UserInterface::make_window(Controller *controller) {
   ptr_controller = controller;
   { main_window = new Fl_Double_Window(1400, 1000, "Smoke");
@@ -210,6 +224,14 @@ Fl_Double_Window* UserInterface::make_window(Controller *controller) {
     { btn_increase_vec_scale = new Fl_Button(1285, 285, 50, 20, "+");
       btn_increase_vec_scale->callback((Fl_Callback*)cb_btn_increase_vec_scale);
     } // Fl_Button* btn_increase_vec_scale
+    { btn_decrease_num_glyphs = new Fl_Button(1135, 305, 50, 20, "-");
+      btn_decrease_num_glyphs->callback((Fl_Callback*)cb_btn_decrease_num_glyphs);
+    } // Fl_Button* btn_decrease_num_glyphs
+    { text_num_glyphs = new Fl_Box(1185, 305, 100, 20, "#glyphs");
+    } // Fl_Box* text_num_glyphs
+    { btn_increase_num_glyphs = new Fl_Button(1285, 305, 50, 20, "+");
+      btn_increase_num_glyphs->callback((Fl_Callback*)cb_btn_increase_num_glyphs);
+    } // Fl_Button* btn_increase_num_glyphs
     main_window->end();
   } // Fl_Double_Window* main_window
   return main_window;
