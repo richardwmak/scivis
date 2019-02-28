@@ -62,3 +62,5 @@ $(BIN)/$(EXECUTABLE): $(foreach d, $(SRC), $d/*.cpp)
 clean:
 	clear
 	-rm $(BIN)/*
+
+$(shell mkdir -p bin)
