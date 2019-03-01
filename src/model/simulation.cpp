@@ -1,6 +1,6 @@
-#include "simulation.h"
-#include "config.h"
-#include "simulation_state.h"
+#include "simulation.hpp"
+#include "config.hpp"
+#include "simulation_state.hpp"
 #include <fftw.h>
 #include <math.h>
 #include <rfftw.h>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "config.h"
-#include "controller.h"
+#include "config.hpp"
+#include "controller.hpp"
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
 

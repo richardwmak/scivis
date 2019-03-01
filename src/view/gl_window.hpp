@@ -1,8 +1,8 @@
 #pragma once
 
-#include "config.h"
-#include "controller.h"
-#include "simulation.h"
+#include "config.hpp"
+#include "controller.hpp"
+#include "simulation.hpp"
 #include <Fl/Fl_Gl_Window.H>
 
 class Controller;

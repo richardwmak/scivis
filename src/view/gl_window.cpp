@@ -1,8 +1,8 @@
 // http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
 
-#include "gl_window.h"
-#include "controller.h"
-#include "simulation.h"
+#include "gl_window.hpp"
+#include "controller.hpp"
+#include "simulation.hpp"
 #include <Fl/Fl.H>
 #include <Fl/Fl_Gl_Window.H>
 #include <Fl/gl.h>

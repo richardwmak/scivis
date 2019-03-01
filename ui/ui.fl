@@ -15,12 +15,12 @@ class UserInterface {open
     Fl_Window main_window {
       label Smoke open
       xywh {949 229 1400 1000} type Double
-      code0 {\#include "config.h"}
+      code0 {\#include "config.hpp"}
       code1 {\#include <iostream>} visible
     } {
       Fl_Box gl_window {
         xywh {0 0 1000 1000} labeltype NO_LABEL
-        code0 {\#include "gl_window.h"}
+        code0 {\#include "gl_window.hpp"}
         class GlWindow
       }
       Fl_Box separator {
@@ -29,7 +29,7 @@ class UserInterface {open
       }
       Fl_Box color_bar {
         xywh {1010 70 40 800} box ENGRAVED_BOX align 16
-        code0 {\#include "color_bar.h"}
+        code0 {\#include "color_bar.hpp"}
         class ColorBar
       }
       Fl_Box text_toggle {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "simulation.h"
-#include "ui.h"
+#include "simulation.hpp"
+#include "ui.hpp"
 #include <Fl/Fl_Window.H>
 #include <vector>
 

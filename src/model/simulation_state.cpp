@@ -1,6 +1,6 @@
-#include "config.h"
+#include "simulation_state.hpp"
+#include "config.hpp"
 #include <rfftw.h>
-#include <simulation_state.h>
 
 SimulationState::SimulationState()
 {

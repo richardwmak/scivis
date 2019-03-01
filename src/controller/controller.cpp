@@ -1,7 +1,7 @@
-#include "controller.h"
-#include "config.h"
-#include "simulation.h"
-#include "ui.h"
+#include "controller.hpp"
+#include "config.hpp"
+#include "simulation.hpp"
+#include "ui.hpp"
 #include <Fl/Fl.H>
 #include <Fl/gl.h>
 #include <Fl/glu.h>

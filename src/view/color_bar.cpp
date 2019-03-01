@@ -1,5 +1,5 @@
-#include "color_bar.h"
-#include "config.h"
+#include "color_bar.hpp"
+#include "config.hpp"
 #include <FL/gl.h>
 #include <FL/glu.h>
 #include <iostream>

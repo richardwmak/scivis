@@ -5,11 +5,11 @@
 #include <FL/Fl.H>
 class GlWindow; class ColorBar; class Controller;
 #include <FL/Fl_Double_Window.H>
-#include "config.h"
+#include "config.hpp"
 #include <iostream>
-#include "gl_window.h"
+#include "gl_window.hpp"
 #include <FL/Fl_Box.H>
-#include "color_bar.h"
+#include "color_bar.hpp"
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
 

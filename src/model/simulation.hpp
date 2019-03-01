@@ -1,8 +1,8 @@
 #pragma once
 
-#include "config.h"
-#include "simulation.h"
-#include "simulation_state.h"
+#include "config.hpp"
+#include "simulation.hpp"
+#include "simulation_state.hpp"
 #include <rfftw.h>
 
 // this is the class that handles the entirety of the actual simulation it stores the data in
