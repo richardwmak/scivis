@@ -42,27 +42,27 @@ int GlWindow::handle(int event)
 {
     switch (event)
     {
-    case FL_DRAG:
-        // for the OpenGL drawing the viewport starts in the lower left
-        // Fl::event_x() is zero in the left, but
-        // Fl::event_y() is zero at the top
-        ptr_controller->drag(Fl::event_x(), Fl::event_y());
-        return 1;
-    case FL_KEYBOARD:
-        // Fl::event_key() ignores capitalisation, so we manually capitalise
-        unsigned char key;
-        if (Fl::event_shift() == 0)
-        {
-            key = Fl::event_key();
-        }
-        else
-        {
-            key = Fl::event_key() - 32;
-        }
+        case FL_DRAG:
+            // for the OpenGL drawing the viewport starts in the lower left
+            // Fl::event_x() is zero in the left, but
+            // Fl::event_y() is zero at the top
+            ptr_controller->drag(Fl::event_x(), Fl::event_y());
+            return 1;
+        case FL_KEYBOARD:
+            // Fl::event_key() ignores capitalisation, so we manually capitalise
+            unsigned char key;
+            if (Fl::event_shift() == 0)
+            {
+                key = Fl::event_key();
+            }
+            else
+            {
+                key = Fl::event_key() - 32;
+            }
 
-        ptr_controller->keyboard((char)key);
-        return 1;
-    default:
-        return 1;
+            ptr_controller->keyboard((char)key);
+            return 1;
+        default:
+            return 1;
     }
 }

@@ -14,5 +14,5 @@ namespace Config
     bool   gradient   = true;
     int    num_verts  = 2;
     bool   scaling    = false;
-    int    num_glyphs = 100;
+    float  num_glyphs = 120;
 } // namespace Config

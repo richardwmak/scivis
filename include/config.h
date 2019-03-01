@@ -15,7 +15,7 @@ namespace Config
     extern float vec_scale;             // scaling of hedgehogs
     extern bool  draw_smoke;            // draw the smoke or not
     extern bool  draw_vecs;             // draw the vector field or not
-    extern int   num_glyphs;            // how many glyphs to draw
+    extern float num_glyphs;            // how many glyphs to draw
     const int   COLOR_BLACKWHITE = 0; // different types of color mapping: black-and-white, rainbow,
     const int   COLOR_RAINBOW    = 1; // banded
     const int   COLOR_RED_TO_WHITE = 2; //

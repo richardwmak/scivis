@@ -1,7 +1,6 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "gl_window.h"
 #include "simulation.h"
 #include "ui.h"
 #include <Fl/Fl_Window.H>
@@ -18,7 +17,7 @@ class Controller
 
     // functions that handle what happens with keypresses/ draggin the mouse
     void keyboard(unsigned char key);
-    void drag(int mx, int my);
+    void drag(int x_pixel_curr, int y_pixel_prev);
 
     // various functions that visualize() uses to draw
     void rainbow(float value, float RGB[3], int index = 0);
@@ -40,7 +39,6 @@ class Controller
     Simulation *simulation;
 
   private:
-    GlWindow *     gl_window;
     UserInterface *window;
 };
 

@@ -58,54 +58,41 @@ void Controller::keyboard(unsigned char key)
     }
 }
 
-void Controller::drag(int mx, int my)
+void Controller::drag(int x_pixel_curr, int y_pixel_curr)
 {
-    int        xi, yi, X, Y;
+    int        x_grid_index, y_grid_index;
     double     dx, dy, len;
-    static int lmx = 0, lmy = 0; // remembers last mouse location
+    static int x_pixel_prev = 0, y_pixel_prev = 0; // remembers last mouse location
 
+    y_pixel_curr = Config::win_height - y_pixel_curr;
     // Compute the array index that corresponds to the cursor location
-    xi =
-        (int)std::floor((double)(Config::GRID_SIZE + 1) * ((double)mx / (double)Config::win_width));
-    yi = (int)std::floor((double)(Config::GRID_SIZE + 1) *
-                         ((double)(Config::win_height - my) / (double)Config::win_height));
+    x_grid_index = (int)std::floor((double)(Config::GRID_SIZE) *
+                                   ((double)x_pixel_curr / (double)Config::win_width));
+    y_grid_index = (int)std::floor((double)(Config::GRID_SIZE) *
+                                   ((double)y_pixel_curr / (double)Config::win_height));
 
-    X = xi;
-    Y = yi;
-
-    if (X > (Config::GRID_SIZE - 1))
-    {
-        X = Config::GRID_SIZE - 1;
-    }
-    if (Y > (Config::GRID_SIZE - 1))
-    {
-        Y = Config::GRID_SIZE - 1;
-    }
-    if (X < 0)
-    {
-        X = 0;
-    }
-    if (Y < 0)
-    {
-        Y = 0;
-    }
+    // clamp index values
+    if (x_grid_index > (Config::num_glyphs)) x_grid_index = Config::num_glyphs;
+    if (y_grid_index > (Config::num_glyphs)) y_grid_index = Config::num_glyphs;
+    if (x_grid_index < 0) x_grid_index = 0;
+    if (y_grid_index < 0) y_grid_index = 0;
 
     // Add force at the cursor location
-    my  = Config::win_height - my;
-    dx  = mx - lmx;
-    dy  = my - lmy;
+    dx  = x_pixel_curr - x_pixel_prev;
+    dy  = y_pixel_curr - y_pixel_prev;
     len = sqrt(dx * dx + dy * dy);
     if (len != 0.0)
     {
         dx *= 0.1 / len;
         dy *= 0.1 / len;
     }
-    simulation->cur_state.force_x[Y * Config::GRID_SIZE + X] += dx;
-    simulation->cur_state.force_y[Y * Config::GRID_SIZE + X] += dy;
-    simulation->cur_state.smoke_density[Y * Config::GRID_SIZE + X] = 10.0f;
 
-    lmx = mx;
-    lmy = my;
+    simulation->cur_state.force_x[y_grid_index * Config::GRID_SIZE + x_grid_index] += dx;
+    simulation->cur_state.force_y[y_grid_index * Config::GRID_SIZE + x_grid_index] += dy;
+    simulation->cur_state.smoke_density[y_grid_index * Config::GRID_SIZE + x_grid_index] = 10.0f;
+
+    x_pixel_prev = x_pixel_curr;
+    y_pixel_prev = y_pixel_curr;
 }
 
 void Controller::rainbow(float value, float RGB[3], int index)
@@ -229,64 +216,61 @@ void Controller::direction_to_color(float x, float y, bool method)
 
 void Controller::visualize()
 {
-    int       glyph_i, glyph_j, grid_i, grid_j, idx;
-    float     glyph_to_grid_ratio = Config::GRID_SIZE / Config::num_glyphs;
-    double    pt_x, pt_y;
-    fftw_real wn =
+    int x_grid_index, y_grid_index, x_glyph_index, y_glyph_index, idx;
+    // this assumes width and height are the same
+    float     glyph_to_grid_ratio = (float)Config::GRID_SIZE / (float)Config::num_glyphs;
+    double    x_pixel, y_pixel;
+    fftw_real x_glyph_width =
         (fftw_real)Config::win_width / (fftw_real)(Config::num_glyphs - 1); // Grid cell width
-    fftw_real hn =
-        (fftw_real)Config::win_height / (fftw_real)(Config::num_glyphs - 1); // Grid cell heigh
-
-    int win_height = window->gl_window->pixel_h();
-    int win_width  = window->gl_window->pixel_w();
+    fftw_real y_glyph_width =
+        (fftw_real)Config::win_height / (fftw_real)(Config::num_glyphs - 1); // Grid cell height
 
     if (Config::draw_smoke)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        for (glyph_j = 0; glyph_j < Config::num_glyphs - 1; glyph_j++) // draw smoke
+        for (y_glyph_index = 0; y_glyph_index - 1 < Config::num_glyphs - 1; y_glyph_index++)
         {
             glBegin(GL_TRIANGLE_STRIP);
 
-            glyph_i = 0;
-            pt_x    = wn + (fftw_real)glyph_i * wn;
-            pt_y    = hn + (fftw_real)glyph_j * hn;
+            x_glyph_index = 0;
+            x_pixel       = x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width;
+            y_pixel       = y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width;
 
-            grid_i = std::round(glyph_i * glyph_to_grid_ratio);
-            grid_j = std::round(glyph_j * glyph_to_grid_ratio);
+            x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
+            y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
 
-            idx = (grid_j * Config::GRID_SIZE) + grid_i;
+            idx = (y_grid_index * Config::GRID_SIZE) + x_grid_index;
             glColor3f(simulation->cur_state.smoke_density[idx],
                       simulation->cur_state.smoke_density[idx],
                       simulation->cur_state.smoke_density[idx]);
-            glVertex2f(pt_x, pt_y);
+            glVertex2f(x_pixel, y_pixel);
 
-            for (glyph_i = 0; glyph_i < Config::num_glyphs - 1; glyph_i++)
+            for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs - 1; x_glyph_index++)
             {
-                pt_x = wn + (fftw_real)glyph_i * wn;
-                pt_y = hn + (fftw_real)(glyph_j + 1) * hn;
+                x_pixel = x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width;
+                y_pixel = y_glyph_width + (fftw_real)(y_glyph_index + 1) * y_glyph_width;
 
-                grid_i = std::round(glyph_i * glyph_to_grid_ratio);
-                grid_j = std::round(glyph_j * glyph_to_grid_ratio);
-                idx    = ((grid_j + 1) * Config::GRID_SIZE) + grid_i;
+                x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
+                y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
+                idx          = ((y_grid_index + 1) * Config::GRID_SIZE) + x_grid_index;
                 set_colormap(simulation->cur_state.smoke_density[idx]);
-                glVertex2f(pt_x, pt_y);
-                pt_x = wn + (fftw_real)(glyph_i + 1) * wn;
-                pt_y = hn + (fftw_real)glyph_j * hn;
+                glVertex2f(x_pixel, y_pixel);
+                x_pixel = x_glyph_width + (fftw_real)(x_glyph_index + 1) * x_glyph_width;
+                y_pixel = y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width;
 
-                idx = (grid_j * Config::GRID_SIZE) + (grid_i + 1);
+                idx = (y_grid_index * Config::GRID_SIZE) + (x_grid_index + 1);
                 set_colormap(simulation->cur_state.smoke_density[idx]);
-                glVertex2f(pt_x, pt_y);
+                glVertex2f(x_pixel, y_pixel);
             }
 
-            pt_x = wn + (fftw_real)(Config::GRID_SIZE - 1) * wn;
-            pt_y = hn + (fftw_real)(glyph_j + 1) * hn;
+            x_pixel = x_glyph_width + (fftw_real)(Config::GRID_SIZE - 1) * x_glyph_width;
+            y_pixel = y_glyph_width + (fftw_real)(y_glyph_index + 1) * y_glyph_width;
 
-            grid_i = std::round(glyph_i * glyph_to_grid_ratio);
-            grid_j = std::round(glyph_j * glyph_to_grid_ratio);
-            idx    = ((grid_j + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
+            x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
+            y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
+            idx          = ((y_grid_index + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
             set_colormap(simulation->cur_state.smoke_density[idx]);
-            glVertex2f(pt_x, pt_y);
-            glEnd();
+            glVertex2f(x_pixel, y_pixel);
 
             glEnd();
         }
@@ -295,19 +279,23 @@ void Controller::visualize()
     if (Config::draw_vecs)
     {
         glBegin(GL_LINES); // draw velocities
-        for (glyph_i = 0; glyph_i < Config::GRID_SIZE; glyph_i++)
+        for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs; x_glyph_index++)
         {
-            for (glyph_j = 0; glyph_j < Config::GRID_SIZE; glyph_j++)
+            for (y_glyph_index = 0; y_glyph_index < Config::num_glyphs; y_glyph_index++)
             {
-                idx = (glyph_j * Config::GRID_SIZE) + glyph_i;
+                x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
+                y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
+
+                idx = (y_grid_index * Config::GRID_SIZE) + x_grid_index;
                 direction_to_color(simulation->cur_state.velocity_x[idx],
                                    simulation->cur_state.velocity_y[idx],
                                    Config::color_dir);
-                glVertex2f(wn + (fftw_real)glyph_i * wn, hn + (fftw_real)glyph_j * hn);
+                glVertex2f(x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width,
+                           y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width);
 
-                glVertex2f((wn + (fftw_real)glyph_i * wn) +
+                glVertex2f((x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width) +
                                Config::vec_scale * simulation->cur_state.velocity_x[idx],
-                           (hn + (fftw_real)glyph_j * hn) +
+                           (y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width) +
                                Config::vec_scale * simulation->cur_state.velocity_y[idx]);
             }
         }
