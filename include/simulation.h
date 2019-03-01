@@ -1,28 +1,9 @@
 #pragma once
 
 #include "config.h"
+#include "simulation.h"
+#include "simulation_state.h"
 #include <rfftw.h>
-// Stores all the current simulation data
-class SimulationState
-{
-  public:
-    // if we do the following type of loop:
-    //
-    // for (int i = 0; i < Config::GRID_SIZE; i++)
-    // {
-    //     for (int j = 0; j < Config::GRID_SIZE; j++)
-    //     {
-    //         velocity[i + j] <-- this will be the (i, j)th entry
-    //     }
-    // }
-    fftw_real *velocity_x;    // velocity field
-    fftw_real *velocity_y;    //
-    fftw_real *smoke_density; // density at each point
-    fftw_real *force_x;       // user-applied force
-    fftw_real *force_y;
-
-    SimulationState();
-};
 
 // this is the class that handles the entirety of the actual simulation it stores the data in
 // cur_state and old_state and upon running do_one_simulation_step() will compute the next timestep
