@@ -1,5 +1,4 @@
-#ifndef GL_WINDOW_H
-#define GL_WINDOW_H
+#pragma once
 
 #include "config.h"
 #include "controller.h"
@@ -24,5 +23,3 @@ class GlWindow : public Fl_Gl_Window
 
     void start_gl_window(Controller *controller, Simulation *simulation);
 };
-
-#endif

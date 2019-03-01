@@ -1,5 +1,4 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#pragma once
 
 #include "simulation.h"
 #include "ui.h"
@@ -41,5 +40,3 @@ class Controller
   private:
     UserInterface *window;
 };
-
-#endif

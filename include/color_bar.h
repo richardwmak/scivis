@@ -1,6 +1,4 @@
-
-#ifndef COLOR_BAR_H
-#define COLOR_BAR_H
+#pragma once
 
 #include "config.h"
 #include "controller.h"
@@ -21,5 +19,3 @@ class ColorBar : public Fl_Gl_Window
     int         X, Y, W, H;
     Controller *ptr_controller;
 };
-
-#endif

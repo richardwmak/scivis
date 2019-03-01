@@ -1,6 +1,4 @@
-
-#ifndef SIMULATION_H
-#define SIMULATION_H
+#pragma once
 
 #include "config.h"
 #include <rfftw.h>
@@ -51,5 +49,3 @@ class Simulation
 
     void do_one_simulation_step();
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 namespace Config
 {
@@ -32,5 +31,3 @@ namespace Config
     const int UPPER_RIGHT = 2;
     const int UPPER_LEFT  = 3;
 } // namespace Config
-
-#endif
