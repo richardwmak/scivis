@@ -1,7 +1,6 @@
 #pragma once
 
 #include "config.hpp"
-#include "simulation.hpp"
 #include "simulation_state.hpp"
 #include <rfftw.h>
 
@@ -19,6 +18,8 @@ class Simulation
     Simulation();
 
     void FFT(int direction, void *vx);
+
+    void apply_force(int, int);
 
     int clamp(float x);
 

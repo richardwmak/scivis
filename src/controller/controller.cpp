@@ -3,6 +3,7 @@
 #include "simulation.hpp"
 #include "ui.hpp"
 #include <Fl/Fl.H>
+#include <Fl/Fl_Widget.H>
 #include <Fl/gl.h>
 #include <Fl/glu.h>
 #include <iostream>
@@ -14,11 +15,32 @@ void idle_callback_sim(void *ptr_data)
 {
     if (ptr_data != NULL)
     {
-        GlWindow *ptr_gl_window = reinterpret_cast<GlWindow *>(ptr_data);
+        Controller *ptr_controller = reinterpret_cast<Controller *>(ptr_data);
+
         if (!Config::frozen)
         {
-            ptr_gl_window->ptr_simulation->do_one_simulation_step();
-            ptr_gl_window->redraw();
+            ptr_controller->simulation->do_one_simulation_step();
+            ptr_controller->window->gl_window->redraw();
+        }
+    }
+}
+
+void idle_callback_con(void *ptr_data)
+{
+    if (ptr_data != NULL)
+    {
+        Controller *ptr_controller = reinterpret_cast<Controller *>(ptr_data);
+
+        switch (Fl::event())
+        {
+            case FL_DRAG:
+            {
+                ptr_controller->drag(Fl::event_x(), Fl::event_y());
+            }
+            default:
+            {
+                ;
+            }
         }
     }
 }
@@ -35,7 +57,7 @@ int Controller::begin()
     Fl::gl_visual(FL_RGB);
     window->make_window(this);
     // set up main simulation window
-    window->gl_window->start_gl_window(this, simulation);
+    window->gl_window->start_w(simulation, this);
     window->show();
     window->gl_window->show();
 
@@ -43,7 +65,8 @@ int Controller::begin()
     window->color_bar->start_color_bar(this);
     window->color_bar->show();
 
-    Fl::add_idle(idle_callback_sim, window->gl_window);
+    Fl::add_idle(idle_callback_sim, this);
+    Fl::add_idle(idle_callback_con, this);
     return Fl::run();
 }
 

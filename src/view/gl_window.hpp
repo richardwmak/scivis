@@ -13,13 +13,13 @@ class GlWindow : public Fl_Gl_Window
   public:
     int         X, Y, W, H;
     const char *L;
-    Controller *ptr_controller;
+
     Simulation *ptr_simulation;
+    Controller *ptr_controller;
+    void        start_w(Simulation *simulation, Controller *controller);
 
     GlWindow(int X, int Y, int W, int H);
 
     void draw();
-    int  handle(int event);
-
-    void start_gl_window(Controller *controller, Simulation *simulation);
+    // int  handle(int event);
 };

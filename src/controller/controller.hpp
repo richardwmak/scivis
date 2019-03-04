@@ -2,6 +2,7 @@
 
 #include "simulation.hpp"
 #include "ui.hpp"
+#include <Fl/Fl_Widget.H>
 #include <Fl/Fl_Window.H>
 #include <vector>
 
@@ -35,8 +36,8 @@ class Controller
 
     int begin();
 
-    Simulation *simulation;
+    Simulation *   simulation;
+    UserInterface *window;
 
   private:
-    UserInterface *window;
 };
