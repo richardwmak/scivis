@@ -2,6 +2,7 @@
 #include "config.hpp"
 #include "simulation_state.hpp"
 #include <fftw.h>
+#include <iostream>
 #include <math.h>
 #include <rfftw.h>
 
@@ -202,7 +203,6 @@ std::vector<fftw_real> Simulation::get_scalar_field()
     std::vector<fftw_real> scalar_field;
     if (Config::scalar_to_draw == Config::SCALAR_FORCE)
     {
-
         std::vector<fftw_real> scalar_field(Config::NUM_CELLS);
 
         for (int i = 0; i < Config::NUM_CELLS; i++)
@@ -224,9 +224,10 @@ std::vector<fftw_real> Simulation::get_scalar_field()
     }
     else if (Config::scalar_to_draw == Config::SCALAR_SMOKE)
     {
-        // https://stackoverflow.com/questions/8777603/what-is-the-simplest-way-to-convert-array-to-vector
-        std::vector<fftw_real> scalar_field(cur_state.smoke_density,
-                                            cur_state.smoke_density + Config::NUM_CELLS);
+        // https://stackoverflow.com/questions/259297/how-do-you-copy-the-contents-of-an-array-to-a-stdvector-in-c-without-looping
+        std::copy(cur_state.smoke_density,
+                  cur_state.smoke_density + Config::NUM_CELLS,
+                  std::back_inserter(scalar_field));
     }
     return scalar_field;
 }
