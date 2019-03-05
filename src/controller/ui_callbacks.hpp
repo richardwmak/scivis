@@ -1,2 +1,2 @@
-#include "config.h"
+#include " "onfig.hpp"
 #include <Fl/Fl_Widget.H>

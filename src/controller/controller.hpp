@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config.hpp"
 #include "simulation.hpp"
 #include "ui.hpp"
 #include <Fl/Fl_Widget.H>
@@ -18,15 +19,6 @@ class Controller
     // functions that handle what happens with keypresses/ draggin the mouse
     void keyboard(unsigned char key);
     void drag(int x_pixel_curr, int y_pixel_prev);
-
-    // various functions that visualize() uses to draw
-    void rainbow(float value, float RGB[3], int index = 0);
-    void red_to_white(float value, float RGB[3], int index = 0);
-    void set_colormap(float vy);
-    void direction_to_color(float x, float y, bool method);
-
-    // take the information we have and actually use OpenGL to draw it
-    void visualize(void);
 
     // this is currently not used, but should implement window resizing
     void reshape(int w, int h);

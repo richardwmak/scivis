@@ -196,3 +196,65 @@ void Simulation::do_one_simulation_step()
         Simulation::diffuse_matter();
     }
 }
+
+std::vector<fftw_real> Simulation::get_scalar_field()
+{
+    std::vector<fftw_real> scalar_field;
+    if (Config::scalar_to_draw == Config::SCALAR_FORCE)
+    {
+
+        std::vector<fftw_real> scalar_field(Config::NUM_CELLS);
+
+        for (int i = 0; i < Config::NUM_CELLS; i++)
+        {
+            scalar_field[i] =
+                std::sqrt(pow(cur_state.force_x[i], 2) + pow(cur_state.force_y[i], 2));
+        }
+    }
+
+    else if (Config::scalar_to_draw == Config::SCALAR_VELOCITY)
+    {
+        std::vector<fftw_real> scalar_field(Config::NUM_CELLS);
+
+        for (int i = 0; i < Config::NUM_CELLS; i++)
+        {
+            scalar_field[i] =
+                std::sqrt(pow(cur_state.velocity_x[i], 2) + pow(cur_state.velocity_y[i], 2));
+        }
+    }
+    else if (Config::scalar_to_draw == Config::SCALAR_SMOKE)
+    {
+        // https://stackoverflow.com/questions/8777603/what-is-the-simplest-way-to-convert-array-to-vector
+        std::vector<fftw_real> scalar_field(cur_state.smoke_density,
+                                            cur_state.smoke_density + Config::NUM_CELLS);
+    }
+    return scalar_field;
+}
+
+std::vector<fftw_real> Simulation::get_vector_field_x()
+{
+    return get_vector_field(cur_state.force_x, cur_state.velocity_x);
+}
+
+std::vector<fftw_real> Simulation::get_vector_field_y()
+{
+    return get_vector_field(cur_state.force_y, cur_state.velocity_y);
+}
+
+std::vector<fftw_real> Simulation::get_vector_field(fftw_real *force, fftw_real *velocity)
+{
+    switch (Config::vector_to_draw)
+    {
+        case Config::VECTOR_FORCE:
+        {
+            std::vector<fftw_real> vector_field(force, force + Config::NUM_CELLS);
+            return vector_field;
+        }
+        case Config::VECTOR_VELOCITY:
+        default:
+        {
+            std::vector<fftw_real> vector_field(velocity, velocity + Config::NUM_CELLS);
+            return vector_field;
+        }
+    }
+}
