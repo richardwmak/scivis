@@ -23,6 +23,16 @@ namespace Config
     extern bool frozen;                 // toggles on/off the animation
     extern bool scaling;                // scaling if true, clamping if false;
 
+    // setting that determines what type of scalar/vector gets drawn
+    const int SCALAR_SMOKE    = 0;
+    const int SCALAR_FORCE    = 1;
+    const int SCALAR_VELOCITY = 2;
+    const int VECTOR_VELOCITY = 0;
+    const int VECTOR_FORCE    = 1;
+
+    extern int scalar_to_draw;
+    extern int vector_to_draw;
+
     extern bool gradient;  // how to draw color_bar
     extern int  num_verts; //
 

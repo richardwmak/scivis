@@ -1,6 +1,6 @@
 # data file for the Fltk User Interface Designer (fluid)
 version 1.0304
-header_name {.h}
+header_name {.hpp}
 code_name {.cpp}
 decl {class GlWindow; class ColorBar; class Controller;} {public global
 }
@@ -27,7 +27,7 @@ class UserInterface {open
         label separator
         xywh {1000 0 10 1000} box FLAT_BOX color 44 labeltype NO_LABEL
       }
-      Fl_Box color_bar {
+      Fl_Box color_bar {selected
         xywh {1010 70 40 800} box ENGRAVED_BOX align 16
         code0 {\#include "color_bar.hpp"}
         class ColorBar
@@ -155,7 +155,7 @@ ptr_controller->change_map_color(Config::COLOR_RAINBOW);}
         xywh {1135 305 50 20}
       }
       Fl_Box text_num_glyphs {
-        label {\#glyphs} selected
+        label {\#glyphs}
         xywh {1185 305 100 20}
       }
       Fl_Button btn_increase_num_glyphs {

@@ -15,4 +15,7 @@ namespace Config
     int    num_verts  = 2;
     bool   scaling    = false;
     float  num_glyphs = 120;
+
+    int scalar_to_draw = SCALAR_SMOKE;
+    int vector_to_draw = VECTOR_VELOCITY;
 } // namespace Config

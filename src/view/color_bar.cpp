@@ -1,4 +1,5 @@
 #include "color_bar.hpp"
+#include "color_mapper.hpp"
 #include "config.hpp"
 #include <FL/gl.h>
 #include <FL/glu.h>
@@ -67,7 +68,7 @@ void ColorBar::draw_rectangle_gradient()
                 float temp[3] = {color[3 * i], color[3 * i + 1], color[3 * i + 2]};
 
                 float vy = (float)i / (float)Config::num_verts;
-                ptr_controller->rainbow(vy, temp);
+                ColorMapper::rainbow(vy, temp);
 
                 color[3 * i]     = temp[0];
                 color[3 * i + 1] = temp[1];
@@ -84,7 +85,7 @@ void ColorBar::draw_rectangle_gradient()
                 float temp[3] = {color[3 * i], color[3 * i + 1], color[3 * i + 2]};
 
                 float vy = (float)i / (float)Config::num_verts;
-                ptr_controller->red_to_white(vy, temp);
+                ColorMapper::red_to_white(vy, temp);
 
                 color[3 * i]     = temp[0];
                 color[3 * i + 1] = temp[1];
