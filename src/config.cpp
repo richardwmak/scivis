@@ -9,12 +9,12 @@ namespace Config
     float  vec_scale  = 1000;
     bool   draw_smoke = false;
     bool   draw_vecs  = true;
-    int    scalar_col = 0;
+    int    scalar_col = COLOR_BLACKWHITE;
     bool   frozen     = false;
     bool   gradient   = true;
     int    num_verts  = 2;
     bool   scaling    = false;
-    float  num_glyphs = 120;
+    float  num_glyphs = 100;
 
     int scalar_to_draw = SCALAR_SMOKE;
     int vector_to_draw = VECTOR_VELOCITY;

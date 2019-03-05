@@ -24,7 +24,7 @@ void ColorMapper::rainbow(float value, float RGB[3], int index)
     RGB[index + 2] = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
 }
 
-void ColorMapper::red_to_white(float value, float RGB[3], int index)
+void ColorMapper::red_white(float value, float RGB[3], int index)
 {
     if (value < 0)
     {
@@ -40,10 +40,8 @@ void ColorMapper::red_to_white(float value, float RGB[3], int index)
     RGB[index + 2] = value;
 }
 
-void ColorMapper::set_colormap(float vy)
+void ColorMapper::set_colormap(float value, float RGB[3], int index)
 {
-    float RGB[3] = {0};
-
     switch (Config::scalar_col)
     {
 
@@ -51,43 +49,41 @@ void ColorMapper::set_colormap(float vy)
         {
             for (int i = 0; i < 3; i++)
             {
-                RGB[i] = vy;
+                RGB[index + i] = value;
             }
             break;
         }
         case Config::COLOR_RAINBOW:
         {
-            rainbow(vy, RGB);
+            rainbow(value, RGB);
             break;
         }
-        case Config::COLOR_RED_TO_WHITE:
+        case Config::COLOR_RED_WHITE:
         {
-            red_to_white(vy, RGB);
+            red_white(value, RGB);
             break;
         }
 
-        case Config::COLOR_BANDS:
-        {
-            const int NLEVELS = 7;
-            vy *= NLEVELS;
-            vy = (int)(vy);
-            vy /= NLEVELS;
-            rainbow(vy, RGB);
-            break;
-        }
+        // case Config::COLOR_BANDS:
+        // {
+        //     const int NLEVELS = 7;
+        //     value *= NLEVELS;
+        //     value = (int)(value);
+        //     value /= NLEVELS;
+        //     rainbow(value, RGB);
+        //     break;
+        // }
         default:
         {
             std::cout << "Something went wrong" << std::endl;
         }
     }
-
-    glColor3fv(RGB);
 }
 
-void ColorMapper::direction_to_color(float x, float y, bool method)
+void ColorMapper::direction_to_color(float RGB[3], float x, float y, int index)
 {
     float r, g, b, f;
-    if (method)
+    if (Config::color_dir)
     {
         f = std::atan2(y, x) / 3.1415927 + 1;
         r = f;
@@ -119,7 +115,7 @@ void ColorMapper::direction_to_color(float x, float y, bool method)
         r = g = b = 1;
     }
 
-    float RGB[3] = {r, g, b};
-
-    glColor3fv(RGB);
+    RGB[index + 0] = r;
+    RGB[index + 1] = g;
+    RGB[index + 2] = b;
 }

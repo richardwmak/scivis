@@ -7,19 +7,15 @@ decl {class GlWindow; class ColorBar; class Controller;} {public global
 
 class UserInterface {open
 } {
-  decl {Controller *ptr_controller;} {private local
-  }
-  Function {make_window(Controller *controller)} {open
+  Function {make_window()} {open
   } {
-    code {ptr_controller = controller;} {}
     Fl_Window main_window {
       label Smoke open
-      xywh {500 175 1400 1000} type Double
+      xywh {939 124 1400 1000} type Double
       code0 {\#include "config.hpp"}
-      code1 {\#include <iostream>}
-      code2 {\#include "controller.hpp"} visible
+      code1 {\#include <iostream>} visible
     } {
-      Fl_Box gl_window {
+      Fl_Box gl_window {selected
         xywh {0 0 1000 1000} labeltype NO_LABEL
         code0 {\#include "gl_window.hpp"}
         class GlWindow
@@ -39,37 +35,18 @@ class UserInterface {open
       }
       Fl_Button toggle_dir_color {
         label {Toggle direction colour}
-        callback {Config::color_dir ? Config::color_dir = false : Config::color_dir = true;}
         xywh {1135 130 200 20}
       }
       Fl_Button toggle_draw_smoke {
         label {Toggle smoke}
-        callback {if (Config::draw_smoke)
-        {
-            Config::draw_smoke = false;
-            Config::draw_vecs  = true;
-        }
-        else
-        {
-            Config::draw_smoke = true;
-        }}
         xywh {1135 90 200 20}
       }
       Fl_Button toggle_draw_vecs {
         label {Toggle vectors}
-        callback {if (Config::draw_vecs)
-        {
-            Config::draw_vecs  = false;
-            Config::draw_smoke = true;
-        }
-        else
-        {
-            Config::draw_vecs = true;
-        }}
         xywh {1135 110 200 20}
       }
       Fl_Button toggle_frozen {
-        label {Toggle play} selected
+        label {Toggle play}
         xywh {1135 70 200 20}
       }
       Fl_Box text_scalar_col {
@@ -82,24 +59,14 @@ class UserInterface {open
       } {
         MenuItem option_black_white {
           label {Black and white}
-          callback {Config::num_verts = 2;
-ptr_controller->change_map_color(Config::COLOR_BLACKWHITE);}
           xywh {0 0 36 21}
         }
         MenuItem option_rainbow {
           label Rainbow
-          callback {Config::num_verts = 11;
-ptr_controller->change_map_color(Config::COLOR_RAINBOW);}
           xywh {0 0 36 21}
         }
-        MenuItem option_bands {
-          label Banded
-          callback {ptr_controller->change_map_color(Config::COLOR_RED_TO_WHITE);}
-          xywh {0 0 36 21}
-        }
-        MenuItem option_red_to_white {
+        MenuItem option_red_white {
           label {Red to white}
-          callback {ptr_controller->change_map_color(Config::COLOR_RED_TO_WHITE);}
           xywh {0 0 36 21}
         }
       }
@@ -107,61 +74,31 @@ ptr_controller->change_map_color(Config::COLOR_RAINBOW);}
         label {Increase/decrease values}
         xywh {1135 230 200 16} labelfont 1
       }
-      Fl_Button btn_decrease_time_step {
-        label {-}
-        callback {Config::time_step -= 0.001;}
-        xywh {1135 245 50 20}
-      }
-      Fl_Box text_time_step {
+      Fl_Counter counter_time_step {
         label {Time step}
-        xywh {1185 245 100 20}
+        xywh {1135 264 200 21} align 1
+        code0 {counter_time_step->step(0.001, 0.01);}
+        code1 {counter_time_step->value(Config::time_step);}
+        code2 {counter_time_step->bounds(0.001,1);}
       }
-      Fl_Button btn_increase_time_step {
-        label {+}
-        callback {Config::time_step += 0.001;}
-        xywh {1285 245 50 20}
-      }
-      Fl_Button btn_decrease_visc {
-        label {-}
-        callback {Config::visc *= 0.2;}
-        xywh {1135 265 50 20}
-      }
-      Fl_Box text_viscosity {
+      Fl_Counter counter_visc {
         label Viscosity
-        xywh {1185 265 100 20}
+        xywh {1135 304 200 21} type Simple align 1
+        code0 {counter_visc->value(Config::visc);}
+        code1 {counter_visc->step(0.00025);}
+        code2 {counter_visc->bounds(0.0001,0.02);}
       }
-      Fl_Button btn_increase_visc {
-        label {+}
-        callback {Config::visc *= 5;}
-        xywh {1285 265 50 20}
-      }
-      Fl_Button btn_decrease_vec_scale {
-        label {-}
-        callback {Config::vec_scale *=0.8}
-        xywh {1135 285 50 20}
-      }
-      Fl_Box text_vec_scale {
+      Fl_Counter counter_vec_scale {
         label {Vector scaling}
-        xywh {1185 285 100 20}
+        xywh {1135 344 200 21} type Simple align 1
+        code0 {counter_vec_scale->value(Config::vec_scale);}
+        code1 {counter_vec_scale->step(200);}
       }
-      Fl_Button btn_increase_vec_scale {
-        label {+}
-        callback {Config::vec_scale *= 1.25;}
-        xywh {1285 285 50 20}
-      }
-      Fl_Button btn_decrease_num_glyphs {
-        label {-}
-        callback {Config::num_glyphs -= 1;}
-        xywh {1135 305 50 20}
-      }
-      Fl_Box text_num_glyphs {
-        label {\#glyphs}
-        xywh {1185 305 100 20}
-      }
-      Fl_Button btn_increase_num_glyphs {
-        label {+}
-        callback {Config::num_glyphs += 1;}
-        xywh {1285 305 50 20}
+      Fl_Counter counter_num_glyphs {
+        label {counter:}
+        xywh {1135 384 200 21} align 1
+        code0 {counter_num_glyphs->step(1, 10);}
+        code1 {counter_num_glyphs->value(Config::num_glyphs);}
       }
     }
   }

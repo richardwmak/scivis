@@ -2,13 +2,24 @@
 
 #include "config.hpp"
 #include <FL/Fl_Button.H>
+#include <Fl/Fl_Counter.H>
 #include <Fl/Fl_Widget.H>
 
-void idle_callback_sim(void *ptr_data);
-void idle_callback_interaction(void *ptr_data);
+void idle_callback_sim(void *ptr_controller);
+void idle_callback_interaction(void *ptr_controller);
 
-// https://stackoverflow.com/questions/15644088/declaration-of-function-returning-a-function-pointer
-template <typename T>
-typedef Fl_Callback (*cb_ptr)(T)
+void cb_toggle_frozen(Fl_Button *, void *);
+void cb_toggle_smoke(Fl_Button *, void *);
+void cb_toggle_vecs(Fl_Button *, void *);
+void cb_toggle_dir_color(Fl_Button *, void *);
 
-    Fl_Callback (*cb_toggle_frozen())(Fl_Button *, void *);
+void cb_counter_time_step(Fl_Counter *w, void *);
+void cb_counter_visc(Fl_Counter *w, void *);
+void cb_counter_vec_scale(Fl_Counter *w, void *);
+void cb_counter_num_glyphs(Fl_Counter *w, void *);
+
+void redraw_color_bar(void *controller);
+
+void cb_option_black_white(Fl_Counter *, void *controller);
+void cb_option_rainbow(Fl_Counter *, void *controller);
+void cb_option_red_white(Fl_Counter *, void *controller);

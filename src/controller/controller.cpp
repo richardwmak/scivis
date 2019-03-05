@@ -21,13 +21,29 @@ Controller::Controller()
 int Controller::begin()
 {
     Fl::gl_visual(FL_RGB);
-    window->make_window(this);
+    window->make_window();
     window->show();
     // display the OpenGL windows
     window->gl_window->show();
     window->color_bar->show();
 
-    window->toggle_frozen->callback(cb_toggle_frozen);
+    // toggle callbacks
+    window->toggle_frozen->callback((Fl_Callback *)cb_toggle_frozen);
+    window->toggle_draw_smoke->callback((Fl_Callback *)cb_toggle_smoke);
+    window->toggle_dir_color->callback((Fl_Callback *)cb_toggle_dir_color);
+    window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs);
+
+    // counter callbacks
+    window->counter_time_step->callback((Fl_Callback *)cb_counter_time_step);
+    window->counter_visc->callback((Fl_Callback *)cb_counter_visc);
+    window->counter_vec_scale->callback((Fl_Callback *)cb_counter_vec_scale);
+    window->counter_num_glyphs->callback((Fl_Callback *)cb_counter_num_glyphs);
+
+    // color map menu callbacks
+    window->option_black_white->callback((Fl_Callback *)cb_option_black_white, this);
+    window->option_rainbow->callback((Fl_Callback *)cb_option_rainbow, this);
+    window->option_red_white->callback((Fl_Callback *)cb_option_red_white, this);
+
     Fl::add_idle(idle_callback_sim, this);
     Fl::add_idle(idle_callback_interaction, this);
     return Fl::run();
@@ -91,11 +107,4 @@ void Controller::reshape(int w, int h)
     gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
     Config::win_width  = w;
     Config::win_height = h;
-}
-
-void Controller::change_map_color(int config_color)
-{
-    // this does not check whether config_color is properly implemented
-    Config::scalar_col = config_color;
-    window->color_bar->redraw();
 }

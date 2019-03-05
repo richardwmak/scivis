@@ -17,11 +17,10 @@ namespace Config
     extern float num_glyphs;            // how many glyphs to draw
     const int   COLOR_BLACKWHITE = 0; // different types of color mapping: black-and-white, rainbow,
     const int   COLOR_RAINBOW    = 1; // banded
-    const int   COLOR_RED_TO_WHITE = 2; //
-    const int   COLOR_BANDS        = 3; //
-    extern int  scalar_col;             // method for scalar coloring
-    extern bool frozen;                 // toggles on/off the animation
-    extern bool scaling;                // scaling if true, clamping if false;
+    const int   COLOR_RED_WHITE  = 2; //
+    extern int  scalar_col;           // method for scalar coloring
+    extern bool frozen;               // toggles on/off the animation
+    extern bool scaling;              // scaling if true, clamping if false;
 
     // setting that determines what type of scalar/vector gets drawn
     const int SCALAR_SMOKE    = 0;

@@ -71,7 +71,7 @@ void ColorBar::draw_rectangle_gradient()
             }
             break;
         }
-        case Config::COLOR_RED_TO_WHITE:
+        case Config::COLOR_RED_WHITE:
         {
             for (int i = 0; i < Config::num_verts; i++)
             {
@@ -80,7 +80,7 @@ void ColorBar::draw_rectangle_gradient()
                 float temp[3] = {color[3 * i], color[3 * i + 1], color[3 * i + 2]};
 
                 float vy = (float)i / (float)Config::num_verts;
-                ColorMapper::red_to_white(vy, temp);
+                ColorMapper::red_white(vy, temp);
 
                 color[3 * i]     = temp[0];
                 color[3 * i + 1] = temp[1];
