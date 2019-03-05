@@ -2,7 +2,7 @@ CXX		  := g++
 CXX_FLAGS := -Wall -Wextra -Wpedantic -std=c++17 -ggdb
 
 BIN		:= bin
-SRC_DIR	:= src src/controller src/model src/view ui
+SRC_DIR	:= src src/controller src/model src/view
 SRC     := $(foreach d, $(SRC_DIR), $d/*.cpp)
 INCLUDE	:= /usr/local/include /usr/include $(SRC_DIR)
 LIB		:= /usr/local/lib

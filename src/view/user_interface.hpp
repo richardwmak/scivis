@@ -7,6 +7,7 @@ class GlWindow; class ColorBar; class Controller;
 #include <FL/Fl_Double_Window.H>
 #include "config.hpp"
 #include <iostream>
+#include "controller.hpp"
 #include "gl_window.hpp"
 #include <FL/Fl_Box.H>
 #include "color_bar.hpp"
@@ -38,10 +39,6 @@ private:
   static void cb_toggle_draw_vecs(Fl_Button*, void*);
 public:
   Fl_Button *toggle_frozen;
-private:
-  inline void cb_toggle_frozen_i(Fl_Button*, void*);
-  static void cb_toggle_frozen(Fl_Button*, void*);
-public:
   Fl_Box *text_scalar_col;
   Fl_Choice *menu_color_map;
   static Fl_Menu_Item menu_menu_color_map[];

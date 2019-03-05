@@ -1,7 +1,8 @@
 #include "controller.hpp"
 #include "config.hpp"
 #include "simulation.hpp"
-#include "ui.hpp"
+#include "ui_callbacks.hpp"
+#include "user_interface.hpp"
 #include <Fl/Fl.H>
 #include <Fl/Fl_Widget.H>
 #include <Fl/gl.h>
@@ -9,53 +10,6 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
-
-// https://web.cecs.pdx.edu/~fliu/courses/cs447/tutorial5.html
-void idle_callback_sim(void *ptr_data)
-{
-    if (ptr_data != NULL)
-    {
-        Controller *ptr_controller = reinterpret_cast<Controller *>(ptr_data);
-
-        if (!Config::frozen)
-        {
-            ptr_controller->simulation->do_one_simulation_step();
-
-            // get the new arrays and convert them to vectors for convenience
-            std::vector<fftw_real> scalar_field(Config::NUM_CELLS);
-            std::vector<fftw_real> vector_field_x(Config::NUM_CELLS);
-            std::vector<fftw_real> vector_field_y(Config::NUM_CELLS);
-
-            scalar_field   = ptr_controller->simulation->get_scalar_field();
-            vector_field_x = ptr_controller->simulation->get_vector_field_x();
-            vector_field_y = ptr_controller->simulation->get_vector_field_y();
-
-            ptr_controller->window->gl_window->set_scalar_data(scalar_field);
-            ptr_controller->window->gl_window->set_vector_data(vector_field_x, vector_field_y);
-            ptr_controller->window->gl_window->redraw();
-        }
-    }
-}
-
-void idle_callback_con(void *ptr_data)
-{
-    if (ptr_data != NULL)
-    {
-        Controller *ptr_controller = reinterpret_cast<Controller *>(ptr_data);
-
-        switch (Fl::event())
-        {
-            case FL_DRAG:
-            {
-                ptr_controller->drag(Fl::event_x(), Fl::event_y());
-            }
-            default:
-            {
-                ;
-            }
-        }
-    }
-}
 
 Controller::Controller()
 {
@@ -69,14 +23,13 @@ int Controller::begin()
     Fl::gl_visual(FL_RGB);
     window->make_window(this);
     window->show();
+    // display the OpenGL windows
     window->gl_window->show();
-
-    // initialise the color bar
-    window->color_bar->start_color_bar(this);
     window->color_bar->show();
 
+    window->toggle_frozen->callback(cb_toggle_frozen);
     Fl::add_idle(idle_callback_sim, this);
-    Fl::add_idle(idle_callback_con, this);
+    Fl::add_idle(idle_callback_interaction, this);
     return Fl::run();
 }
 

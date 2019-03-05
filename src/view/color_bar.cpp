@@ -6,12 +6,7 @@
 #include <iostream>
 #include <vector>
 
-ColorBar::ColorBar(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H), X(X), Y(Y), W(W), H(H) {}
-
-void ColorBar::start_color_bar(Controller *controller)
-{
-    ptr_controller = controller;
-}
+ColorBar::ColorBar(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H) {}
 
 void ColorBar::draw()
 {

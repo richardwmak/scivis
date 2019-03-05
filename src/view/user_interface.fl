@@ -14,9 +14,10 @@ class UserInterface {open
     code {ptr_controller = controller;} {}
     Fl_Window main_window {
       label Smoke open
-      xywh {949 229 1400 1000} type Double
+      xywh {500 175 1400 1000} type Double
       code0 {\#include "config.hpp"}
-      code1 {\#include <iostream>} visible
+      code1 {\#include <iostream>}
+      code2 {\#include "controller.hpp"} visible
     } {
       Fl_Box gl_window {
         xywh {0 0 1000 1000} labeltype NO_LABEL
@@ -27,7 +28,7 @@ class UserInterface {open
         label separator
         xywh {1000 0 10 1000} box FLAT_BOX color 44 labeltype NO_LABEL
       }
-      Fl_Box color_bar {selected
+      Fl_Box color_bar {
         xywh {1010 70 40 800} box ENGRAVED_BOX align 16
         code0 {\#include "color_bar.hpp"}
         class ColorBar
@@ -68,8 +69,7 @@ class UserInterface {open
         xywh {1135 110 200 20}
       }
       Fl_Button toggle_frozen {
-        label {Toggle play}
-        callback {Config::frozen ? Config::frozen = false : Config::frozen = true;}
+        label {Toggle play} selected
         xywh {1135 70 200 20}
       }
       Fl_Box text_scalar_col {

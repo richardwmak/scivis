@@ -39,13 +39,6 @@ void UserInterface::cb_toggle_draw_vecs(Fl_Button* o, void* v) {
   ((UserInterface*)(o->parent()->user_data()))->cb_toggle_draw_vecs_i(o,v);
 }
 
-void UserInterface::cb_toggle_frozen_i(Fl_Button*, void*) {
-  Config::frozen ? Config::frozen = false : Config::frozen = true;
-}
-void UserInterface::cb_toggle_frozen(Fl_Button* o, void* v) {
-  ((UserInterface*)(o->parent()->user_data()))->cb_toggle_frozen_i(o,v);
-}
-
 void UserInterface::cb_option_black_white_i(Fl_Menu_*, void*) {
   Config::num_verts = 2;
 ptr_controller->change_map_color(Config::COLOR_BLACKWHITE);
@@ -188,7 +181,6 @@ Fl_Double_Window* UserInterface::make_window(Controller *controller) {
       toggle_draw_vecs->callback((Fl_Callback*)cb_toggle_draw_vecs);
     } // Fl_Button* toggle_draw_vecs
     { toggle_frozen = new Fl_Button(1135, 70, 200, 20, "Toggle play");
-      toggle_frozen->callback((Fl_Callback*)cb_toggle_frozen);
     } // Fl_Button* toggle_frozen
     { text_scalar_col = new Fl_Box(1135, 170, 200, 20, "Color mapping");
       text_scalar_col->labelfont(1);

@@ -2,7 +2,7 @@
 
 #include "config.hpp"
 #include "simulation.hpp"
-#include "ui.hpp"
+#include "user_interface.hpp"
 #include <Fl/Fl_Widget.H>
 #include <Fl/Fl_Window.H>
 #include <vector>
