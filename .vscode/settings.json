@@ -1,4 +1,7 @@
 {
+    "c-cpp-flylint.cppcheck.includePaths": [
+        "src/**"
+    ],
     "c-cpp-flylint.clang.warnings": [
         "all",
         "extra"
