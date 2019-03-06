@@ -40,39 +40,32 @@ void ColorMapper::red_white(float value, float RGB[3], int index)
     RGB[index + 2] = value;
 }
 
+void ColorMapper::black_white(float value, float RGB[3], int index)
+{
+    RGB[index + 0] = value;
+    RGB[index + 1] = value;
+    RGB[index + 2] = value;
+}
+
 void ColorMapper::set_colormap(float value, float RGB[3], int index)
 {
     switch (Config::scalar_col)
     {
-
         case Config::COLOR_BLACKWHITE:
         {
-            for (int i = 0; i < 3; i++)
-            {
-                RGB[index + i] = value;
-            }
+            black_white(value, RGB, index);
             break;
         }
         case Config::COLOR_RAINBOW:
         {
-            rainbow(value, RGB);
+            rainbow(value, RGB, index);
             break;
         }
         case Config::COLOR_RED_WHITE:
         {
-            red_white(value, RGB);
+            red_white(value, RGB, index);
             break;
         }
-
-        // case Config::COLOR_BANDS:
-        // {
-        //     const int NLEVELS = 7;
-        //     value *= NLEVELS;
-        //     value = (int)(value);
-        //     value /= NLEVELS;
-        //     rainbow(value, RGB);
-        //     break;
-        // }
         default:
         {
             std::cout << "Something went wrong" << std::endl;

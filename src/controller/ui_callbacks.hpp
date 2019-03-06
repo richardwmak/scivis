@@ -3,10 +3,11 @@
 #include "config.hpp"
 #include <FL/Fl_Button.H>
 #include <Fl/Fl_Counter.H>
+#include <Fl/Fl_Gl_Window.H>
 #include <Fl/Fl_Widget.H>
 
-void idle_callback_sim(void *ptr_controller);
-void idle_callback_interaction(void *ptr_controller);
+void idle_callback_sim(void *controller);
+void idle_callback_interaction(void *controller);
 
 void cb_toggle_frozen(Fl_Button *, void *);
 void cb_toggle_smoke(Fl_Button *, void *);

@@ -2,6 +2,7 @@
 #include "controller.hpp"
 #include <FL/Fl.H>
 #include <FL/Fl_Button.H>
+#include <Fl/Fl_Gl_Window.H>
 #include <iostream>
 #include <math.h>
 
@@ -36,7 +37,8 @@ void idle_callback_sim(void *controller)
 
 void idle_callback_interaction(void *controller)
 {
-    if (controller != NULL)
+    if (controller != NULL && Fl::event_x() <= Config::win_width &&
+        Fl::event_y() <= Config::win_height)
     {
         Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
 

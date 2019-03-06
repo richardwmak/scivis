@@ -56,33 +56,37 @@ Fl_Double_Window* UserInterface::make_window() {
     { text_scalar_col = new Fl_Box(1135, 170, 200, 20, "Color mapping");
       text_scalar_col->labelfont(1);
     } // Fl_Box* text_scalar_col
-    { menu_color_map = new Fl_Choice(1135, 190, 200, 20);
+    { toggle_parametrize_color_map = new Fl_Light_Button(1135, 190, 200, 20, "Parametrize color map");
+    } // Fl_Light_Button* toggle_parametrize_color_map
+    { counter_num_bands = new Fl_Counter(1135, 210, 200, 21, "counter:");
+    } // Fl_Counter* counter_num_bands
+    { menu_color_map = new Fl_Choice(1135, 228, 200, 20);
       menu_color_map->down_box(FL_BORDER_BOX);
       menu_color_map->menu(menu_menu_color_map);
     } // Fl_Choice* menu_color_map
-    { text_increase_decrease = new Fl_Box(1135, 230, 200, 16, "Increase/decrease values");
+    { text_increase_decrease = new Fl_Box(1135, 265, 200, 16, "Increase/decrease values");
       text_increase_decrease->labelfont(1);
     } // Fl_Box* text_increase_decrease
-    { counter_time_step = new Fl_Counter(1135, 264, 200, 21, "Time step");
+    { counter_time_step = new Fl_Counter(1135, 299, 200, 21, "Time step");
       counter_time_step->align(Fl_Align(FL_ALIGN_TOP));
       counter_time_step->step(0.001, 0.01);
       counter_time_step->value(Config::time_step);
       counter_time_step->bounds(0.001,1);
     } // Fl_Counter* counter_time_step
-    { counter_visc = new Fl_Counter(1135, 304, 200, 21, "Viscosity");
+    { counter_visc = new Fl_Counter(1135, 339, 200, 21, "Viscosity");
       counter_visc->type(1);
       counter_visc->align(Fl_Align(FL_ALIGN_TOP));
       counter_visc->value(Config::visc);
       counter_visc->step(0.00025);
       counter_visc->bounds(0.0001,0.02);
     } // Fl_Counter* counter_visc
-    { counter_vec_scale = new Fl_Counter(1135, 344, 200, 21, "Vector scaling");
+    { counter_vec_scale = new Fl_Counter(1135, 379, 200, 21, "Vector scaling");
       counter_vec_scale->type(1);
       counter_vec_scale->align(Fl_Align(FL_ALIGN_TOP));
       counter_vec_scale->value(Config::vec_scale);
       counter_vec_scale->step(200);
     } // Fl_Counter* counter_vec_scale
-    { counter_num_glyphs = new Fl_Counter(1135, 384, 200, 21, "counter:");
+    { counter_num_glyphs = new Fl_Counter(1135, 419, 200, 21, "counter:");
       counter_num_glyphs->align(Fl_Align(FL_ALIGN_TOP));
       counter_num_glyphs->step(1, 10);
       counter_num_glyphs->value(Config::num_glyphs);

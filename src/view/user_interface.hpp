@@ -11,8 +11,9 @@ class GlWindow; class ColorBar; class Controller;
 #include <FL/Fl_Box.H>
 #include "color_bar.hpp"
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Choice.H>
+#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Counter.H>
+#include <FL/Fl_Choice.H>
 
 class UserInterface {
 public:
@@ -27,6 +28,8 @@ public:
   Fl_Button *toggle_draw_vecs;
   Fl_Button *toggle_frozen;
   Fl_Box *text_scalar_col;
+  Fl_Light_Button *toggle_parametrize_color_map;
+  Fl_Counter *counter_num_bands;
   Fl_Choice *menu_color_map;
   static Fl_Menu_Item menu_menu_color_map[];
   static Fl_Menu_Item *option_black_white;
