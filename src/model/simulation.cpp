@@ -1,6 +1,7 @@
 #include "simulation.hpp"
 #include "config.hpp"
 #include "simulation_state.hpp"
+#include <algorithm>
 #include <fftw.h>
 #include <iostream>
 #include <math.h>
@@ -19,7 +20,6 @@ Simulation::Simulation()
 
 void Simulation::FFT(int direction, void *vx)
 {
-
     if (direction == 1)
     {
         rfftwnd_one_real_to_complex(plan_rc, (fftw_real *)vx, (fftw_complex *)vx);
@@ -37,7 +37,6 @@ int Simulation::clamp(float x)
 
 void Simulation::compute_next_step()
 {
-
     fftw_real x, y, x0, y0, f, r, U[2], V[2], s, t;
     int       i, j, i0, j0, i1, j1;
 

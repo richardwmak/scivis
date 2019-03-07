@@ -14,6 +14,8 @@ class Simulation
     SimulationState cur_state;
     SimulationState old_state;
 
+    fftw_real max_value;
+
     rfftwnd_plan plan_rc, plan_cr; // necessary for fftw to do FFT
 
     Simulation();

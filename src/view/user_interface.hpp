@@ -13,6 +13,7 @@ class GlWindow; class ColorBar; class Controller;
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Counter.H>
+#include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Choice.H>
 
 class UserInterface {
@@ -30,6 +31,10 @@ public:
   Fl_Box *text_scalar_col;
   Fl_Light_Button *toggle_parametrize_color_map;
   Fl_Counter *counter_num_bands;
+  Fl_Button *button_clamp;
+  Fl_Button *button_scale;
+  Fl_Value_Input *value_clamp_min;
+  Fl_Value_Input *value_clamp_max;
   Fl_Choice *menu_color_map;
   static Fl_Menu_Item menu_menu_color_map[];
   static Fl_Menu_Item *option_black_white;

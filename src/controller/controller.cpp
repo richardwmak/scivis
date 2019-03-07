@@ -32,8 +32,10 @@ int Controller::begin()
     window->toggle_draw_smoke->callback((Fl_Callback *)cb_toggle_smoke);
     window->toggle_dir_color->callback((Fl_Callback *)cb_toggle_dir_color);
     window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs);
+    window->toggle_parametrize_color_map->callback((Fl_Callback *)cb_toggle_parametrization, this);
 
     // counter callbacks
+    window->counter_num_bands->callback((Fl_Callback *)cb_counter_num_bands, this);
     window->counter_time_step->callback((Fl_Callback *)cb_counter_time_step);
     window->counter_visc->callback((Fl_Callback *)cb_counter_visc);
     window->counter_vec_scale->callback((Fl_Callback *)cb_counter_vec_scale);
@@ -43,6 +45,14 @@ int Controller::begin()
     window->option_black_white->callback((Fl_Callback *)cb_option_black_white, this);
     window->option_rainbow->callback((Fl_Callback *)cb_option_rainbow, this);
     window->option_red_white->callback((Fl_Callback *)cb_option_red_white, this);
+
+    // button callbacks
+    window->button_clamp->callback((Fl_Callback *)cb_button_clamp, this);
+    window->button_scale->callback((Fl_Callback *)cb_button_scale, this);
+
+    // value input callbacks
+    window->value_clamp_min->callback((Fl_Callback *)cb_value_clamp_min, this);
+    window->value_clamp_max->callback((Fl_Callback *)cb_value_clamp_max, this);
 
     Fl::add_idle(idle_callback_sim, this);
     Fl::add_idle(idle_callback_interaction, this);

@@ -54,40 +54,38 @@ void GlWindow::visualize()
     fftw_real y_glyph_width =
         (fftw_real)Config::win_height / (fftw_real)(Config::num_glyphs - 1); // Grid cell height
 
+    fftw_real x_grid_width = (fftw_real)Config::win_width / (fftw_real)(Config::GRID_SIZE - 1);
+    fftw_real y_grid_width = (fftw_real)Config::win_height / (fftw_real)(Config::GRID_SIZE - 1);
+
     if (Config::draw_smoke)
     {
         float RGB[3] = {0};
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        for (y_glyph_index = 0; y_glyph_index - 1 < Config::num_glyphs - 1; y_glyph_index++)
+        for (y_grid_index = 0; y_grid_index - 1 < Config::GRID_SIZE - 1; y_grid_index++)
         {
             glBegin(GL_TRIANGLE_STRIP);
 
             x_glyph_index = 0;
-            x_pixel       = x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width;
-            y_pixel       = y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width;
-
-            x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
-            y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
+            x_pixel       = x_grid_width + (fftw_real)x_grid_index * x_grid_width;
+            y_pixel       = y_grid_width + (fftw_real)y_grid_index * y_grid_width;
 
             idx = (y_grid_index * Config::GRID_SIZE) + x_grid_index;
             glColor3f(scalar_field[idx], scalar_field[idx], scalar_field[idx]);
             glVertex2f(x_pixel, y_pixel);
 
-            for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs - 1; x_glyph_index++)
+            for (x_grid_index = 0; x_grid_index < Config::GRID_SIZE - 1; x_grid_index++)
             {
-                x_pixel = x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width;
-                y_pixel = y_glyph_width + (fftw_real)(y_glyph_index + 1) * y_glyph_width;
+                x_pixel = x_grid_width + (fftw_real)x_grid_index * x_grid_width;
+                y_pixel = y_grid_width + (fftw_real)(y_grid_index + 1) * y_grid_width;
 
-                x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
-                y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
-                idx          = ((y_grid_index + 1) * Config::GRID_SIZE) + x_grid_index;
+                idx = ((y_grid_index + 1) * Config::GRID_SIZE) + x_grid_index;
                 ColorMapper::set_colormap(scalar_field[idx], RGB);
                 glColor3fv(RGB);
 
                 glVertex2f(x_pixel, y_pixel);
-                x_pixel = x_glyph_width + (fftw_real)(x_glyph_index + 1) * x_glyph_width;
-                y_pixel = y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width;
+                x_pixel = x_grid_width + (fftw_real)(x_grid_index + 1) * x_grid_width;
+                y_pixel = y_grid_width + (fftw_real)y_grid_index * y_grid_width;
 
                 idx = (y_grid_index * Config::GRID_SIZE) + (x_grid_index + 1);
                 ColorMapper::set_colormap(scalar_field[idx], RGB);
@@ -96,12 +94,10 @@ void GlWindow::visualize()
                 glVertex2f(x_pixel, y_pixel);
             }
 
-            x_pixel = x_glyph_width + (fftw_real)(Config::GRID_SIZE - 1) * x_glyph_width;
-            y_pixel = y_glyph_width + (fftw_real)(y_glyph_index + 1) * y_glyph_width;
+            x_pixel = x_grid_width + (fftw_real)(Config::GRID_SIZE - 1) * x_grid_width;
+            y_pixel = y_grid_width + (fftw_real)(y_grid_index + 1) * y_grid_width;
 
-            x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
-            y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
-            idx          = ((y_grid_index + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
+            idx = ((y_grid_index + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
             ColorMapper::set_colormap(scalar_field[idx], RGB);
             glColor3fv(RGB);
 

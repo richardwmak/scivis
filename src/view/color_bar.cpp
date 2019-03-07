@@ -28,70 +28,28 @@ void ColorBar::draw()
     }
     else
     {
-        ; // divide into num_bands bands and draw each
+        draw_rectangle_banded(); // divide into num_bands bands and draw each
     }
     glFlush();
 }
 
 void ColorBar::draw_rectangle_gradient()
 {
+    int num_verts = 200;
+
     // divide the bar into num_verts - 1 sections
-    std::vector<GLfloat> color(3 * Config::num_verts, 0.0);
+    std::vector<GLfloat> color(3 * num_verts, 0.0);
 
     int bar_height = pixel_h();
     int bar_width  = pixel_w();
 
-    float sec_height = bar_height / (Config::num_verts - 1);
+    float sec_height = bar_height / (num_verts - 1);
 
-    switch (Config::scalar_col)
+    float value_increment = 1 / (float)(num_verts - 1);
+    float cur_value       = 0;
+    for (int i = 0; i < num_verts; i++, cur_value += value_increment)
     {
-        case Config::COLOR_BLACKWHITE:
-        {
-            // set top vertices to be black
-            for (int i = 0; i < 3; i++)
-            {
-                color[i + 3] = 1;
-            }
-            break;
-        }
-        case Config::COLOR_RAINBOW:
-        {
-            for (int i = 0; i < Config::num_verts; i++)
-            {
-                // temporarily convert the bits of the vector we want to an array, then take the
-                // values out later
-                float temp[3] = {color[3 * i], color[3 * i + 1], color[3 * i + 2]};
-
-                float vy = (float)i / (float)Config::num_verts;
-                ColorMapper::rainbow(vy, temp);
-
-                color[3 * i]     = temp[0];
-                color[3 * i + 1] = temp[1];
-                color[3 * i + 2] = temp[2];
-            }
-            break;
-        }
-        case Config::COLOR_RED_WHITE:
-        {
-            for (int i = 0; i < Config::num_verts; i++)
-            {
-                // temporarily convert the bits of the vector we want to an array, then take the
-                // values out later
-                float temp[3] = {color[3 * i], color[3 * i + 1], color[3 * i + 2]};
-
-                float vy = (float)i / (float)Config::num_verts;
-                ColorMapper::red_white(vy, temp);
-
-                color[3 * i]     = temp[0];
-                color[3 * i + 1] = temp[1];
-                color[3 * i + 2] = temp[2];
-            }
-            break;
-        }
-        default:
-        {
-            std::cout << "Something went wrong" << std::endl;
-        };
+        ColorMapper::set_colormap(cur_value, &color[3 * i]);
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -100,13 +58,49 @@ void ColorBar::draw_rectangle_gradient()
     float h = 0;
 
     // since we are using GL_QUADS, we need to loop over the nodes in a bit of a weird way
-    for (int i = 0; i < Config::num_verts - 1; i++, h += sec_height)
+    for (int i = 0; i < num_verts - 1; i++, h += sec_height)
     {
         int index = 3 * i;
         glColor3f(color[index + 0], color[index + 1], color[index + 2]);
         glVertex2f(bar_width, h);
         glVertex2f(0, h);
         glColor3f(color[index + 3], color[index + 4], color[index + 5]);
+        glVertex2f(0, h + sec_height);
+        glVertex2f(bar_width, h + sec_height);
+    }
+
+    glEnd();
+}
+
+void ColorBar::draw_rectangle_banded()
+{
+    std::vector<GLfloat> color(3 * Config::num_bands, 0.0);
+
+    int bar_height = pixel_h();
+    int bar_width  = pixel_w();
+
+    float sec_height = bar_height / (Config::num_bands);
+
+    float value_increment = 1 / (float)(Config::num_bands - 1);
+    float cur_value       = 0;
+
+    for (int i = 0; i < Config::num_bands; i++, cur_value += value_increment)
+    {
+        ColorMapper::set_colormap(cur_value, &color[3 * i]);
+    }
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBegin(GL_QUADS);
+
+    float h = 0;
+
+    // since we are using GL_QUADS, we need to loop over the nodes in a bit of a weird way
+    for (int i = 0; i < Config::num_bands; i++, h += sec_height)
+    {
+        int index = 3 * i;
+        glColor3f(color[index + 0], color[index + 1], color[index + 2]);
+        glVertex2f(bar_width, h);
+        glVertex2f(0, h);
         glVertex2f(0, h + sec_height);
         glVertex2f(bar_width, h + sec_height);
     }
