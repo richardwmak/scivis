@@ -22,6 +22,14 @@ Fl_Menu_Item* UserInterface::option_scalar_smoke = UserInterface::menu_menu_scal
 Fl_Menu_Item* UserInterface::option_scalar_velocity = UserInterface::menu_menu_scalar_choice + 1;
 Fl_Menu_Item* UserInterface::option_scalar_force = UserInterface::menu_menu_scalar_choice + 2;
 
+Fl_Menu_Item UserInterface::menu_menu_vector_choice[] = {
+ {"Velocity", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Force", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
+Fl_Menu_Item* UserInterface::option_vector_velocity = UserInterface::menu_menu_vector_choice + 0;
+Fl_Menu_Item* UserInterface::option_vector_force = UserInterface::menu_menu_vector_choice + 1;
+
 Fl_Double_Window* UserInterface::make_window() {
   { main_window = new Fl_Double_Window(1650, 1000, "Smoke");
     main_window->user_data((void*)(this));
@@ -128,6 +136,10 @@ Fl_Double_Window* UserInterface::make_window() {
       menu_scalar_choice->down_box(FL_BORDER_BOX);
       menu_scalar_choice->menu(menu_menu_scalar_choice);
     } // Fl_Choice* menu_scalar_choice
+    { menu_vector_choice = new Fl_Choice(1435, 90, 150, 20, "Vector:");
+      menu_vector_choice->down_box(FL_BORDER_BOX);
+      menu_vector_choice->menu(menu_menu_vector_choice);
+    } // Fl_Choice* menu_vector_choice
     main_window->end();
   } // Fl_Double_Window* main_window
   return main_window;

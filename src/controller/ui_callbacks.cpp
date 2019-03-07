@@ -170,6 +170,16 @@ void cb_option_scalar_force(Fl_Menu_Item *, void *)
     Config::scalar_choice = Config::SCALAR_FORCE;
 }
 
+void cb_option_vector_force(Fl_Menu_Item *, void *)
+{
+    Config::vector_choice = Config::VECTOR_FORCE;
+}
+
+void cb_option_vector_velocity(Fl_Menu_Item *, void *)
+{
+    Config::vector_choice = Config::VECTOR_VELOCITY;
+}
+
 void cb_button_scale(Fl_Button *b, void *controller)
 {
     b->deactivate();

@@ -49,6 +49,9 @@ int Controller::begin()
     window->option_scalar_smoke->callback((Fl_Callback *)cb_option_scalar_smoke);
     window->option_scalar_velocity->callback((Fl_Callback *)cb_option_scalar_velocity);
     window->option_scalar_force->callback((Fl_Callback *)cb_option_scalar_force);
+    // vector choice menu callbacks
+    window->option_vector_force->callback((Fl_Callback *)cb_option_vector_force);
+    window->option_vector_velocity->callback((Fl_Callback *)cb_option_vector_velocity);
 
     // button callbacks
     window->button_clamp->callback((Fl_Callback *)cb_button_clamp, this);

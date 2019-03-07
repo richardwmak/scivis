@@ -50,6 +50,10 @@ public:
   static Fl_Menu_Item *option_scalar_smoke;
   static Fl_Menu_Item *option_scalar_velocity;
   static Fl_Menu_Item *option_scalar_force;
+  Fl_Choice *menu_vector_choice;
+  static Fl_Menu_Item menu_menu_vector_choice[];
+  static Fl_Menu_Item *option_vector_velocity;
+  static Fl_Menu_Item *option_vector_force;
   void show();
 };
 #endif

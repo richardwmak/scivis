@@ -81,10 +81,10 @@ class UserInterface {open
         xywh {1187 300 48 25} hide
       }
       Fl_Value_Input value_clamp_max {
-        label {max:} selected
+        label {max:}
         xywh {1287 300 48 25} value 1 hide
       }
-      Fl_Choice menu_color_map {open
+      Fl_Choice menu_color_map {
         xywh {1135 245 200 20} down_box BORDER_BOX
         code0 {\#include <iostream>}
       } {
@@ -149,6 +149,19 @@ class UserInterface {open
         }
         MenuItem option_scalar_force {
           label {Force ||f||}
+          xywh {0 0 34 20}
+        }
+      }
+      Fl_Choice menu_vector_choice {
+        label {Vector:} open
+        xywh {1435 90 150 20} down_box BORDER_BOX
+      } {
+        MenuItem option_vector_velocity {
+          label Velocity
+          xywh {0 0 34 20}
+        }
+        MenuItem option_vector_force {
+          label Force selected
           xywh {0 0 34 20}
         }
       }
