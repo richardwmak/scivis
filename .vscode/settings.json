@@ -47,5 +47,13 @@
         "utility": "cpp",
         "cstdarg": "cpp"
     },
-    "C_Cpp.intelliSenseEngine": "Tag Parser"
+    "C_Cpp.intelliSenseEngine": "Tag Parser",
+    "clang.cxxflags": [
+        "-I/usr/local/include",
+        "-I/usr/include",
+        "-Isrc",
+        "-Isrc/controller",
+        "-Isrc/model",
+        "-Isrc/view"
+    ]
 }
