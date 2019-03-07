@@ -111,7 +111,18 @@ void GlWindow::visualize()
     if (Config::draw_vecs)
     {
         float RGB[3] = {1};
-        glBegin(GL_LINES); // draw velocities
+        switch (Config::vector_shape)
+        {
+            case Config::HEDGEHOG:
+            {
+                glBegin(GL_LINES); // draw velocities
+            }
+            case Config::CONE:
+            {
+                // https://www.qtcentre.org/threads/49145-Cylinder-with-gluCylinder()
+                glBegin(GL_POLYGON);
+            }
+        }
         for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs; x_glyph_index++)
         {
             for (y_glyph_index = 0; y_glyph_index < Config::num_glyphs; y_glyph_index++)
@@ -158,4 +169,9 @@ void GlWindow::render_hedgehog(coord start, coord end)
 {
     glVertex2f(start.first, start.second);
     glVertex2f(end.first, end.second);
+}
+
+void GlWindow::render_cone(coord start, coord end)
+{
+    glTranslatef()
 }

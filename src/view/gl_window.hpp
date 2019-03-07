@@ -27,6 +27,7 @@ class GlWindow : public Fl_Gl_Window
 
     void render_vector(coord start, coord end);
     void render_hedgehog(coord start, coord end);
+    void render_cone(coord start, coord end);
 
   private:
     std::vector<fftw_real> scalar_field;
