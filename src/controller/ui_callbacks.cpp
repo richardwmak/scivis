@@ -11,15 +11,6 @@
 
 class Controller;
 
-void redraw_color_bar(void *controller)
-{
-    if (controller != NULL)
-    {
-        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
-        ptr_controller->window->color_bar->redraw();
-    }
-}
-
 // https://web.cecs.pdx.edu/~fliu/courses/cs447/tutorial5.html
 void idle_callback_sim(void *controller)
 {
@@ -45,6 +36,7 @@ void idle_callback_sim(void *controller)
             ptr_controller->window->gl_window->set_scalar_data(scalar_field);
             ptr_controller->window->gl_window->set_vector_data(vector_field_x, vector_field_y);
             ptr_controller->window->gl_window->redraw();
+            ptr_controller->window->color_bar->redraw();
         }
     }
 }
@@ -105,16 +97,14 @@ void cb_toggle_dir_color(Fl_Button *, void *)
     Config::color_dir ? Config::color_dir = false : Config::color_dir = true;
 }
 
-void cb_toggle_parametrization(Fl_Button *, void *controller)
+void cb_toggle_parametrization(Fl_Button *, void *)
 {
     Config::gradient ? Config::gradient = false : Config::gradient = true;
-    redraw_color_bar(controller);
 }
 
-void cb_counter_num_bands(Fl_Counter *w, void *controller)
+void cb_counter_num_bands(Fl_Counter *w, void *)
 {
     Config::num_bands = w->value();
-    redraw_color_bar(controller);
 }
 
 void cb_counter_time_step(Fl_Counter *w, void *)
@@ -141,20 +131,17 @@ void cb_counter_num_glyphs(Fl_Counter *w, void *)
     Config::num_glyphs = w->value();
 }
 
-void cb_option_black_white(Fl_Menu_Item *, void *controller)
+void cb_option_black_white(Fl_Menu_Item *, void *)
 {
     Config::scalar_col = Config::COLOR_BLACKWHITE;
-    redraw_color_bar(controller);
 }
-void cb_option_rainbow(Fl_Menu_Item *, void *controller)
+void cb_option_rainbow(Fl_Menu_Item *, void *)
 {
     Config::scalar_col = Config::COLOR_RAINBOW;
-    redraw_color_bar(controller);
 }
-void cb_option_red_white(Fl_Menu_Item *, void *controller)
+void cb_option_red_white(Fl_Menu_Item *, void *)
 {
     Config::scalar_col = Config::COLOR_RED_WHITE;
-    redraw_color_bar(controller);
 }
 
 void cb_option_scalar_smoke(Fl_Menu_Item *, void *)
@@ -221,7 +208,6 @@ void cb_value_clamp_min(Fl_Valuator *b, void *controller)
     }
     b->value(new_value);
     Config::clamp_min = new_value;
-    redraw_color_bar(controller);
 }
 
 void cb_value_clamp_max(Fl_Valuator *b, void *controller)
@@ -236,5 +222,4 @@ void cb_value_clamp_max(Fl_Valuator *b, void *controller)
     }
     b->value(new_value);
     Config::clamp_max = new_value;
-    redraw_color_bar(controller);
 }
