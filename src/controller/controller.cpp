@@ -45,6 +45,10 @@ int Controller::begin()
     window->option_black_white->callback((Fl_Callback *)cb_option_black_white, this);
     window->option_rainbow->callback((Fl_Callback *)cb_option_rainbow, this);
     window->option_red_white->callback((Fl_Callback *)cb_option_red_white, this);
+    // scalar choice menus callbacks
+    window->option_scalar_smoke->callback((Fl_Callback *)cb_option_scalar_smoke);
+    window->option_scalar_velocity->callback((Fl_Callback *)cb_option_scalar_velocity);
+    window->option_scalar_force->callback((Fl_Callback *)cb_option_scalar_force);
 
     // button callbacks
     window->button_clamp->callback((Fl_Callback *)cb_button_clamp, this);

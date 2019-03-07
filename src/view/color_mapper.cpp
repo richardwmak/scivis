@@ -2,68 +2,68 @@
 #include "config.hpp"
 #include <Fl/gl.h>
 #include <Fl/glu.h>
+#include <algorithm>
 #include <iostream>
 #include <math.h>
+#include <vector>
 
-void ColorMapper::rainbow(float value, float RGB[3], int index)
+void ColorMapper::rainbow(float value, float RGB[3])
 {
     const float dx = 0.8;
-    if (value < 0)
-    {
-        value = 0;
-    }
-    else if (value > 1)
-    {
-        value = 1;
-    }
+    value          = (6 - 2 * dx) * value + dx;
 
-    value = (6 - 2 * dx) * value + dx;
-
-    RGB[index + 0] = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
-    RGB[index + 1] = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
-    RGB[index + 2] = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
+    RGB[0] = std::max(0.0f, (3 - std::fabs(value - 4) - std::fabs(value - 5) / 2));
+    RGB[1] = std::max(0.0f, (4 - std::fabs(value - 2) - std::fabs(value - 4) / 2));
+    RGB[2] = std::max(0.0f, (3 - std::fabs(value - 1) - std::fabs(value - 2) / 2));
 }
 
-void ColorMapper::red_white(float value, float RGB[3], int index)
+void ColorMapper::red_white(float value, float RGB[3])
 {
-    if (value < 0)
-    {
-        value = 0;
-    }
-    else if (value > 1)
-    {
-        value = 1;
-    }
-
-    RGB[index + 0] = 1;
-    RGB[index + 1] = value;
-    RGB[index + 2] = value;
+    RGB[0] = 1;
+    RGB[1] = value;
+    RGB[2] = value;
 }
 
-void ColorMapper::black_white(float value, float RGB[3], int index)
+void ColorMapper::black_white(float value, float RGB[3])
 {
-    RGB[index + 0] = value;
-    RGB[index + 1] = value;
-    RGB[index + 2] = value;
+    RGB[0] = value;
+    RGB[1] = value;
+    RGB[2] = value;
 }
 
-void ColorMapper::set_colormap(float value, float RGB[3], int index)
+void ColorMapper::set_colormap(float value, float RGB[3])
 {
+    if (Config::scaling)
+    {
+        value /= max_scalar;
+    }
+    else
+    {
+        if (value < Config::clamp_min)
+        {
+            value = Config::clamp_min;
+        }
+        else if (value > Config::clamp_max)
+        {
+            value = Config::clamp_max;
+        }
+    }
+
     switch (Config::scalar_col)
     {
         case Config::COLOR_BLACKWHITE:
         {
-            black_white(value, RGB, index);
+            black_white(value, RGB);
             break;
         }
         case Config::COLOR_RAINBOW:
         {
-            rainbow(value, RGB, index);
+            rainbow(value, RGB);
             break;
         }
         case Config::COLOR_RED_WHITE:
         {
-            red_white(value, RGB, index);
+            red_white(value, RGB);
             break;
         }
         default:
@@ -73,7 +73,7 @@ void ColorMapper::set_colormap(float value, float RGB[3], int index)
     }
 }
 
-void ColorMapper::direction_to_color(float RGB[3], float x, float y, int index)
+void ColorMapper::direction_to_color(float RGB[3], float x, float y)
 {
     float r, g, b, f;
     if (Config::color_dir)
@@ -108,7 +108,16 @@ void ColorMapper::direction_to_color(float RGB[3], float x, float y, int index)
         r = g = b = 1;
     }
 
-    RGB[index + 0] = r;
-    RGB[index + 1] = g;
-    RGB[index + 2] = b;
+    RGB[0] = r;
+    RGB[1] = g;
+    RGB[2] = b;
+}
+
+fftw_real ColorMapper::max_scalar = 0;
+
+void ColorMapper::set_max_scalar(std::vector<fftw_real> scalar_field)
+{
+    // max_element returns an iterator so we must dereference it
+    fftw_real max_value = *std::max_element(scalar_field.begin(), scalar_field.end());
+    max_scalar          = std::fabs(max_value);
 }

@@ -1,11 +1,4 @@
 {
-    "c-cpp-flylint.cppcheck.includePaths": [
-        "src/**"
-    ],
-    "c-cpp-flylint.clang.warnings": [
-        "all",
-        "extra"
-    ],
     "files.associations": {
         "limits": "cpp",
         "algorithm": "cpp",
@@ -45,7 +38,8 @@
         "tuple": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp",
-        "cstdarg": "cpp"
+        "cstdarg": "cpp",
+        "deque": "cpp"
     },
     "C_Cpp.intelliSenseEngine": "Tag Parser",
     "clang.cxxflags": [

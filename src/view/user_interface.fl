@@ -11,9 +11,9 @@ class UserInterface {open
   } {
     Fl_Window main_window {
       label Smoke open
-      xywh {939 124 1400 1000} type Double hide
+      xywh {375 175 1650 1000} type Double
       code0 {\#include "config.hpp"}
-      code1 {\#include <iostream>}
+      code1 {\#include <iostream>} visible
     } {
       Fl_Box gl_window {
         xywh {0 0 1000 1000} labeltype NO_LABEL
@@ -76,15 +76,15 @@ class UserInterface {open
         label Scale
         xywh {1235 280 100 20} color 63 deactivate
       }
-      Fl_Value_Input value_clamp__min {
+      Fl_Value_Input value_clamp_min {
         label {min:}
         xywh {1187 300 48 25} hide
       }
-      Fl_Value_Input value_clamp__max {
-        label {max:}
+      Fl_Value_Input value_clamp_max {
+        label {max:} selected
         xywh {1287 300 48 25} value 1 hide
       }
-      Fl_Choice menu_color_map {open selected
+      Fl_Choice menu_color_map {open
         xywh {1135 245 200 20} down_box BORDER_BOX
         code0 {\#include <iostream>}
       } {
@@ -130,6 +130,27 @@ class UserInterface {open
         xywh {1135 504 200 21} align 1
         code0 {counter_num_glyphs->step(1, 10);}
         code1 {counter_num_glyphs->value(Config::num_glyphs);}
+      }
+      Fl_Box {} {
+        label Datasets
+        xywh {1385 50 200 20} labelfont 1
+      }
+      Fl_Choice menu_scalar_choice {
+        label {Scalar:} open
+        xywh {1435 70 150 20} down_box BORDER_BOX
+      } {
+        MenuItem option_scalar_smoke {
+          label Smoke
+          xywh {0 0 34 20}
+        }
+        MenuItem option_scalar_velocity {
+          label {Velocity ||v||}
+          xywh {0 0 34 20}
+        }
+        MenuItem option_scalar_force {
+          label {Force ||f||}
+          xywh {0 0 34 20}
+        }
       }
     }
   }

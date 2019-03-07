@@ -12,8 +12,18 @@ Fl_Menu_Item* UserInterface::option_black_white = UserInterface::menu_menu_color
 Fl_Menu_Item* UserInterface::option_rainbow = UserInterface::menu_menu_color_map + 1;
 Fl_Menu_Item* UserInterface::option_red_white = UserInterface::menu_menu_color_map + 2;
 
+Fl_Menu_Item UserInterface::menu_menu_scalar_choice[] = {
+ {"Smoke", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Velocity ||v||", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Force ||f||", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
+Fl_Menu_Item* UserInterface::option_scalar_smoke = UserInterface::menu_menu_scalar_choice + 0;
+Fl_Menu_Item* UserInterface::option_scalar_velocity = UserInterface::menu_menu_scalar_choice + 1;
+Fl_Menu_Item* UserInterface::option_scalar_force = UserInterface::menu_menu_scalar_choice + 2;
+
 Fl_Double_Window* UserInterface::make_window() {
-  { main_window = new Fl_Double_Window(1400, 1000, "Smoke");
+  { main_window = new Fl_Double_Window(1650, 1000, "Smoke");
     main_window->user_data((void*)(this));
     { gl_window = new GlWindow(0, 0, 1000, 1000);
       gl_window->box(FL_NO_BOX);
@@ -111,6 +121,13 @@ Fl_Double_Window* UserInterface::make_window() {
       counter_num_glyphs->step(1, 10);
       counter_num_glyphs->value(Config::num_glyphs);
     } // Fl_Counter* counter_num_glyphs
+    { Fl_Box* o = new Fl_Box(1385, 50, 200, 20, "Datasets");
+      o->labelfont(1);
+    } // Fl_Box* o
+    { menu_scalar_choice = new Fl_Choice(1435, 70, 150, 20, "Scalar:");
+      menu_scalar_choice->down_box(FL_BORDER_BOX);
+      menu_scalar_choice->menu(menu_menu_scalar_choice);
+    } // Fl_Choice* menu_scalar_choice
     main_window->end();
   } // Fl_Double_Window* main_window
   return main_window;

@@ -45,6 +45,11 @@ public:
   Fl_Counter *counter_visc;
   Fl_Counter *counter_vec_scale;
   Fl_Counter *counter_num_glyphs;
+  Fl_Choice *menu_scalar_choice;
+  static Fl_Menu_Item menu_menu_scalar_choice[];
+  static Fl_Menu_Item *option_scalar_smoke;
+  static Fl_Menu_Item *option_scalar_velocity;
+  static Fl_Menu_Item *option_scalar_force;
   void show();
 };
 #endif

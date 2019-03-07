@@ -1,3 +1,4 @@
+#include "color_mapper.hpp"
 #include "config.hpp"
 #include "controller.hpp"
 #include <FL/Fl.H>
@@ -38,6 +39,8 @@ void idle_callback_sim(void *controller)
             scalar_field   = ptr_controller->simulation->get_scalar_field();
             vector_field_x = ptr_controller->simulation->get_vector_field_x();
             vector_field_y = ptr_controller->simulation->get_vector_field_y();
+
+            ColorMapper::set_max_scalar(scalar_field);
 
             ptr_controller->window->gl_window->set_scalar_data(scalar_field);
             ptr_controller->window->gl_window->set_vector_data(vector_field_x, vector_field_y);
@@ -154,10 +157,25 @@ void cb_option_red_white(Fl_Menu_Item *, void *controller)
     redraw_color_bar(controller);
 }
 
+void cb_option_scalar_smoke(Fl_Menu_Item *, void *)
+{
+    Config::scalar_choice = Config::SCALAR_SMOKE;
+}
+void cb_option_scalar_velocity(Fl_Menu_Item *, void *)
+{
+    Config::scalar_choice = Config::SCALAR_VELOCITY;
+}
+void cb_option_scalar_force(Fl_Menu_Item *, void *)
+{
+    Config::scalar_choice = Config::SCALAR_FORCE;
+}
+
 void cb_button_scale(Fl_Button *b, void *controller)
 {
     b->deactivate();
     b->color(FL_GREEN);
+
+    Config::scaling = true;
 
     Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
     ptr_controller->window->button_clamp->activate();
@@ -170,6 +188,8 @@ void cb_button_clamp(Fl_Button *b, void *controller)
 {
     b->deactivate();
     b->color(FL_GREEN);
+
+    Config::scaling = false;
 
     Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
     ptr_controller->window->button_scale->activate();

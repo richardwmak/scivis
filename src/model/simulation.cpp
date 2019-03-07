@@ -200,28 +200,22 @@ void Simulation::do_one_simulation_step()
 std::vector<fftw_real> Simulation::get_scalar_field()
 {
     std::vector<fftw_real> scalar_field;
-    if (Config::scalar_to_draw == Config::SCALAR_FORCE)
+    if (Config::scalar_choice == Config::SCALAR_FORCE)
     {
-        std::vector<fftw_real> scalar_field(Config::NUM_CELLS);
-
         for (int i = 0; i < Config::NUM_CELLS; i++)
         {
-            scalar_field[i] =
-                std::sqrt(pow(cur_state.force_x[i], 2) + pow(cur_state.force_y[i], 2));
+            scalar_field.push_back(std::hypot(cur_state.force_x[i], cur_state.force_y[i]));
         }
     }
 
-    else if (Config::scalar_to_draw == Config::SCALAR_VELOCITY)
+    else if (Config::scalar_choice == Config::SCALAR_VELOCITY)
     {
-        std::vector<fftw_real> scalar_field(Config::NUM_CELLS);
-
         for (int i = 0; i < Config::NUM_CELLS; i++)
         {
-            scalar_field[i] =
-                std::sqrt(pow(cur_state.velocity_x[i], 2) + pow(cur_state.velocity_y[i], 2));
+            scalar_field.push_back(std::hypot(cur_state.velocity_x[i], cur_state.velocity_y[i]));
         }
     }
-    else if (Config::scalar_to_draw == Config::SCALAR_SMOKE)
+    else if (Config::scalar_choice == Config::SCALAR_SMOKE)
     {
         // https://stackoverflow.com/questions/259297/how-do-you-copy-the-contents-of-an-array-to-a-stdvector-in-c-without-looping
         std::copy(cur_state.smoke_density,
@@ -243,7 +237,7 @@ std::vector<fftw_real> Simulation::get_vector_field_y()
 
 std::vector<fftw_real> Simulation::get_vector_field(fftw_real *force, fftw_real *velocity)
 {
-    switch (Config::vector_to_draw)
+    switch (Config::vector_choice)
     {
         case Config::VECTOR_FORCE:
         {
