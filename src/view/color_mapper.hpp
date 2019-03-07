@@ -13,7 +13,7 @@ class ColorMapper
     static void black_white(float value, float RGB[3]);
     static void red_white(float value, float RGB[3]);
     static void set_colormap(float value, float RGB[3]);
-    static void direction_to_color(float RGB[3], float x, float y);
+    // static void direction_to_color(float RGB[3], float x, float y);
 
     static fftw_real max_scalar;
     static void      set_max_scalar(std::vector<fftw_real> scalar_field);

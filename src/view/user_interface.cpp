@@ -63,14 +63,14 @@ Fl_Double_Window* UserInterface::make_window() {
     { text_toggle = new Fl_Box(1135, 50, 200, 20, "Toggle");
       text_toggle->labelfont(1);
     } // Fl_Box* text_toggle
-    { toggle_dir_color = new Fl_Button(1135, 130, 200, 20, "Toggle direction colour");
-    } // Fl_Button* toggle_dir_color
     { toggle_draw_smoke = new Fl_Button(1135, 90, 200, 20, "Toggle smoke");
     } // Fl_Button* toggle_draw_smoke
     { toggle_draw_vecs = new Fl_Button(1135, 110, 200, 20, "Toggle vectors");
     } // Fl_Button* toggle_draw_vecs
     { toggle_frozen = new Fl_Button(1135, 70, 200, 20, "Toggle play");
     } // Fl_Button* toggle_frozen
+    { toggle_vector_color = new Fl_Button(1135, 130, 200, 20, "Toggle vector coloring");
+    } // Fl_Button* toggle_vector_color
     { text_scalar_col = new Fl_Box(1135, 170, 200, 20, "Color mapping");
       text_scalar_col->labelfont(1);
     } // Fl_Box* text_scalar_col

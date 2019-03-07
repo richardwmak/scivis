@@ -92,9 +92,9 @@ void cb_toggle_vecs(Fl_Button *, void *)
         Config::draw_vecs = true;
     }
 }
-void cb_toggle_dir_color(Fl_Button *, void *)
+void cb_toggle_vector_color(Fl_Button *, void *)
 {
-    Config::color_dir ? Config::color_dir = false : Config::color_dir = true;
+    Config::vector_color ? Config::vector_color = false : Config::vector_color = true;
 }
 
 void cb_toggle_parametrization(Fl_Button *, void *)

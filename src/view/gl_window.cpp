@@ -7,6 +7,7 @@
 #include <Fl/glu.h>
 #include <iostream>
 #include <math.h>
+#include <vector>
 
 GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
 {
@@ -109,7 +110,7 @@ void GlWindow::visualize()
 
     if (Config::draw_vecs)
     {
-        float RGB[3] = {0};
+        float RGB[3] = {1};
         glBegin(GL_LINES); // draw velocities
         for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs; x_glyph_index++)
         {
@@ -119,17 +120,42 @@ void GlWindow::visualize()
                 y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
 
                 idx = (y_grid_index * Config::GRID_SIZE) + x_grid_index;
-                ColorMapper::direction_to_color(RGB, vector_field_x[idx], vector_field_y[idx]);
+                if (Config::vector_color)
+                {
+                    ColorMapper::set_colormap(scalar_field[idx], RGB);
+                }
                 glColor3fv(RGB);
-                glVertex2f(x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width,
-                           y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width);
 
-                glVertex2f((x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width) +
-                               Config::vec_scale * vector_field_x[idx],
-                           (y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width) +
-                               Config::vec_scale * vector_field_y[idx]);
+                coord start, end;
+
+                start = std::make_pair(
+                    (GLfloat)(x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width),
+                    (GLfloat)(y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width));
+                end = std::make_pair(
+                    (GLfloat)((x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width) +
+                              Config::vec_scale * vector_field_x[idx]),
+                    (GLfloat)((y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width) +
+                              Config::vec_scale * vector_field_y[idx]));
+                render_vector(start, end);
             }
         }
         glEnd();
     }
+}
+
+void GlWindow::render_vector(coord start, coord end)
+{
+    switch (Config::vector_shape)
+    {
+        case (Config::HEDGEHOG):
+        {
+            render_hedgehog(start, end);
+        }
+    }
+}
+
+void GlWindow::render_hedgehog(coord start, coord end)
+{
+    glVertex2f(start.first, start.second);
+    glVertex2f(end.first, end.second);
 }

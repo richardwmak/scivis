@@ -24,10 +24,10 @@ public:
   Fl_Box *separator;
   ColorBar *color_bar;
   Fl_Box *text_toggle;
-  Fl_Button *toggle_dir_color;
   Fl_Button *toggle_draw_smoke;
   Fl_Button *toggle_draw_vecs;
   Fl_Button *toggle_frozen;
+  Fl_Button *toggle_vector_color;
   Fl_Box *text_scalar_col;
   Fl_Light_Button *toggle_parametrize_color_map;
   Fl_Counter *counter_num_bands;

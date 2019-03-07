@@ -8,14 +8,16 @@ namespace Config
     int    win_width, win_height;
     float  num_glyphs = 100;
 
-    bool      color_dir  = false;
-    bool      draw_smoke = false;
-    bool      draw_vecs  = true;
-    bool      frozen     = false;
-    float     vec_scale  = 1000;
-    bool      scaling    = true;
-    fftw_real clamp_min  = 0;
-    fftw_real clamp_max  = 1;
+    bool color_dir    = false;
+    bool draw_smoke   = false;
+    bool draw_vecs    = true;
+    bool frozen       = false;
+    bool vector_color = false;
+
+    float     vec_scale = 1000;
+    bool      scaling   = true;
+    fftw_real clamp_min = 0;
+    fftw_real clamp_max = 1;
 
     bool gradient  = true;
     int  num_bands = 7;
@@ -24,4 +26,7 @@ namespace Config
 
     int scalar_choice = SCALAR_SMOKE;
     int vector_choice = VECTOR_VELOCITY;
+
+    int vector_shape = HEDGEHOG;
+
 } // namespace Config

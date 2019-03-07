@@ -12,13 +12,14 @@ namespace Config
     extern float  num_glyphs;                        // how many glyphs to draw
 
     // VISUALIZATION PARAMETERS
-    extern bool      color_dir;  // use direction color-coding or not
-    extern bool      draw_smoke; // draw the smoke or not
-    extern bool      draw_vecs;  // draw the vector field or not
-    extern bool      frozen;     // toggles on/off the animation
-    extern float     vec_scale;  // scaling of hedgehogs
-    extern bool      scaling;    // scaling if true, clamping if false;
-    extern fftw_real clamp_min;  // clamping values if we are clamping
+    extern bool  draw_smoke;   // draw the smoke or not
+    extern bool  draw_vecs;    // draw the vector field or not
+    extern bool  frozen;       // toggles on/off the animation
+    extern float vec_scale;    // scaling of hedgehogs
+    extern bool  vector_color; // color the vectors according to the scalar_col or not
+
+    extern bool      scaling;   // scaling if true, clamping if false;
+    extern fftw_real clamp_min; // clamping values if we are clamping
     extern fftw_real clamp_max;
 
     extern bool gradient;  // draw a gradient if true, use banding if false
@@ -39,4 +40,11 @@ namespace Config
     const int SCALAR_VELOCITY = 2;
     const int VECTOR_VELOCITY = 0;
     const int VECTOR_FORCE    = 1;
+
+    // what shape of vector do we draw?
+    extern int vector_shape;
+    const int  HEDGEHOG      = 0;
+    const int  CONE          = 1;
+    const int  THREE_D_ARROW = 2;
+
 } // namespace Config

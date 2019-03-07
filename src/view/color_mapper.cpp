@@ -73,45 +73,45 @@ void ColorMapper::set_colormap(float value, float RGB[3])
     }
 }
 
-void ColorMapper::direction_to_color(float RGB[3], float x, float y)
-{
-    float r, g, b, f;
-    if (Config::color_dir)
-    {
-        f = std::atan2(y, x) / 3.1415927 + 1;
-        r = f;
-        if (r > 1)
-        {
-            r = 2 - r;
-        }
-        g = f + .66667;
-        if (g > 2)
-        {
-            g -= 2;
-        }
-        if (g > 1)
-        {
-            g = 2 - g;
-        }
-        b = f + 2 * .66667;
-        if (b > 2)
-        {
-            b -= 2;
-        }
-        if (b > 1)
-        {
-            b = 2 - b;
-        }
-    }
-    else
-    {
-        r = g = b = 1;
-    }
+// void ColorMapper::direction_to_color(float RGB[3], float x, float y)
+// {
+//     float r, g, b, f;
+//     if (Config::color_dir)
+//     {
+//         f = std::atan2(y, x) / 3.1415927 + 1;
+//         r = f;
+//         if (r > 1)
+//         {
+//             r = 2 - r;
+//         }
+//         g = f + .66667;
+//         if (g > 2)
+//         {
+//             g -= 2;
+//         }
+//         if (g > 1)
+//         {
+//             g = 2 - g;
+//         }
+//         b = f + 2 * .66667;
+//         if (b > 2)
+//         {
+//             b -= 2;
+//         }
+//         if (b > 1)
+//         {
+//             b = 2 - b;
+//         }
+//     }
+//     else
+//     {
+//         r = g = b = 1;
+//     }
 
-    RGB[0] = r;
-    RGB[1] = g;
-    RGB[2] = b;
-}
+//     RGB[0] = r;
+//     RGB[1] = g;
+//     RGB[2] = b;
+// }
 
 fftw_real ColorMapper::max_scalar = 0;
 
