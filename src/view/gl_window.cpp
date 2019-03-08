@@ -67,12 +67,14 @@ void GlWindow::visualize()
         {
             glBegin(GL_TRIANGLE_STRIP);
 
-            x_glyph_index = 0;
-            x_pixel       = x_grid_width + (fftw_real)x_grid_index * x_grid_width;
-            y_pixel       = y_grid_width + (fftw_real)y_grid_index * y_grid_width;
+            x_grid_index = 0;
+            x_pixel      = x_grid_width + (fftw_real)x_grid_index * x_grid_width;
+            y_pixel      = y_grid_width + (fftw_real)y_grid_index * y_grid_width;
 
             idx = (y_grid_index * Config::GRID_SIZE) + x_grid_index;
-            glColor3f(scalar_field[idx], scalar_field[idx], scalar_field[idx]);
+            ColorMapper::set_colormap(scalar_field[idx], RGB);
+            glColor3fv(RGB);
+
             glVertex2f(x_pixel, y_pixel);
 
             for (x_grid_index = 0; x_grid_index < Config::GRID_SIZE - 1; x_grid_index++)
@@ -110,7 +112,7 @@ void GlWindow::visualize()
 
     if (Config::draw_vecs)
     {
-        float RGB[3] = {1};
+        float RGB[3] = {1, 1, 1};
         switch (Config::vector_shape)
         {
             case Config::HEDGEHOG:
@@ -173,5 +175,27 @@ void GlWindow::render_hedgehog(coord start, coord end)
 
 void GlWindow::render_cone(coord start, coord end)
 {
-    glTranslatef()
+    // referred to
+    // http://lifeofaprogrammergeek.blogspot.com/2008/07/rendering-cylinder-between-two-points.html
+
+    // pushes the matrix down the stack and duplicates it so that we can come back to it
+    glPushMatrix();
+
+    glTranslatef(start.first, start.second, 0);
+
+    GLfloat vector_length = std::hypot(start.first, start.second);
+
+    GLfloat angle = std::acos(start.first / vector_length);
+    glRotatef(angle, start.first, start.second, 0);
+
+    GLUquadric *quadric = gluNewQuadric();
+    GLdouble    base    = 1.0;
+    GLdouble    top     = 0.0;
+    GLdouble    height  = vector_length;
+    GLint       slices  = 0;
+    GLint       stacks  = 0;
+
+    gluCylinder(quadric, base, top, height, slices, stacks);
+
+    glPopMatrix();
 }

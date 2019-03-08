@@ -33,7 +33,7 @@ void ColorMapper::black_white(float value, float RGB[3])
 
 void ColorMapper::set_colormap(float value, float RGB[3])
 {
-    if (Config::scaling)
+    if (Config::scaling && max_scalar != 0)
     {
         value /= max_scalar;
     }
