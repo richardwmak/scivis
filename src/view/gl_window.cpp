@@ -115,14 +115,15 @@ void GlWindow::visualize()
         float RGB[3] = {1, 1, 1};
         switch (Config::vector_shape)
         {
-            case Config::HEDGEHOG:
-            {
-                glBegin(GL_LINES); // draw velocities
-            }
             case Config::CONE:
             {
                 // https://www.qtcentre.org/threads/49145-Cylinder-with-gluCylinder()
                 glBegin(GL_POLYGON);
+            }
+            case Config::HEDGEHOG:
+            default:
+            {
+                glBegin(GL_LINES); // draw velocities
             }
         }
         for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs; x_glyph_index++)
@@ -183,7 +184,7 @@ void GlWindow::render_cone(coord start, coord end)
 
     glTranslatef(start.first, start.second, 0);
 
-    GLfloat vector_length = std::hypot(start.first, start.second);
+    GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
 
     GLfloat angle = std::acos(start.first / vector_length);
     glRotatef(angle, start.first, start.second, 0);

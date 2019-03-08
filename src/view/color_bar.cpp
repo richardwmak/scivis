@@ -45,7 +45,7 @@ void ColorBar::draw_rectangle_gradient()
 
     float sec_height = bar_height / (num_verts - 1);
 
-    float value_increment = 1 / (float)(num_verts - 1);
+    float value_increment = ColorMapper::max_scalar / (float)(num_verts - 1);
     float cur_value       = 0;
     for (int i = 0; i < num_verts; i++, cur_value += value_increment)
     {
@@ -81,7 +81,7 @@ void ColorBar::draw_rectangle_banded()
 
     float sec_height = bar_height / (Config::num_bands);
 
-    float value_increment = 1 / (float)(Config::num_bands - 1);
+    float value_increment = ColorMapper::max_scalar / (float)(Config::num_bands - 1);
     float cur_value       = 0;
 
     for (int i = 0; i < Config::num_bands; i++, cur_value += value_increment)
