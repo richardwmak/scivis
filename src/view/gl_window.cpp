@@ -225,7 +225,6 @@ void GlWindow::render_arrow_2d(coord start, coord end)
     GLfloat vector_length     = std::hypot(end.first - start.first, end.second - start.second);
     GLfloat vector_width      = 0.1 * vector_length;
     GLfloat arrow_base_length = 0.7 * vector_length;
-    GLfloat arrow_head_length = vector_length - arrow_base_length;
     GLfloat arrow_base_width  = 0.4 * vector_width;
     GLfloat arrow_head_width  = vector_width;
 

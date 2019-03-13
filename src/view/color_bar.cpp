@@ -22,32 +22,36 @@ void ColorBar::draw()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    if (Config::gradient)
-    {
-        draw_rectangle_gradient(); // draw gradient from top to bottom
-    }
-    else
-    {
-        draw_rectangle_banded(); // divide into num_bands bands and draw each
-    }
-    glFlush();
+    draw_rectangle_gradient();
 }
 
 void ColorBar::draw_rectangle_gradient()
 {
-    int num_verts = 200;
+    int sections;
+    Config::gradient ? sections = 200 : sections = Config::num_bands;
 
-    // divide the bar into num_verts - 1 sections
-    std::vector<GLfloat> color(3 * num_verts, 0.0);
+    std::vector<GLfloat> color(3 * (sections + 1), 0.0);
 
     int bar_height = pixel_h();
     int bar_width  = pixel_w();
 
-    float sec_height = bar_height / (num_verts - 1);
+    float sec_height = bar_height / (sections);
 
-    float value_increment = ColorMapper::max_scalar / (float)(num_verts - 1);
-    float cur_value       = 0;
-    for (int i = 0; i < num_verts; i++, cur_value += value_increment)
+    // depending on whether we're scaling we'll want different iterations
+    float value_increment;
+    float cur_value;
+    if (Config::scaling)
+    {
+        value_increment = ColorMapper::max_scalar / (float)(sections);
+        cur_value       = 0;
+    }
+    else
+    {
+        value_increment = (Config::clamp_max - Config::clamp_min) / (float)(sections);
+        cur_value       = Config::clamp_min;
+    }
+
+    for (int i = 0; i < sections; i++, cur_value += value_increment)
     {
         ColorMapper::set_colormap(cur_value, &color[3 * i]);
     }
@@ -58,49 +62,18 @@ void ColorBar::draw_rectangle_gradient()
     float h = 0;
 
     // since we are using GL_QUADS, we need to loop over the nodes in a bit of a weird way
-    for (int i = 0; i < num_verts - 1; i++, h += sec_height)
+    for (int i = 0; i < sections; i++, h += sec_height)
     {
         int index = 3 * i;
         glColor3f(color[index + 0], color[index + 1], color[index + 2]);
         glVertex2f(bar_width, h);
         glVertex2f(0, h);
-        glColor3f(color[index + 3], color[index + 4], color[index + 5]);
-        glVertex2f(0, h + sec_height);
-        glVertex2f(bar_width, h + sec_height);
-    }
-
-    glEnd();
-}
-
-void ColorBar::draw_rectangle_banded()
-{
-    std::vector<GLfloat> color(3 * Config::num_bands, 0.0);
-
-    int bar_height = pixel_h();
-    int bar_width  = pixel_w();
-
-    float sec_height = bar_height / (Config::num_bands);
-
-    float value_increment = ColorMapper::max_scalar / (float)(Config::num_bands - 1);
-    float cur_value       = 0;
-
-    for (int i = 0; i < Config::num_bands; i++, cur_value += value_increment)
-    {
-        ColorMapper::set_colormap(cur_value, &color[3 * i]);
-    }
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glBegin(GL_QUADS);
-
-    float h = 0;
-
-    // since we are using GL_QUADS, we need to loop over the nodes in a bit of a weird way
-    for (int i = 0; i < Config::num_bands; i++, h += sec_height)
-    {
-        int index = 3 * i;
-        glColor3f(color[index + 0], color[index + 1], color[index + 2]);
-        glVertex2f(bar_width, h);
-        glVertex2f(0, h);
+        // if we are drawing a gradient we want to make sure to set the top of the section to be the
+        // next colour
+        if (Config::gradient)
+        {
+            glColor3f(color[index + 3], color[index + 4], color[index + 5]);
+        }
         glVertex2f(0, h + sec_height);
         glVertex2f(bar_width, h + sec_height);
     }

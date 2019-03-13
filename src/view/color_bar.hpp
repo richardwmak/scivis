@@ -11,5 +11,4 @@ class ColorBar : public Fl_Gl_Window
 
     void draw();
     void draw_rectangle_gradient();
-    void draw_rectangle_banded();
 };
