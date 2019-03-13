@@ -223,11 +223,11 @@ void GlWindow::render_arrow_2d(coord start, coord end)
     // then rotate it
 
     GLfloat vector_length     = std::hypot(end.first - start.first, end.second - start.second);
-    GLfloat vector_width      = 0.2 * vector_length;
+    GLfloat vector_width      = 0.1 * vector_length;
     GLfloat arrow_base_length = 0.7 * vector_length;
     GLfloat arrow_head_length = vector_length - arrow_base_length;
     GLfloat arrow_base_width  = 0.4 * vector_width;
-    GLfloat arrow_head_width  = vector_width - arrow_base_width;
+    GLfloat arrow_head_width  = vector_width;
 
     GLfloat vector_angle = std::acos((end.first - start.first) / vector_length);
 
@@ -236,11 +236,15 @@ void GlWindow::render_arrow_2d(coord start, coord end)
                          start.first + arrow_base_length,
                          start.second + 0.5 * arrow_base_width,
                          vector_angle);
-    coord v3 = rotate_2d(
-        start, start.first + arrow_base_length, start.second + 0.5 * vector_width, vector_angle);
+    coord v3 = rotate_2d(start,
+                         start.first + arrow_base_length,
+                         start.second + 0.5 * arrow_head_width,
+                         vector_angle);
     coord v4 = rotate_2d(start, start.first + vector_length, start.second, vector_angle);
-    coord v5 = rotate_2d(
-        start, start.first + arrow_base_length, start.second - 0.5 * vector_width, vector_angle);
+    coord v5 = rotate_2d(start,
+                         start.first + arrow_base_length,
+                         start.second - 0.5 * arrow_head_width,
+                         vector_angle);
     coord v6 = rotate_2d(start,
                          start.first + arrow_base_length,
                          start.second - 0.5 * arrow_base_width,
