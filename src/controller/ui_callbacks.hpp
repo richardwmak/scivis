@@ -23,14 +23,22 @@ void cb_counter_visc(Fl_Counter *w, void *);
 void cb_counter_vec_scale(Fl_Counter *w, void *);
 void cb_counter_num_glyphs(Fl_Counter *w, void *);
 
+// option callbacks
+
 void cb_option_black_white(Fl_Menu_Item *, void *);
 void cb_option_rainbow(Fl_Menu_Item *, void *);
 void cb_option_red_white(Fl_Menu_Item *, void *);
+
 void cb_option_scalar_smoke(Fl_Menu_Item *, void *);
 void cb_option_scalar_velocity(Fl_Menu_Item *, void *);
 void cb_option_scalar_force(Fl_Menu_Item *, void *);
+
 void cb_option_vector_force(Fl_Menu_Item *, void *);
 void cb_option_vector_velocity(Fl_Menu_Item *, void *);
+
+void cb_option_hedgehog(Fl_Menu_Item *, void *);
+void cb_option_cone(Fl_Menu_Item *, void *);
+void cb_option_arrow_2d(Fl_Menu_Item *, void *);
 
 void cb_button_scale(Fl_Button *b, void *controller);
 void cb_button_clamp(Fl_Button *b, void *controller);

@@ -54,6 +54,12 @@ public:
   static Fl_Menu_Item menu_menu_vector_choice[];
   static Fl_Menu_Item *option_vector_velocity;
   static Fl_Menu_Item *option_vector_force;
+  Fl_Box *text_vector_shape;
+  Fl_Choice *menu_vector_shape;
+  static Fl_Menu_Item menu_menu_vector_shape[];
+  static Fl_Menu_Item *option_hedgehog;
+  static Fl_Menu_Item *option_cone;
+  static Fl_Menu_Item *option_arrow_2d;
   void show();
 };
 #endif

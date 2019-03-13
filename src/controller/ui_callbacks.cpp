@@ -167,6 +167,19 @@ void cb_option_vector_velocity(Fl_Menu_Item *, void *)
     Config::vector_choice = Config::VECTOR_VELOCITY;
 }
 
+void cb_option_hedgehog(Fl_Menu_Item *, void *)
+{
+    Config::vector_shape = Config::HEDGEHOG;
+}
+void cb_option_cone(Fl_Menu_Item *, void *)
+{
+    Config::vector_shape = Config::CONE;
+}
+void cb_option_arrow_2d(Fl_Menu_Item *, void *)
+{
+    Config::vector_shape = Config::ARROW_2D;
+}
+
 void cb_button_scale(Fl_Button *b, void *controller)
 {
     b->deactivate();

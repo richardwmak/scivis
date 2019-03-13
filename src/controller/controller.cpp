@@ -52,6 +52,10 @@ int Controller::begin()
     // vector choice menu callbacks
     window->option_vector_force->callback((Fl_Callback *)cb_option_vector_force);
     window->option_vector_velocity->callback((Fl_Callback *)cb_option_vector_velocity);
+    // vector shape menu callbacks
+    window->option_hedgehog->callback((Fl_Callback *)cb_option_hedgehog);
+    window->option_cone->callback((Fl_Callback *)cb_option_cone);
+    window->option_arrow_2d->callback((Fl_Callback *)cb_option_arrow_2d);
 
     // button callbacks
     window->button_clamp->callback((Fl_Callback *)cb_button_clamp, this);

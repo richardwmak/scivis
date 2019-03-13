@@ -43,8 +43,8 @@ namespace Config
 
     // what shape of vector do we draw?
     extern int vector_shape;
-    const int  HEDGEHOG      = 0;
-    const int  CONE          = 1;
-    const int  THREE_D_ARROW = 2;
+    const int  HEDGEHOG = 0;
+    const int  CONE     = 1;
+    const int  ARROW_2D = 2;
 
 } // namespace Config

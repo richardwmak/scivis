@@ -119,11 +119,19 @@ void GlWindow::visualize()
             {
                 // https://www.qtcentre.org/threads/49145-Cylinder-with-gluCylinder()
                 glBegin(GL_POLYGON);
+                break;
+            }
+            case Config::ARROW_2D:
+            {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                glBegin(GL_POLYGON);
+                break;
             }
             case Config::HEDGEHOG:
             default:
             {
                 glBegin(GL_LINES); // draw velocities
+                break;
             }
         }
         for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs; x_glyph_index++)
@@ -161,9 +169,16 @@ void GlWindow::render_vector(coord start, coord end)
 {
     switch (Config::vector_shape)
     {
-        case (Config::HEDGEHOG):
+        case Config::ARROW_2D:
+        {
+            render_arrow_2d(start, end);
+            break;
+        }
+        case Config::HEDGEHOG:
+        default:
         {
             render_hedgehog(start, end);
+            break;
         }
     }
 }
@@ -199,4 +214,73 @@ void GlWindow::render_cone(coord start, coord end)
     gluCylinder(quadric, base, top, height, slices, stacks);
 
     glPopMatrix();
+}
+
+void GlWindow::render_arrow_2d(coord start, coord end)
+{
+    // https://www.gamedev.net/forums/topic/229253-how-to-draw-arrows-in-opengl/
+    // first draw the arrow horizontally along the positive x-axis
+    // then rotate it
+
+    GLfloat vector_length     = std::hypot(end.first - start.first, end.second - start.second);
+    GLfloat vector_width      = 0.2 * vector_length;
+    GLfloat arrow_base_length = 0.7 * vector_length;
+    GLfloat arrow_head_length = vector_length - arrow_base_length;
+    GLfloat arrow_base_width  = 0.4 * vector_width;
+    GLfloat arrow_head_width  = vector_width - arrow_base_width;
+
+    GLfloat vector_angle = std::acos((end.first - start.first) / vector_length);
+
+    coord v1 = rotate_2d(start, start.first, start.second + 0.5 * arrow_base_width, vector_angle);
+    coord v2 = rotate_2d(start,
+                         start.first + arrow_base_length,
+                         start.second + 0.5 * arrow_base_width,
+                         vector_angle);
+    coord v3 = rotate_2d(
+        start, start.first + arrow_base_length, start.second + 0.5 * vector_width, vector_angle);
+    coord v4 = rotate_2d(start, start.first + vector_length, start.second, vector_angle);
+    coord v5 = rotate_2d(
+        start, start.first + arrow_base_length, start.second - 0.5 * vector_width, vector_angle);
+    coord v6 = rotate_2d(start,
+                         start.first + arrow_base_length,
+                         start.second - 0.5 * arrow_base_width,
+                         vector_angle);
+    coord v7 = rotate_2d(start, start.first, start.second - 0.5 * arrow_base_width, vector_angle);
+
+    glVertex2f(v1.first, v1.second);
+    glVertex2f(v2.first, v2.second);
+    glVertex2f(v3.first, v3.second);
+    glVertex2f(v4.first, v4.second);
+    glVertex2f(v5.first, v5.second);
+    glVertex2f(v6.first, v6.second);
+    glVertex2f(v7.first, v7.second);
+    glVertex2f(v1.first, v1.second);
+
+    glEnd();
+    glBegin(GL_POLYGON);
+}
+
+coord GlWindow::rotate_2d(coord center, GLfloat x_vertex, GLfloat y_vertex, GLfloat angle)
+{
+    GLfloat x_final, y_final;
+
+    GLfloat cos_angle = std::cos(angle);
+    GLfloat sin_angle = std::sin(angle);
+
+    coord result;
+
+    // translate back so we are relative to origin
+    x_vertex -= center.first;
+    y_vertex -= center.second;
+
+    // rotate
+    x_final = x_vertex * cos_angle - y_vertex * sin_angle;
+    y_final = x_vertex * sin_angle + y_vertex * cos_angle;
+
+    // translate to the right coordinates
+    x_final += center.first;
+    y_final += center.second;
+
+    result = std::make_pair(x_final, y_final);
+    return result;
 }
