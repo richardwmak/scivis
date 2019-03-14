@@ -31,9 +31,27 @@ void idle_callback_sim(void *controller)
             vector_field_x = ptr_controller->simulation->get_vector_field_x();
             vector_field_y = ptr_controller->simulation->get_vector_field_y();
 
-            ColorMapper::set_max_scalar(scalar_field);
+            fftw_real max_scalar = ColorMapper::set_max_scalar(scalar_field);
+            fftw_real min_val, med_val, max_val;
 
-            ptr_controller->window->gl_window->set_scalar_data(scalar_field);
+            if (Config::scaling)
+            {
+                min_val = 0;
+                med_val = 0.5;
+                max_val = 1;
+            }
+            else
+            {
+                min_val = Config::clamp_min;
+                med_val = (Config::clamp_max + Config::clamp_min) / 2;
+                max_val = Config::clamp_max;
+            }
+
+            ptr_controller->window->output_color_bar_max_val->value(max_val);
+            ptr_controller->window->output_color_bar_med_val->value(med_val);
+            ptr_controller->window->output_color_bar_min_val->value(min_val);
+
+            ptr_controller->window->gl_window->set_scalar_data(scalar_field, max_scalar);
             ptr_controller->window->gl_window->set_vector_data(vector_field_x, vector_field_y);
             ptr_controller->window->gl_window->redraw();
             ptr_controller->window->color_bar->redraw();

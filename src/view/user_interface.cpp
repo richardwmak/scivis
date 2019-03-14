@@ -70,6 +70,12 @@ Fl_Double_Window* UserInterface::make_window() {
       color_bar->align(Fl_Align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE));
       color_bar->when(FL_WHEN_RELEASE);
     } // ColorBar* color_bar
+    { output_color_bar_max_val = new Fl_Value_Output(1050, 55, 70, 30);
+    } // Fl_Value_Output* output_color_bar_max_val
+    { output_color_bar_med_val = new Fl_Value_Output(1050, 455, 70, 30);
+    } // Fl_Value_Output* output_color_bar_med_val
+    { output_color_bar_min_val = new Fl_Value_Output(1050, 855, 70, 30);
+    } // Fl_Value_Output* output_color_bar_min_val
     { text_toggle = new Fl_Box(1135, 50, 200, 20, "Toggle");
       text_toggle->labelfont(1);
     } // Fl_Box* text_toggle

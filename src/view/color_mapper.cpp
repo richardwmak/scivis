@@ -33,11 +33,7 @@ void ColorMapper::black_white(float value, float RGB[3])
 
 void ColorMapper::set_colormap(float value, float RGB[3])
 {
-    if (Config::scaling && max_scalar != 0)
-    {
-        value /= max_scalar;
-    }
-    else
+    if (!Config::scaling)
     {
         if (value < Config::clamp_min)
         {
@@ -49,6 +45,12 @@ void ColorMapper::set_colormap(float value, float RGB[3])
         }
     }
 
+    if (!Config::gradient)
+    {
+        value *= Config::num_bands;
+        value = (int)value;
+        value /= Config::num_bands;
+    }
     switch (Config::scalar_col)
     {
         case Config::COLOR_BLACKWHITE:
@@ -73,51 +75,12 @@ void ColorMapper::set_colormap(float value, float RGB[3])
     }
 }
 
-// void ColorMapper::direction_to_color(float RGB[3], float x, float y)
-// {
-//     float r, g, b, f;
-//     if (Config::color_dir)
-//     {
-//         f = std::atan2(y, x) / 3.1415927 + 1;
-//         r = f;
-//         if (r > 1)
-//         {
-//             r = 2 - r;
-//         }
-//         g = f + .66667;
-//         if (g > 2)
-//         {
-//             g -= 2;
-//         }
-//         if (g > 1)
-//         {
-//             g = 2 - g;
-//         }
-//         b = f + 2 * .66667;
-//         if (b > 2)
-//         {
-//             b -= 2;
-//         }
-//         if (b > 1)
-//         {
-//             b = 2 - b;
-//         }
-//     }
-//     else
-//     {
-//         r = g = b = 1;
-//     }
-
-//     RGB[0] = r;
-//     RGB[1] = g;
-//     RGB[2] = b;
-// }
-
 fftw_real ColorMapper::max_scalar = 0;
 
-void ColorMapper::set_max_scalar(std::vector<fftw_real> scalar_field)
+fftw_real ColorMapper::set_max_scalar(std::vector<fftw_real> scalar_field)
 {
     // max_element returns an iterator so we must dereference it
     fftw_real max_value = *std::max_element(scalar_field.begin(), scalar_field.end());
     max_scalar          = std::fabs(max_value);
+    return max_scalar;
 }

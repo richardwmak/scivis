@@ -197,6 +197,23 @@ void Simulation::do_one_simulation_step()
     }
 }
 
+std::pair<std::vector<fftw_real>, std::vector<fftw_real>>
+compute_gradient(std::vector<fftw_real> scalar_field)
+{
+    std::vector<fftw_real> x_deriv(Config::NUM_CELLS);
+    std::vector<fftw_real> y_deriv(Config::NUM_CELLS);
+
+    for (int x_grid = 0; x_grid < Config::GRID_SIZE; x_grid++)
+    {
+        for (int y_grid = 0; y_grid < Config::GRID_SIZE; y_grid++)
+        {
+            int index      = x_grid + y_grid * Config::GRID_SIZE;
+            x_deriv[index] = scalar_field[index + 1] - scalar_field[index];
+            y_deriv[index] = scalar_field[index + Config::GRID_SIZE] - scalar_field[index];
+        }
+    }
+}
+
 std::vector<fftw_real> Simulation::get_scalar_field()
 {
     std::vector<fftw_real> scalar_field;

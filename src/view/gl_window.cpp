@@ -24,6 +24,9 @@ void GlWindow::draw()
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
+        // glFrustum(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height, -1, 1);
+        // gluPerspective(60, 1, 0.5, 5);
+        // glFrustum(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height, -1, 1);
     }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
@@ -32,8 +35,16 @@ void GlWindow::draw()
     glFlush();
 }
 
-void GlWindow::set_scalar_data(std::vector<fftw_real> new_scalar_field)
+void GlWindow::set_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar)
 {
+    if (Config::scaling)
+    {
+        for (int i = 0; i < Config::NUM_CELLS; i++)
+        {
+            new_scalar_field[i] /= max_scalar;
+        }
+    }
+
     scalar_field = new_scalar_field;
 }
 
@@ -113,31 +124,31 @@ void GlWindow::visualize()
     if (Config::draw_vecs)
     {
         float RGB[3] = {1, 1, 1};
-        switch (Config::vector_shape)
+        if (Config::vector_shape == Config::HEDGEHOG)
         {
-            case Config::CONE:
-            {
-                // https://www.qtcentre.org/threads/49145-Cylinder-with-gluCylinder()
-                glBegin(GL_POLYGON);
-                break;
-            }
-            case Config::ARROW_2D:
-            {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                glBegin(GL_POLYGON);
-                break;
-            }
-            case Config::HEDGEHOG:
-            default:
-            {
-                glBegin(GL_LINES); // draw velocities
-                break;
-            }
+            glBegin(GL_LINES);
         }
+
         for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs; x_glyph_index++)
         {
             for (y_glyph_index = 0; y_glyph_index < Config::num_glyphs; y_glyph_index++)
             {
+                switch (Config::vector_shape)
+                {
+                    case Config::CONE:
+                    {
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                        glBegin(GL_TRIANGLE_STRIP);
+                        break;
+                    }
+                    case Config::ARROW_2D:
+                    {
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                        glBegin(GL_POLYGON);
+                        break;
+                    }
+                }
+
                 x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
                 y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
 
@@ -159,9 +170,16 @@ void GlWindow::visualize()
                     (GLfloat)((y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width) +
                               Config::vec_scale * vector_field_y[idx]));
                 render_vector(start, end);
+                if (Config::vector_shape != Config::HEDGEHOG)
+                {
+                    glEnd();
+                }
             }
         }
-        glEnd();
+        if (Config::vector_shape == Config::HEDGEHOG)
+        {
+            glEnd();
+        }
     }
 }
 
@@ -191,29 +209,66 @@ void GlWindow::render_hedgehog(coord start, coord end)
 
 void GlWindow::render_cone(coord start, coord end)
 {
-    // referred to
+    // // referred to
+    // //
     // http://lifeofaprogrammergeek.blogspot.com/2008/07/rendering-cylinder-between-two-points.html
 
-    // pushes the matrix down the stack and duplicates it so that we can come back to it
-    glPushMatrix();
+    // // pushes the matrix down the stack and duplicates it so that we can come back to it
+    // glPushMatrix();
 
-    glTranslatef(start.first, start.second, 0);
+    // glTranslatef(start.first, start.second, 0);
 
-    GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
+    // GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
 
-    GLfloat angle = std::acos(start.first / vector_length);
-    glRotatef(angle, start.first, start.second, 0);
+    // GLfloat angle = std::acos(start.first / vector_length);
+    // glRotatef(angle, start.first, start.second, 0);
 
-    GLUquadric *quadric = gluNewQuadric();
-    GLdouble    base    = 1.0;
-    GLdouble    top     = 0.0;
-    GLdouble    height  = vector_length;
-    GLint       slices  = 0;
-    GLint       stacks  = 0;
+    // GLUquadric *quadric = gluNewQuadric();
+    // GLdouble    base    = 1.0;
+    // GLdouble    top     = 0.0;
+    // GLdouble    height  = vector_length;
+    // GLint       slices  = 0;
+    // GLint       stacks  = 0;
 
-    gluCylinder(quadric, base, top, height, slices, stacks);
+    // gluCylinder(quadric, base, top, height, slices, stacks);
 
-    glPopMatrix();
+    // glPopMatrix();
+
+    // https://math.stackexchange.com/questions/1184038/what-is-the-equation-of-a-general-circle-in-3-d-space
+    // in the above notation, v1 is (0,0,1), v2 is (y, -x, 0) where (x, y) is end - start
+
+    glVertex3f(end.first, end.second, 0);
+    GLfloat cone_length = std::hypot(end.first - start.first, end.second - start.second);
+    GLfloat cone_radius = 0.3 * cone_length;
+
+    GLfloat cur_cos, cur_sin;
+
+    int slices = 10;
+
+    std::vector<GLfloat> center = {start.first, start.second, 0};
+    std::vector<GLfloat> v1     = {0, 0, 1};
+    std::vector<GLfloat> v2     = {
+        ((end.second - start.second) / cone_length), ((start.first, end.first) / cone_length), 0};
+    std::vector<GLfloat> cur_point = {0, 0, 0};
+
+    GLfloat cur_angle = 0;
+    GLfloat increment = M_PI / (float)slices;
+
+    for (int i = 0; i < slices; i++, cur_angle += increment)
+    {
+        cur_sin = std::sin(cur_angle);
+        cur_cos = std::cos(cur_angle);
+
+        for (int j = 0; j < 3; j++)
+        {
+            cur_point[j] = center[j] + cone_radius * (cur_cos * v1[j] + cur_sin * v2[j]);
+        }
+
+        glVertex2f(cur_point[0], cur_point[1]);
+    }
+
+    // draw starting point again to complete the cone
+    glVertex2f(start.first, start.second);
 }
 
 void GlWindow::render_arrow_2d(coord start, coord end)

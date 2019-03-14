@@ -21,7 +21,7 @@ class GlWindow : public Fl_Gl_Window
     void draw();
     // int  handle(int event);
 
-    void set_scalar_data(std::vector<fftw_real> new_scalar_field);
+    void set_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar);
     void set_vector_data(std::vector<fftw_real> new_vector_field_x,
                          std::vector<fftw_real> new_vector_field_y);
 

@@ -37,19 +37,8 @@ void ColorBar::draw_rectangle_gradient()
 
     float sec_height = bar_height / (sections);
 
-    // depending on whether we're scaling we'll want different iterations
-    float value_increment;
-    float cur_value;
-    if (Config::scaling)
-    {
-        value_increment = ColorMapper::max_scalar / (float)(sections);
-        cur_value       = 0;
-    }
-    else
-    {
-        value_increment = (Config::clamp_max - Config::clamp_min) / (float)(sections);
-        cur_value       = Config::clamp_min;
-    }
+    float value_increment = 1 / (float)(sections);
+    float cur_value       = 0;
 
     for (int i = 0; i < sections; i++, cur_value += value_increment)
     {

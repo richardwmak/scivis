@@ -11,7 +11,7 @@ class UserInterface {open
   } {
     Fl_Window main_window {
       label Smoke open
-      xywh {772 146 1650 1000} type Double
+      xywh {375 175 1650 1000} type Double
       code0 {\#include "config.hpp"}
       code1 {\#include <iostream>} visible
     } {
@@ -28,6 +28,15 @@ class UserInterface {open
         xywh {1010 70 40 800} box ENGRAVED_BOX align 16
         code0 {\#include "color_bar.hpp"}
         class ColorBar
+      }
+      Fl_Value_Output output_color_bar_max_val {
+        xywh {1050 55 70 30}
+      }
+      Fl_Value_Output output_color_bar_med_val {selected
+        xywh {1050 455 70 30}
+      }
+      Fl_Value_Output output_color_bar_min_val {
+        xywh {1050 855 70 30}
       }
       Fl_Box text_toggle {
         label Toggle
