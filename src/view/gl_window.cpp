@@ -23,10 +23,18 @@ void GlWindow::draw()
         glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
-        // glFrustum(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height, -1, 1);
-        // gluPerspective(60, 1, 0.5, 5);
-        // glFrustum(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height, -1, 1);
+        // gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
+        // glOrtho(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height, -1, 1);
+        gluPerspective(60, 1, -10, 10);
+        gluLookAt(Config::win_height / 2,
+                  Config::win_width / 2 - 100,
+                  900,
+                  Config::win_height / 2,
+                  Config::win_width / 2,
+                  0,
+                  0,
+                  1,
+                  0);
     }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
@@ -138,7 +146,7 @@ void GlWindow::visualize()
                     case Config::CONE:
                     {
                         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                        glBegin(GL_TRIANGLE_STRIP);
+                        glBegin(GL_TRIANGLE_FAN);
                         break;
                     }
                     case Config::ARROW_2D:
@@ -192,6 +200,10 @@ void GlWindow::render_vector(coord start, coord end)
             render_arrow_2d(start, end);
             break;
         }
+        case Config::CONE:
+        {
+            render_cone(start, end);
+        }
         case Config::HEDGEHOG:
         default:
         {
@@ -239,7 +251,7 @@ void GlWindow::render_cone(coord start, coord end)
 
     glVertex3f(end.first, end.second, 0);
     GLfloat cone_length = std::hypot(end.first - start.first, end.second - start.second);
-    GLfloat cone_radius = 0.3 * cone_length;
+    GLfloat cone_radius = 0.5 * cone_length;
 
     GLfloat cur_cos, cur_sin;
 
@@ -248,7 +260,8 @@ void GlWindow::render_cone(coord start, coord end)
     std::vector<GLfloat> center = {start.first, start.second, 0};
     std::vector<GLfloat> v1     = {0, 0, 1};
     std::vector<GLfloat> v2     = {
-        ((end.second - start.second) / cone_length), ((start.first, end.first) / cone_length), 0};
+        ((end.second - start.second) / cone_length), ((start.first - end.first) / cone_length), 0};
+
     std::vector<GLfloat> cur_point = {0, 0, 0};
 
     GLfloat cur_angle = 0;
@@ -264,11 +277,15 @@ void GlWindow::render_cone(coord start, coord end)
             cur_point[j] = center[j] + cone_radius * (cur_cos * v1[j] + cur_sin * v2[j]);
         }
 
-        glVertex2f(cur_point[0], cur_point[1]);
+        if (i % 2)
+        {
+        }
+
+        glVertex3f(cur_point[0], cur_point[1], cur_point[2]);
     }
 
     // draw starting point again to complete the cone
-    glVertex2f(start.first, start.second);
+    glVertex3f(end.first, end.second, 0);
 }
 
 void GlWindow::render_arrow_2d(coord start, coord end)
