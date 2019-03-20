@@ -187,6 +187,11 @@ void cb_option_vector_gradient_smoke(Fl_Menu_Item *, void *)
     Config::vector_choice = Config::VECTOR_GRADIENT_SMOKE;
 }
 
+void cb_option_vector_gradient_velocity(Fl_Menu_Item *, void *)
+{
+    Config::vector_choice = Config::VECTOR_GRADIENT_VELOCITY;
+}
+
 void cb_option_hedgehog(Fl_Menu_Item *, void *)
 {
     Config::vector_shape = Config::HEDGEHOG;

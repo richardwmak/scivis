@@ -197,23 +197,36 @@ void Simulation::do_one_simulation_step()
         Simulation::compute_next_step();
         Simulation::diffuse_matter();
 
-        switch (Config::vector_choice)
+        if (Config::vector_choice == Config::VECTOR_GRADIENT_SMOKE ||
+            Config::vector_choice == Config::VECTOR_GRADIENT_VELOCITY)
         {
-            case Config::VECTOR_GRADIENT_SMOKE:
-            {
-                compute_gradient(cur_state.smoke_density);
-                break;
-            }
+            compute_gradient();
         }
     }
 }
 
-void Simulation::compute_gradient(fftw_real *scalar_field)
+void Simulation::compute_gradient()
 {
     gradient_x.clear();
     gradient_y.clear();
 
-    fftw_real grad_x, grad_y, max_grad;
+    fftw_real              grad_x, grad_y;
+    std::vector<fftw_real> scalar_field;
+
+    if (Config::vector_choice == Config::VECTOR_GRADIENT_SMOKE)
+    {
+        for (int i = 0; i < Config::NUM_CELLS; i++)
+        {
+            scalar_field.push_back(cur_state.smoke_density[i]);
+        }
+    }
+    else if (Config::vector_choice == Config::VECTOR_GRADIENT_VELOCITY)
+    {
+        for (int i = 0; i < Config::NUM_CELLS; i++)
+        {
+            scalar_field.push_back(std::hypot(cur_state.velocity_x[i], cur_state.velocity_y[i]));
+        }
+    }
 
     for (int y_grid = 0; y_grid < Config::GRID_SIZE; y_grid++)
     {
@@ -280,9 +293,8 @@ std::vector<fftw_real> Simulation::get_vector_field_y()
     return get_vector_field(cur_state.force_y, cur_state.velocity_y, gradient_y);
 }
 
-std::vector<fftw_real> Simulation::get_vector_field(fftw_real *            force,
-                                                    fftw_real *            velocity,
-                                                    std::vector<fftw_real> gradient_smoke)
+std::vector<fftw_real>
+Simulation::get_vector_field(fftw_real *force, fftw_real *velocity, std::vector<fftw_real> gradient)
 {
     switch (Config::vector_choice)
     {
@@ -293,7 +305,11 @@ std::vector<fftw_real> Simulation::get_vector_field(fftw_real *            force
         }
         case Config::VECTOR_GRADIENT_SMOKE:
         {
-            return gradient_smoke;
+            return gradient;
+        }
+        case Config::VECTOR_GRADIENT_VELOCITY:
+        {
+            return gradient;
         }
         case Config::VECTOR_VELOCITY:
         default:

@@ -26,11 +26,13 @@ Fl_Menu_Item UserInterface::menu_menu_vector_choice[] = {
  {"Velocity", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Force", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Smoke gradient", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Velocity gradient", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0}
 };
 Fl_Menu_Item* UserInterface::option_vector_velocity = UserInterface::menu_menu_vector_choice + 0;
 Fl_Menu_Item* UserInterface::option_vector_force = UserInterface::menu_menu_vector_choice + 1;
 Fl_Menu_Item* UserInterface::option_vector_gradient_smoke = UserInterface::menu_menu_vector_choice + 2;
+Fl_Menu_Item* UserInterface::option_vector_gradient_velocity = UserInterface::menu_menu_vector_choice + 3;
 
 Fl_Menu_Item UserInterface::menu_menu_vector_shape[] = {
  {"Hedgehog", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},

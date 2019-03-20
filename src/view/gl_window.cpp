@@ -203,6 +203,7 @@ void GlWindow::render_vector(coord start, coord end)
         case Config::CONE:
         {
             render_cone(start, end);
+            break;
         }
         case Config::HEDGEHOG:
         default:

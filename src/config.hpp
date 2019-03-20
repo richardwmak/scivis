@@ -35,12 +35,13 @@ namespace Config
     extern int scalar_choice;
     extern int vector_choice;
 
-    const int SCALAR_SMOKE          = 0;
-    const int SCALAR_FORCE          = 1;
-    const int SCALAR_VELOCITY       = 2;
-    const int VECTOR_VELOCITY       = 0;
-    const int VECTOR_FORCE          = 1;
-    const int VECTOR_GRADIENT_SMOKE = 2;
+    const int SCALAR_SMOKE             = 0;
+    const int SCALAR_FORCE             = 1;
+    const int SCALAR_VELOCITY          = 2;
+    const int VECTOR_VELOCITY          = 0;
+    const int VECTOR_FORCE             = 1;
+    const int VECTOR_GRADIENT_SMOKE    = 2;
+    const int VECTOR_GRADIENT_VELOCITY = 3;
 
     // what shape of vector do we draw?
     extern int vector_shape;
