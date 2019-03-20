@@ -15,6 +15,7 @@ class Simulation
     SimulationState old_state;
 
     fftw_real              max_value;
+    std::vector<fftw_real> gradient_x, gradient_y;
 
     rfftwnd_plan plan_rc, plan_cr; // necessary for fftw to do FFT
 
@@ -34,12 +35,12 @@ class Simulation
 
     void do_one_simulation_step();
 
-    std::pair<std::vector<fftw_real>, std::vector<fftw_real>>
-    compute_gradient(std::vector<fftw_real> scalar_field);
+    void compute_gradient(fftw_real *scalar_field);
 
     std::vector<fftw_real> get_scalar_field();
 
     std::vector<fftw_real> get_vector_field_x();
     std::vector<fftw_real> get_vector_field_y();
-    std::vector<fftw_real> get_vector_field(fftw_real *force, fftw_real *velocity);
+    std::vector<fftw_real>
+    get_vector_field(fftw_real *force, fftw_real *velocity, std::vector<fftw_real> gradient_smoke);
 };

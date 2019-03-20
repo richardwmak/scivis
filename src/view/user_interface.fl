@@ -11,7 +11,7 @@ class UserInterface {open
   } {
     Fl_Window main_window {
       label Smoke open
-      xywh {375 175 1650 1000} type Double
+      xywh {668 154 1650 1000} type Double
       code0 {\#include "config.hpp"}
       code1 {\#include <iostream>} visible
     } {
@@ -32,7 +32,7 @@ class UserInterface {open
       Fl_Value_Output output_color_bar_max_val {
         xywh {1050 55 70 30}
       }
-      Fl_Value_Output output_color_bar_med_val {selected
+      Fl_Value_Output output_color_bar_med_val {
         xywh {1050 455 70 30}
       }
       Fl_Value_Output output_color_bar_min_val {
@@ -153,7 +153,7 @@ class UserInterface {open
           xywh {0 0 34 20}
         }
         MenuItem option_scalar_velocity {
-          label {Velocity ||v||}
+          label {Velocity ||v||} selected
           xywh {0 0 34 20}
         }
         MenuItem option_scalar_force {
@@ -172,6 +172,10 @@ class UserInterface {open
         MenuItem option_vector_force {
           label Force
           xywh {0 0 34 20}
+        }
+        MenuItem option_vector_gradient_smoke {
+          label {Smoke gradient}
+          xywh {0 0 36 21}
         }
       }
       Fl_Box text_vector_shape {

@@ -134,10 +134,7 @@ void cb_counter_visc(Fl_Counter *w, void *)
     float new_val  = w->value();
     Config::visc   = new_val;
     float new_step = 0.2 * new_val;
-    std::cout << new_val << std::endl;
-    std::cout << new_step << std::endl;
-    new_step = std::round(1000000 * new_step) / 1000000;
-    std::cout << new_step << std::endl;
+    new_step       = std::round(1000000 * new_step) / 1000000;
     w->step(new_step);
 }
 void cb_counter_vec_scale(Fl_Counter *w, void *)
@@ -183,6 +180,11 @@ void cb_option_vector_force(Fl_Menu_Item *, void *)
 void cb_option_vector_velocity(Fl_Menu_Item *, void *)
 {
     Config::vector_choice = Config::VECTOR_VELOCITY;
+}
+
+void cb_option_vector_gradient_smoke(Fl_Menu_Item *, void *)
+{
+    Config::vector_choice = Config::VECTOR_GRADIENT_SMOKE;
 }
 
 void cb_option_hedgehog(Fl_Menu_Item *, void *)

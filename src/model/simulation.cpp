@@ -12,6 +12,8 @@ Simulation::Simulation()
     cur_state = SimulationState();
     old_state = SimulationState();
 
+    std::vector<fftw_real> gradient_x, gradient_y;
+
     plan_rc = rfftw2d_create_plan(
         Config::GRID_SIZE, Config::GRID_SIZE, FFTW_REAL_TO_COMPLEX, FFTW_IN_PLACE);
     plan_cr = rfftw2d_create_plan(
@@ -194,22 +196,48 @@ void Simulation::do_one_simulation_step()
         Simulation::set_forces();
         Simulation::compute_next_step();
         Simulation::diffuse_matter();
+
+        switch (Config::vector_choice)
+        {
+            case Config::VECTOR_GRADIENT_SMOKE:
+            {
+                compute_gradient(cur_state.smoke_density);
+                break;
+            }
+        }
     }
 }
 
-std::pair<std::vector<fftw_real>, std::vector<fftw_real>>
-compute_gradient(std::vector<fftw_real> scalar_field)
+void Simulation::compute_gradient(fftw_real *scalar_field)
 {
-    std::vector<fftw_real> x_deriv(Config::NUM_CELLS);
-    std::vector<fftw_real> y_deriv(Config::NUM_CELLS);
+    gradient_x.clear();
+    gradient_y.clear();
 
-    for (int x_grid = 0; x_grid < Config::GRID_SIZE; x_grid++)
+    fftw_real grad_x, grad_y, max_grad;
+
+    for (int y_grid = 0; y_grid < Config::GRID_SIZE; y_grid++)
     {
-        for (int y_grid = 0; y_grid < Config::GRID_SIZE; y_grid++)
+        for (int x_grid = 0; x_grid < Config::GRID_SIZE; x_grid++)
         {
-            int index      = x_grid + y_grid * Config::GRID_SIZE;
-            x_deriv[index] = scalar_field[index + 1] - scalar_field[index];
-            y_deriv[index] = scalar_field[index + Config::GRID_SIZE] - scalar_field[index];
+            int index = x_grid + y_grid * Config::GRID_SIZE;
+            if (x_grid == Config::GRID_SIZE - 1)
+            {
+                grad_x = scalar_field[index + 1 - Config::GRID_SIZE] - scalar_field[index];
+            }
+            else
+            {
+                grad_x = scalar_field[index + 1] - scalar_field[index];
+            }
+            if (y_grid == Config::GRID_SIZE - 1)
+            {
+                grad_y = scalar_field[x_grid] - scalar_field[index];
+            }
+            else
+            {
+                grad_y = scalar_field[index + Config::GRID_SIZE] - scalar_field[index];
+            }
+            gradient_x.push_back(grad_x);
+            gradient_y.push_back(grad_y);
         }
     }
 }
@@ -244,15 +272,17 @@ std::vector<fftw_real> Simulation::get_scalar_field()
 
 std::vector<fftw_real> Simulation::get_vector_field_x()
 {
-    return get_vector_field(cur_state.force_x, cur_state.velocity_x);
+    return get_vector_field(cur_state.force_x, cur_state.velocity_x, gradient_x);
 }
 
 std::vector<fftw_real> Simulation::get_vector_field_y()
 {
-    return get_vector_field(cur_state.force_y, cur_state.velocity_y);
+    return get_vector_field(cur_state.force_y, cur_state.velocity_y, gradient_y);
 }
 
-std::vector<fftw_real> Simulation::get_vector_field(fftw_real *force, fftw_real *velocity)
+std::vector<fftw_real> Simulation::get_vector_field(fftw_real *            force,
+                                                    fftw_real *            velocity,
+                                                    std::vector<fftw_real> gradient_smoke)
 {
     switch (Config::vector_choice)
     {
@@ -260,6 +290,10 @@ std::vector<fftw_real> Simulation::get_vector_field(fftw_real *force, fftw_real 
         {
             std::vector<fftw_real> vector_field(force, force + Config::NUM_CELLS);
             return vector_field;
+        }
+        case Config::VECTOR_GRADIENT_SMOKE:
+        {
+            return gradient_smoke;
         }
         case Config::VECTOR_VELOCITY:
         default:

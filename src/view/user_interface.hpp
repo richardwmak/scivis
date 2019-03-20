@@ -58,6 +58,7 @@ public:
   static Fl_Menu_Item menu_menu_vector_choice[];
   static Fl_Menu_Item *option_vector_velocity;
   static Fl_Menu_Item *option_vector_force;
+  static Fl_Menu_Item *option_vector_gradient_smoke;
   Fl_Box *text_vector_shape;
   Fl_Choice *menu_vector_shape;
   static Fl_Menu_Item menu_menu_vector_shape[];
