@@ -222,31 +222,6 @@ void GlWindow::render_hedgehog(coord start, coord end)
 
 void GlWindow::render_cone(coord start, coord end)
 {
-    // // referred to
-    // //
-    // http://lifeofaprogrammergeek.blogspot.com/2008/07/rendering-cylinder-between-two-points.html
-
-    // // pushes the matrix down the stack and duplicates it so that we can come back to it
-    // glPushMatrix();
-
-    // glTranslatef(start.first, start.second, 0);
-
-    // GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
-
-    // GLfloat angle = std::acos(start.first / vector_length);
-    // glRotatef(angle, start.first, start.second, 0);
-
-    // GLUquadric *quadric = gluNewQuadric();
-    // GLdouble    base    = 1.0;
-    // GLdouble    top     = 0.0;
-    // GLdouble    height  = vector_length;
-    // GLint       slices  = 0;
-    // GLint       stacks  = 0;
-
-    // gluCylinder(quadric, base, top, height, slices, stacks);
-
-    // glPopMatrix();
-
     // https://math.stackexchange.com/questions/1184038/what-is-the-equation-of-a-general-circle-in-3-d-space
     // in the above notation, v1 is (0,0,1), v2 is (y, -x, 0) where (x, y) is end - start
 
@@ -278,15 +253,11 @@ void GlWindow::render_cone(coord start, coord end)
             cur_point[j] = center[j] + cone_radius * (cur_cos * v1[j] + cur_sin * v2[j]);
         }
 
-        if (i % 2)
-        {
-        }
-
         glVertex3f(cur_point[0], cur_point[1], cur_point[2]);
     }
 
     // draw starting point again to complete the cone
-    glVertex3f(end.first, end.second, 0);
+    glVertex3f(center[0] + v1[0], center[1] + v1[1], center[2] + v1[2]);
 }
 
 void GlWindow::render_arrow_2d(coord start, coord end)

@@ -6,7 +6,7 @@ namespace Config
     double time_step = 0.4;
     float  visc      = 0.001;
     int    win_width, win_height;
-    float  num_glyphs = 100;
+    float  num_glyphs = 50;
 
     bool color_dir    = false;
     bool draw_smoke   = false;

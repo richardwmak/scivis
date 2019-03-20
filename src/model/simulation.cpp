@@ -304,9 +304,6 @@ Simulation::get_vector_field(fftw_real *force, fftw_real *velocity, std::vector<
             return vector_field;
         }
         case Config::VECTOR_GRADIENT_SMOKE:
-        {
-            return gradient;
-        }
         case Config::VECTOR_GRADIENT_VELOCITY:
         {
             return gradient;
