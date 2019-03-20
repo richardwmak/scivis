@@ -13,6 +13,7 @@ GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
 {
     Config::win_height = H;
     Config::win_width  = W;
+    Config::grid_width = (float)H / Config::GRID_SIZE;
 }
 
 void GlWindow::draw()
@@ -193,6 +194,15 @@ void GlWindow::visualize()
 
 void GlWindow::render_vector(coord start, coord end)
 {
+    // scale it to the grid width
+    GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
+
+    if (vector_length > Config::grid_width)
+    {
+        end.first = start.first + (end.first - start.first) * Config::grid_width / vector_length;
+        end.second =
+            start.second + (end.second - start.second) * Config::grid_width / vector_length;
+    }
     switch (Config::vector_shape)
     {
         case Config::ARROW_2D:

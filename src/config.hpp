@@ -9,7 +9,8 @@ namespace Config
     extern double time_step;                         // simulation time step
     extern float  visc;                              // fluid viscosityx1
     extern int    win_width, win_height;             // size of the graphics window, in pixels
-    extern float  num_glyphs;                        // how many glyphs to draw
+    extern float  grid_width;
+    extern float  num_glyphs; // how many glyphs to draw
 
     // VISUALIZATION PARAMETERS
     extern bool  draw_smoke;   // draw the smoke or not
