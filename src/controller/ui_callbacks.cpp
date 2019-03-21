@@ -80,42 +80,55 @@ void idle_callback_interaction(void *controller)
     }
 }
 
-void cb_toggle_frozen(Fl_Button *, void *)
+void cb_toggle_frozen(Fl_Light_Button *, void *)
 {
     Config::frozen ? Config::frozen = false : Config::frozen = true;
 }
 
-void cb_toggle_smoke(Fl_Button *, void *)
+void cb_toggle_smoke(Fl_Light_Button *, void *controller)
 {
-    if (Config::draw_smoke)
+    if (controller != NULL)
     {
-        Config::draw_smoke = false;
-        Config::draw_vecs  = true;
-    }
-    else
-    {
-        Config::draw_smoke = true;
+        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
+
+        if (Config::draw_smoke)
+        {
+            Config::draw_smoke = false;
+            Config::draw_vecs  = true;
+            ptr_controller->window->toggle_draw_vecs->value(1);
+        }
+        else
+        {
+            Config::draw_smoke = true;
+        }
     }
 }
 
-void cb_toggle_vecs(Fl_Button *, void *)
+void cb_toggle_vecs(Fl_Light_Button *, void *controller)
 {
-    if (Config::draw_vecs)
+    if (controller != NULL)
     {
-        Config::draw_vecs  = false;
-        Config::draw_smoke = true;
-    }
-    else
-    {
-        Config::draw_vecs = true;
+        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
+
+        if (Config::draw_vecs)
+        {
+            Config::draw_vecs  = false;
+            Config::draw_smoke = true;
+            ptr_controller->window->toggle_draw_smoke->value(1);
+        }
+        else
+        {
+            Config::draw_vecs = true;
+        }
     }
 }
-void cb_toggle_vector_color(Fl_Button *, void *)
+
+void cb_toggle_vector_color(Fl_Light_Button *, void *)
 {
     Config::vector_color ? Config::vector_color = false : Config::vector_color = true;
 }
 
-void cb_toggle_parametrization(Fl_Button *, void *)
+void cb_toggle_parametrization(Fl_Light_Button *, void *)
 {
     Config::gradient ? Config::gradient = false : Config::gradient = true;
 }

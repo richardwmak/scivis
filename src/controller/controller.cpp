@@ -29,9 +29,9 @@ int Controller::begin()
 
     // toggle callbacks
     window->toggle_frozen->callback((Fl_Callback *)cb_toggle_frozen);
-    window->toggle_draw_smoke->callback((Fl_Callback *)cb_toggle_smoke);
+    window->toggle_draw_smoke->callback((Fl_Callback *)cb_toggle_smoke, this);
     window->toggle_vector_color->callback((Fl_Callback *)cb_toggle_vector_color);
-    window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs);
+    window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs, this);
     window->toggle_parametrize_color_map->callback((Fl_Callback *)cb_toggle_parametrization, this);
 
     // counter callbacks

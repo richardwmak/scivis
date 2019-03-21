@@ -11,9 +11,9 @@ class GlWindow; class ColorBar; class Controller;
 #include <FL/Fl_Box.H>
 #include "color_bar.hpp"
 #include <FL/Fl_Value_Output.H>
-#include <FL/Fl_Button.H>
 #include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Counter.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Choice.H>
 
@@ -28,10 +28,10 @@ public:
   Fl_Value_Output *output_color_bar_med_val;
   Fl_Value_Output *output_color_bar_min_val;
   Fl_Box *text_toggle;
-  Fl_Button *toggle_draw_smoke;
-  Fl_Button *toggle_draw_vecs;
-  Fl_Button *toggle_frozen;
-  Fl_Button *toggle_vector_color;
+  Fl_Light_Button *toggle_draw_smoke;
+  Fl_Light_Button *toggle_draw_vecs;
+  Fl_Light_Button *toggle_frozen;
+  Fl_Light_Button *toggle_vector_color;
   Fl_Box *text_scalar_col;
   Fl_Light_Button *toggle_parametrize_color_map;
   Fl_Counter *counter_num_bands;

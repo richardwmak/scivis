@@ -11,7 +11,7 @@ class UserInterface {open
   } {
     Fl_Window main_window {
       label Smoke open
-      xywh {668 154 1650 1000} type Double
+      xywh {375 175 1650 1000} type Double
       code0 {\#include "config.hpp"}
       code1 {\#include <iostream>} visible
     } {
@@ -42,19 +42,20 @@ class UserInterface {open
         label Toggle
         xywh {1135 50 200 20} labelfont 1
       }
-      Fl_Button toggle_draw_smoke {
+      Fl_Light_Button toggle_draw_smoke {
         label {Toggle smoke}
         xywh {1135 90 200 20}
       }
-      Fl_Button toggle_draw_vecs {
-        label {Toggle vectors}
+      Fl_Light_Button toggle_draw_vecs {
+        label {Toggle vectors} selected
         xywh {1135 110 200 20}
+        code0 {toggle_draw_vecs->value(1);}
       }
-      Fl_Button toggle_frozen {
+      Fl_Light_Button toggle_frozen {
         label {Toggle play}
         xywh {1135 70 200 20}
       }
-      Fl_Button toggle_vector_color {
+      Fl_Light_Button toggle_vector_color {
         label {Toggle vector coloring}
         xywh {1135 130 200 20}
       }
@@ -178,7 +179,7 @@ class UserInterface {open
           xywh {0 0 36 21}
         }
         MenuItem option_vector_gradient_velocity {
-          label {Velocity gradient} selected
+          label {Velocity gradient}
           xywh {0 0 36 21}
         }
       }
