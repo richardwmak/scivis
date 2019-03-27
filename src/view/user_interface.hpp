@@ -32,6 +32,7 @@ public:
   Fl_Light_Button *toggle_draw_vecs;
   Fl_Light_Button *toggle_frozen;
   Fl_Light_Button *toggle_vector_color;
+  Fl_Light_Button *toggle_streamline;
   Fl_Box *text_scalar_col;
   Fl_Light_Button *toggle_parametrize_color_map;
   Fl_Counter *counter_num_bands;

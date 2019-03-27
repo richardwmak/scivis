@@ -33,6 +33,7 @@ int Controller::begin()
     window->toggle_vector_color->callback((Fl_Callback *)cb_toggle_vector_color);
     window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs, this);
     window->toggle_parametrize_color_map->callback((Fl_Callback *)cb_toggle_parametrization, this);
+    window->toggle_streamline->callback((Fl_Callback *)cb_toggle_streamline);
 
     // counter callbacks
     window->counter_num_bands->callback((Fl_Callback *)cb_counter_num_bands, this);

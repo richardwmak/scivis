@@ -47,7 +47,7 @@ class UserInterface {open
         xywh {1135 90 200 20}
       }
       Fl_Light_Button toggle_draw_vecs {
-        label {Toggle vectors} selected
+        label {Toggle vectors}
         xywh {1135 110 200 20}
         code0 {toggle_draw_vecs->value(1);}
       }
@@ -59,32 +59,36 @@ class UserInterface {open
         label {Toggle vector coloring}
         xywh {1135 130 200 20}
       }
+      Fl_Light_Button toggle_streamline {
+        label {Toggle streamlines} selected
+        xywh {1135 150 200 20}
+      }
       Fl_Box text_scalar_col {
         label {Color mapping}
-        xywh {1135 170 200 20} labelfont 1
+        xywh {1135 195 200 20} labelfont 1
       }
       Fl_Light_Button toggle_parametrize_color_map {
         label {Parametrize color map}
-        xywh {1135 190 200 20}
+        xywh {1135 215 200 20}
       }
       Fl_Counter counter_num_bands {
         label {Number of bands}
-        xywh {1135 227 200 21} align 1
+        xywh {1135 252 200 21} align 1
         code0 {counter_num_bands->step(1, 10);}
         code1 {counter_num_bands->value(Config::num_bands);}
         code2 {counter_num_bands->bounds(2,256);}
       }
       Fl_Box {} {
         label {Clamp or scale value?}
-        xywh {1135 265 200 17} labelfont 1
+        xywh {1135 290 200 17} labelfont 1
       }
       Fl_Button button_clamp {
         label Clamp
-        xywh {1135 280 100 20}
+        xywh {1135 305 100 20}
       }
       Fl_Button button_scale {
         label Scale
-        xywh {1235 280 100 20} color 63 deactivate
+        xywh {1235 305 100 20} color 63 deactivate
       }
       Fl_Value_Input value_clamp_min {
         label {min:}
@@ -95,7 +99,7 @@ class UserInterface {open
         xywh {1287 300 48 25} value 1 hide
       }
       Fl_Choice menu_color_map {
-        xywh {1135 245 200 20} down_box BORDER_BOX
+        xywh {1135 270 200 20} down_box BORDER_BOX
         code0 {\#include <iostream>}
       } {
         MenuItem option_black_white {
@@ -113,31 +117,31 @@ class UserInterface {open
       }
       Fl_Box text_increase_decrease {
         label {Increase/decrease values}
-        xywh {1135 350 200 16} labelfont 1
+        xywh {1135 375 200 16} labelfont 1
       }
       Fl_Counter counter_time_step {
         label {Time step}
-        xywh {1135 384 200 21} align 1
+        xywh {1135 409 200 21} align 1
         code0 {counter_time_step->step(0.001, 0.01);}
         code1 {counter_time_step->value(Config::time_step);}
         code2 {counter_time_step->bounds(0.001,1);}
       }
       Fl_Counter counter_visc {
         label Viscosity
-        xywh {1135 424 200 21} type Simple align 1
+        xywh {1135 449 200 21} type Simple align 1
         code0 {counter_visc->value(Config::visc);}
         code1 {counter_visc->step(0.00025);}
         code2 {counter_visc->bounds(0.0001,0.02);}
       }
       Fl_Counter counter_vec_scale {
         label {Vector scaling}
-        xywh {1135 464 200 21} type Simple align 1
+        xywh {1135 489 200 21} type Simple align 1
         code0 {counter_vec_scale->value(Config::vec_scale);}
         code1 {counter_vec_scale->step(200);}
       }
       Fl_Counter counter_num_glyphs {
         label {Number of glyphs}
-        xywh {1135 504 200 21} align 1
+        xywh {1135 529 200 21} align 1
         code0 {counter_num_glyphs->step(1, 10);}
         code1 {counter_num_glyphs->value(Config::num_glyphs);}
       }

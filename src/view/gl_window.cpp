@@ -14,7 +14,7 @@ GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
 {
     Config::win_height = H;
     Config::win_width  = W;
-    Config::grid_width = (float)H / Config::GRID_SIZE;
+    Config::grid_width = (float)H / (float)Config::GRID_SIZE;
 }
 
 void GlWindow::draw()
@@ -25,24 +25,35 @@ void GlWindow::draw()
         glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        // gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
-        // glOrtho(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height, -1, 1);
-        gluPerspective(60, 1, -10, 10);
-        gluLookAt(Config::win_height / 2,
-                  Config::win_width / 2 - 100,
-                  900,
-                  Config::win_height / 2,
-                  Config::win_width / 2,
-                  0,
-                  0,
-                  1,
-                  0);
+        gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
+        // gluPerspective(70, 1, -10, 10);
+        // gluLookAt(Config::win_height / 2,
+        //           Config::win_width / 2,
+        //           800,
+        //           Config::win_height / 2,
+        //           Config::win_width / 2,
+        //           0,
+        //           0,
+        //           1,
+        //           0);
     }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     visualize();
     glFlush();
+}
+
+int GlWindow::handle(int event)
+{
+    switch (event)
+    {
+        case FL_PUSH:
+        {
+            std::cout << Fl::event_x() << ", " << Fl::event_y() << std::endl;
+            return 1;
+        }
+    }
 }
 
 void GlWindow::set_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar)
@@ -134,6 +145,7 @@ void GlWindow::visualize()
     if (Config::draw_vecs)
     {
         float RGB[3] = {1, 1, 1};
+        float scalar_val, vector_x_val, vector_y_val;
         if (Config::vector_shape == Config::HEDGEHOG)
         {
             glBegin(GL_LINES);
@@ -159,13 +171,16 @@ void GlWindow::visualize()
                     }
                 }
 
-                x_grid_index = std::round(x_glyph_index * glyph_to_grid_ratio);
-                y_grid_index = std::round(y_glyph_index * glyph_to_grid_ratio);
+                x_grid_index = x_glyph_index * glyph_to_grid_ratio;
+                y_grid_index = y_glyph_index * glyph_to_grid_ratio;
 
-                idx = (y_grid_index * Config::GRID_SIZE) + x_grid_index;
+                scalar_val   = bilin_interpolate(x_grid_index, y_grid_index, scalar_field);
+                vector_x_val = bilin_interpolate(x_grid_index, y_grid_index, vector_field_x);
+                vector_y_val = bilin_interpolate(x_grid_index, y_grid_index, vector_field_y);
+
                 if (Config::vector_color)
                 {
-                    ColorMapper::set_colormap(scalar_field[idx], RGB);
+                    ColorMapper::set_colormap(scalar_val, RGB);
                 }
                 glColor3fv(RGB);
 
@@ -176,9 +191,9 @@ void GlWindow::visualize()
                     (GLfloat)(y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width));
                 end = std::make_pair(
                     (GLfloat)((x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width) +
-                              Config::vec_scale * vector_field_x[idx]),
+                              Config::vec_scale * vector_x_val),
                     (GLfloat)((y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width) +
-                              Config::vec_scale * vector_field_y[idx]));
+                              Config::vec_scale * vector_y_val));
                 RenderVector::render_vector(start, end);
                 if (Config::vector_shape != Config::HEDGEHOG)
                 {
@@ -191,4 +206,47 @@ void GlWindow::visualize()
             glEnd();
         }
     }
+
+    if (Config::draw_streamline)
+    {
+        float delta_t = 0.001;
+    }
+}
+
+float GlWindow::bilin_interpolate(float x, float y, std::vector<fftw_real> field)
+{
+    int   x_floor, y_floor, x_ceil, y_ceil;
+    int   lower_left, upper_left, upper_right, lower_right;
+    float result;
+
+    x_floor = (int)std::floor(x);
+    y_floor = (int)std::floor(y);
+
+    x_ceil = (int)std::ceil(x);
+    y_ceil = (int)std::ceil(y);
+
+    if (x_ceil > Config::GRID_SIZE - 1)
+    {
+        x_ceil = 0;
+    }
+    if (y_ceil > Config::GRID_SIZE - 1)
+    {
+        y_ceil = 0;
+    }
+
+    lower_left  = x_floor + y_floor * Config::GRID_SIZE;
+    upper_left  = x_floor + y_ceil * Config::GRID_SIZE;
+    upper_right = x_ceil + y_ceil * Config::GRID_SIZE;
+    lower_right = x_ceil + y_floor * Config::GRID_SIZE;
+
+    std::cout << x_ceil - x << std::endl;
+    // std::cout << field[lower_left] * (float)(x_ceil - x) * (float)(y_ceil - y) << std::endl;
+
+    // https://en.wikipedia.org/wiki/Bilinear_interpolation
+    result = field[lower_left] * (x_ceil - x) * (y_ceil - y) +
+             field[lower_right] * (x - x_floor) * (y_ceil - y) +
+             field[upper_left] * (x_ceil - x) * (y - x_floor) +
+             field[upper_right] * (x - x_floor) * (y - y_floor);
+
+    return result;
 }

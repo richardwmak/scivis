@@ -92,23 +92,25 @@ Fl_Double_Window* UserInterface::make_window() {
     } // Fl_Light_Button* toggle_frozen
     { toggle_vector_color = new Fl_Light_Button(1135, 130, 200, 20, "Toggle vector coloring");
     } // Fl_Light_Button* toggle_vector_color
-    { text_scalar_col = new Fl_Box(1135, 170, 200, 20, "Color mapping");
+    { toggle_streamline = new Fl_Light_Button(1135, 150, 200, 20, "Toggle streamlines");
+    } // Fl_Light_Button* toggle_streamline
+    { text_scalar_col = new Fl_Box(1135, 195, 200, 20, "Color mapping");
       text_scalar_col->labelfont(1);
     } // Fl_Box* text_scalar_col
-    { toggle_parametrize_color_map = new Fl_Light_Button(1135, 190, 200, 20, "Parametrize color map");
+    { toggle_parametrize_color_map = new Fl_Light_Button(1135, 215, 200, 20, "Parametrize color map");
     } // Fl_Light_Button* toggle_parametrize_color_map
-    { counter_num_bands = new Fl_Counter(1135, 227, 200, 21, "Number of bands");
+    { counter_num_bands = new Fl_Counter(1135, 252, 200, 21, "Number of bands");
       counter_num_bands->align(Fl_Align(FL_ALIGN_TOP));
       counter_num_bands->step(1, 10);
       counter_num_bands->value(Config::num_bands);
       counter_num_bands->bounds(2,256);
     } // Fl_Counter* counter_num_bands
-    { Fl_Box* o = new Fl_Box(1135, 265, 200, 17, "Clamp or scale value?");
+    { Fl_Box* o = new Fl_Box(1135, 290, 200, 17, "Clamp or scale value?");
       o->labelfont(1);
     } // Fl_Box* o
-    { button_clamp = new Fl_Button(1135, 280, 100, 20, "Clamp");
+    { button_clamp = new Fl_Button(1135, 305, 100, 20, "Clamp");
     } // Fl_Button* button_clamp
-    { button_scale = new Fl_Button(1235, 280, 100, 20, "Scale");
+    { button_scale = new Fl_Button(1235, 305, 100, 20, "Scale");
       button_scale->color(FL_GREEN);
       button_scale->deactivate();
     } // Fl_Button* button_scale
@@ -119,33 +121,33 @@ Fl_Double_Window* UserInterface::make_window() {
       value_clamp_max->value(1);
       value_clamp_max->hide();
     } // Fl_Value_Input* value_clamp_max
-    { menu_color_map = new Fl_Choice(1135, 245, 200, 20);
+    { menu_color_map = new Fl_Choice(1135, 270, 200, 20);
       menu_color_map->down_box(FL_BORDER_BOX);
       menu_color_map->menu(menu_menu_color_map);
     } // Fl_Choice* menu_color_map
-    { text_increase_decrease = new Fl_Box(1135, 350, 200, 16, "Increase/decrease values");
+    { text_increase_decrease = new Fl_Box(1135, 375, 200, 16, "Increase/decrease values");
       text_increase_decrease->labelfont(1);
     } // Fl_Box* text_increase_decrease
-    { counter_time_step = new Fl_Counter(1135, 384, 200, 21, "Time step");
+    { counter_time_step = new Fl_Counter(1135, 409, 200, 21, "Time step");
       counter_time_step->align(Fl_Align(FL_ALIGN_TOP));
       counter_time_step->step(0.001, 0.01);
       counter_time_step->value(Config::time_step);
       counter_time_step->bounds(0.001,1);
     } // Fl_Counter* counter_time_step
-    { counter_visc = new Fl_Counter(1135, 424, 200, 21, "Viscosity");
+    { counter_visc = new Fl_Counter(1135, 449, 200, 21, "Viscosity");
       counter_visc->type(1);
       counter_visc->align(Fl_Align(FL_ALIGN_TOP));
       counter_visc->value(Config::visc);
       counter_visc->step(0.00025);
       counter_visc->bounds(0.0001,0.02);
     } // Fl_Counter* counter_visc
-    { counter_vec_scale = new Fl_Counter(1135, 464, 200, 21, "Vector scaling");
+    { counter_vec_scale = new Fl_Counter(1135, 489, 200, 21, "Vector scaling");
       counter_vec_scale->type(1);
       counter_vec_scale->align(Fl_Align(FL_ALIGN_TOP));
       counter_vec_scale->value(Config::vec_scale);
       counter_vec_scale->step(200);
     } // Fl_Counter* counter_vec_scale
-    { counter_num_glyphs = new Fl_Counter(1135, 504, 200, 21, "Number of glyphs");
+    { counter_num_glyphs = new Fl_Counter(1135, 529, 200, 21, "Number of glyphs");
       counter_num_glyphs->align(Fl_Align(FL_ALIGN_TOP));
       counter_num_glyphs->step(1, 10);
       counter_num_glyphs->value(Config::num_glyphs);

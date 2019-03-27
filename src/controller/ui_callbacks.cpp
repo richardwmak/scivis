@@ -133,6 +133,11 @@ void cb_toggle_parametrization(Fl_Light_Button *, void *)
     Config::gradient ? Config::gradient = false : Config::gradient = true;
 }
 
+void cb_toggle_streamline(Fl_Light_Button *, void *)
+{
+    Config::draw_streamline ? Config::draw_streamline = false : Config::draw_streamline = true;
+}
+
 void cb_counter_num_bands(Fl_Counter *w, void *)
 {
     Config::num_bands = w->value();

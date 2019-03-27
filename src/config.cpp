@@ -9,11 +9,12 @@ namespace Config
     float  grid_width;
     float  num_glyphs = 50;
 
-    bool color_dir    = false;
-    bool draw_smoke   = false;
-    bool draw_vecs    = true;
-    bool frozen       = false;
-    bool vector_color = false;
+    bool color_dir       = false;
+    bool draw_smoke      = false;
+    bool draw_vecs       = true;
+    bool frozen          = false;
+    bool vector_color    = false;
+    bool draw_streamline = false;
 
     float     vec_scale = 1000;
     bool      scaling   = true;

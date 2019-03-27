@@ -18,6 +18,7 @@ namespace Config
     extern bool  frozen;       // toggles on/off the animation
     extern float vec_scale;    // scaling of hedgehogs
     extern bool  vector_color; // color the vectors according to the scalar_col or not
+    extern bool  draw_streamline;
 
     extern bool      scaling;   // scaling if true, clamping if false;
     extern fftw_real clamp_min; // clamping values if we are clamping
