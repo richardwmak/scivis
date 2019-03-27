@@ -26,10 +26,14 @@ void idle_callback_sim(void *controller)
             std::vector<fftw_real> scalar_field(Config::NUM_CELLS);
             std::vector<fftw_real> vector_field_x(Config::NUM_CELLS);
             std::vector<fftw_real> vector_field_y(Config::NUM_CELLS);
+            std::vector<fftw_real> vel_field_x(Config::NUM_CELLS);
+            std::vector<fftw_real> vel_field_y(Config::NUM_CELLS);
 
             scalar_field   = ptr_controller->simulation->get_scalar_field();
             vector_field_x = ptr_controller->simulation->get_vector_field_x();
             vector_field_y = ptr_controller->simulation->get_vector_field_y();
+            vel_field_x    = ptr_controller->simulation->get_vel_field_x();
+            vel_field_y    = ptr_controller->simulation->get_vel_field_y();
 
             fftw_real max_scalar = ColorMapper::set_max_scalar(scalar_field);
             fftw_real min_val, med_val, max_val;
@@ -53,6 +57,7 @@ void idle_callback_sim(void *controller)
 
             ptr_controller->window->gl_window->set_scalar_data(scalar_field, max_scalar);
             ptr_controller->window->gl_window->set_vector_data(vector_field_x, vector_field_y);
+            ptr_controller->window->gl_window->set_vel_data(vel_field_x, vel_field_y);
             ptr_controller->window->gl_window->redraw();
             ptr_controller->window->color_bar->redraw();
         }

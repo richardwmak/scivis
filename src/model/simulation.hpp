@@ -41,6 +41,8 @@ class Simulation
 
     std::vector<fftw_real> get_vector_field_x();
     std::vector<fftw_real> get_vector_field_y();
+    std::vector<fftw_real> get_vel_field_x();
+    std::vector<fftw_real> get_vel_field_y();
     std::vector<fftw_real>
     get_vector_field(fftw_real *force, fftw_real *velocity, std::vector<fftw_real> gradient);
 };

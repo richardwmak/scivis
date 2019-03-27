@@ -316,3 +316,17 @@ Simulation::get_vector_field(fftw_real *force, fftw_real *velocity, std::vector<
         }
     }
 }
+
+std::vector<fftw_real> Simulation::get_vel_field_x()
+{
+    std::vector<fftw_real> vel_field_x(cur_state.velocity_x,
+                                       cur_state.velocity_x + Config::NUM_CELLS);
+    return vel_field_x;
+}
+
+std::vector<fftw_real> Simulation::get_vel_field_y()
+{
+    std::vector<fftw_real> vel_field_y(cur_state.velocity_y,
+                                       cur_state.velocity_y + Config::NUM_CELLS);
+    return vel_field_y;
+}

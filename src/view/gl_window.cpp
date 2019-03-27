@@ -44,17 +44,17 @@ void GlWindow::draw()
     glFlush();
 }
 
-int GlWindow::handle(int event)
-{
-    switch (event)
-    {
-        case FL_PUSH:
-        {
-            std::cout << Fl::event_x() << ", " << Fl::event_y() << std::endl;
-            return 1;
-        }
-    }
-}
+// int GlWindow::handle(int event)
+// {
+//     switch (event)
+//     {
+//         case FL_PUSH:
+//         {
+//             // std::cout << Fl::event_x() << ", " << Fl::event_y() << std::endl;
+//             return 1;
+//         }
+//     }
+// }
 
 void GlWindow::set_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar)
 {
@@ -74,6 +74,13 @@ void GlWindow::set_vector_data(std::vector<fftw_real> new_vector_field_x,
 {
     vector_field_x = new_vector_field_x;
     vector_field_y = new_vector_field_y;
+}
+
+void GlWindow::set_vel_data(std::vector<fftw_real> new_vel_field_x,
+                            std::vector<fftw_real> new_vel_field_y)
+{
+    vel_field_x = new_vel_field_x;
+    vel_field_y = new_vel_field_y;
 }
 
 void GlWindow::visualize()
@@ -209,7 +216,30 @@ void GlWindow::visualize()
 
     if (Config::draw_streamline)
     {
-        float delta_t = 0.001;
+        glBegin(GL_LINES);
+        float RGB[3]  = {1, 1, 1};
+        float delta_t = 0.1;
+        float cur_col;
+        float cur_vel_x;
+        float cur_vel_y;
+        float x, y;
+        x = 500;
+        y = 500;
+
+        glVertex2f(x, y);
+        for (int i = 0; i < 50; i++)
+        {
+            std::cout << x << std::endl;
+            cur_vel_x = bilin_interpolate(x, y, vel_field_x);
+            cur_vel_y = bilin_interpolate(x, y, vel_field_y);
+
+            cur_col = std::hypot(cur_vel_x, cur_vel_y);
+            ColorMapper::set_colormap(cur_col, RGB);
+            glVertex2f(x, y);
+            x += cur_vel_x * delta_t;
+            y += cur_vel_y * delta_t;
+        }
+        glEnd();
     }
 }
 
@@ -239,14 +269,28 @@ float GlWindow::bilin_interpolate(float x, float y, std::vector<fftw_real> field
     upper_right = x_ceil + y_ceil * Config::GRID_SIZE;
     lower_right = x_ceil + y_floor * Config::GRID_SIZE;
 
-    std::cout << x_ceil - x << std::endl;
     // std::cout << field[lower_left] * (float)(x_ceil - x) * (float)(y_ceil - y) << std::endl;
 
-    // https://en.wikipedia.org/wiki/Bilinear_interpolation
-    result = field[lower_left] * (x_ceil - x) * (y_ceil - y) +
-             field[lower_right] * (x - x_floor) * (y_ceil - y) +
-             field[upper_left] * (x_ceil - x) * (y - x_floor) +
-             field[upper_right] * (x - x_floor) * (y - y_floor);
-
+    // check if we're not actually (almost) at a grid cell
+    if (((int)x) - x < 0.01 && ((int)y) - y < 0.01)
+    {
+        result = field[(int)x + Config::GRID_SIZE * (int)y];
+    }
+    else if (((int)x) - x < 0.01 && ((int)y) - y >= 0.01)
+    {
+        result = field[lower_left] * (y - y_floor) + field[upper_left] * (y_ceil - y);
+    }
+    else if (((int)x) - x >= 0.01 && ((int)y) - y < 0.01)
+    {
+        result = field[lower_left] * (x - x_floor) + field[lower_right] * (x_ceil - x);
+    }
+    else
+    {
+        // https://en.wikipedia.org/wiki/Bilinear_interpolation
+        result = field[lower_left] * (x_ceil - x) * (y_ceil - y) +
+                 field[lower_right] * (x - x_floor) * (y_ceil - y) +
+                 field[upper_left] * (x_ceil - x) * (y - x_floor) +
+                 field[upper_right] * (x - x_floor) * (y - y_floor);
+    }
     return result;
 }
