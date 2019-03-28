@@ -217,37 +217,36 @@ void GlWindow::visualize()
     if (Config::draw_streamline)
     {
         glBegin(GL_LINES);
-        float RGB[3]  = {1, 1, 1};
-        float delta_t = 0.1;
-        float cur_col;
-        float cur_vel_x;
-        float cur_vel_y;
-        float x, y;
-        x = 500;
-        y = 500;
+        float     RGB[3]       = {1, 1, 1};
+        fftw_real sl_time_step = 0.1;
+        float     cur_col;
+        fftw_real cur_vel_x;
+        fftw_real cur_vel_y;
+        float     x, y;
+        x = Config::win_width / 2;
+        y = Config::win_height / 2;
 
         glVertex2f(x, y);
         for (int i = 0; i < 50; i++)
         {
-            std::cout << x << std::endl;
             cur_vel_x = bilin_interpolate(x, y, vel_field_x);
             cur_vel_y = bilin_interpolate(x, y, vel_field_y);
-
+            std::cout << cur_vel_x * sl_time_step << std::endl;
             cur_col = std::hypot(cur_vel_x, cur_vel_y);
             ColorMapper::set_colormap(cur_col, RGB);
             glVertex2f(x, y);
-            x += cur_vel_x * delta_t;
-            y += cur_vel_y * delta_t;
+            x += cur_vel_x * sl_time_step;
+            y += cur_vel_y * sl_time_step;
         }
         glEnd();
     }
 }
 
-float GlWindow::bilin_interpolate(float x, float y, std::vector<fftw_real> field)
+fftw_real GlWindow::bilin_interpolate(float x, float y, std::vector<fftw_real> field)
 {
-    int   x_floor, y_floor, x_ceil, y_ceil;
-    int   lower_left, upper_left, upper_right, lower_right;
-    float result;
+    int       x_floor, y_floor, x_ceil, y_ceil;
+    int       lower_left, upper_left, upper_right, lower_right;
+    fftw_real result;
 
     x_floor = (int)std::floor(x);
     y_floor = (int)std::floor(y);
