@@ -178,12 +178,12 @@ void GlWindow::visualize()
                     }
                 }
 
-                x_grid_index = x_glyph_index * glyph_to_grid_ratio;
-                y_grid_index = y_glyph_index * glyph_to_grid_ratio;
+                x_pixel = (float)x_glyph_index * glyph_to_grid_ratio;
+                y_pixel = (float)y_glyph_index * glyph_to_grid_ratio;
 
-                scalar_val   = bilin_interpolate(x_grid_index, y_grid_index, scalar_field);
-                vector_x_val = bilin_interpolate(x_grid_index, y_grid_index, vector_field_x);
-                vector_y_val = bilin_interpolate(x_grid_index, y_grid_index, vector_field_y);
+                scalar_val   = bilin_interpolate(x_pixel, y_pixel, scalar_field);
+                vector_x_val = bilin_interpolate(x_pixel, y_pixel, vector_field_x);
+                vector_y_val = bilin_interpolate(x_pixel, y_pixel, vector_field_y);
 
                 if (Config::vector_color)
                 {
@@ -218,25 +218,31 @@ void GlWindow::visualize()
     {
         glBegin(GL_LINES);
         float     RGB[3]       = {1, 1, 1};
-        fftw_real sl_time_step = 0.1;
+        fftw_real sl_time_step = 10;
         float     cur_col;
         fftw_real cur_vel_x;
         fftw_real cur_vel_y;
-        float     x, y;
-        x = Config::win_width / 2;
-        y = Config::win_height / 2;
+        float     x_pixel, y_pixel, x_glyph, y_glyph;
+        float     pixel_to_glyph_ratio = (float)Config::num_glyphs / (float)Config::win_width;
 
-        glVertex2f(x, y);
-        for (int i = 0; i < 50; i++)
+        x_pixel = 500;
+        y_pixel = 500;
+        x_glyph = x_pixel * pixel_to_glyph_ratio;
+        y_glyph = y_pixel * pixel_to_glyph_ratio;
+
+        glVertex2f(x_pixel, y_pixel);
+        for (int i = 0; i < 10; i++)
         {
-            cur_vel_x = bilin_interpolate(x, y, vel_field_x);
-            cur_vel_y = bilin_interpolate(x, y, vel_field_y);
-            std::cout << cur_vel_x * sl_time_step << std::endl;
-            cur_col = std::hypot(cur_vel_x, cur_vel_y);
+            cur_vel_x = bilin_interpolate(x_glyph, y_glyph, vel_field_x);
+            cur_vel_y = bilin_interpolate(x_glyph, y_glyph, vel_field_y);
+            cur_col   = std::hypot(cur_vel_x, cur_vel_y);
             ColorMapper::set_colormap(cur_col, RGB);
-            glVertex2f(x, y);
-            x += cur_vel_x * sl_time_step;
-            y += cur_vel_y * sl_time_step;
+            glColor3fv(RGB);
+            glVertex2f(x_pixel, y_pixel);
+            x_pixel += cur_vel_x * sl_time_step;
+            y_pixel += cur_vel_y * sl_time_step;
+            x_glyph = x_pixel * pixel_to_glyph_ratio;
+            y_glyph = y_pixel * pixel_to_glyph_ratio;
         }
         glEnd();
     }
@@ -244,52 +250,46 @@ void GlWindow::visualize()
 
 fftw_real GlWindow::bilin_interpolate(float x, float y, std::vector<fftw_real> field)
 {
-    int       x_floor, y_floor, x_ceil, y_ceil;
+    int       x_floor, y_floor;
     int       lower_left, upper_left, upper_right, lower_right;
     fftw_real result;
 
     x_floor = (int)std::floor(x);
     y_floor = (int)std::floor(y);
 
-    x_ceil = (int)std::ceil(x);
-    y_ceil = (int)std::ceil(y);
+    if (x_floor >= Config::GRID_SIZE - 1 || y_floor >= Config::GRID_SIZE)
+    {
+        return 0;
+    }
 
-    if (x_ceil > Config::GRID_SIZE - 1)
-    {
-        x_ceil = 0;
-    }
-    if (y_ceil > Config::GRID_SIZE - 1)
-    {
-        y_ceil = 0;
-    }
+    float x_delta = x - (float)x_floor;
+    float y_delta = y - (float)y_floor;
 
     lower_left  = x_floor + y_floor * Config::GRID_SIZE;
-    upper_left  = x_floor + y_ceil * Config::GRID_SIZE;
-    upper_right = x_ceil + y_ceil * Config::GRID_SIZE;
-    lower_right = x_ceil + y_floor * Config::GRID_SIZE;
-
-    // std::cout << field[lower_left] * (float)(x_ceil - x) * (float)(y_ceil - y) << std::endl;
+    lower_right = lower_left + 1;
+    upper_left  = lower_left + Config::GRID_SIZE;
+    upper_right = upper_left + 1;
 
     // check if we're not actually (almost) at a grid cell
-    if (((int)x) - x < 0.01 && ((int)y) - y < 0.01)
+    if (std::round(x) - x < 0.01 && std::round(y) - y < 0.01)
     {
-        result = field[(int)x + Config::GRID_SIZE * (int)y];
+        result = field[lower_left];
     }
-    else if (((int)x) - x < 0.01 && ((int)y) - y >= 0.01)
+    else if (std::round(x) - x < 0.01 && std::round(y) - y >= 0.01)
     {
-        result = field[lower_left] * (y - y_floor) + field[upper_left] * (y_ceil - y);
+        result = field[lower_left] * (y_delta) + field[upper_left] * (1 - y_delta);
     }
-    else if (((int)x) - x >= 0.01 && ((int)y) - y < 0.01)
+    else if (std::round(x) - x >= 0.01 && std::round(y) - y < 0.01)
     {
-        result = field[lower_left] * (x - x_floor) + field[lower_right] * (x_ceil - x);
+        result = field[lower_left] * (x_delta) + field[lower_right] * (1 - x_delta);
     }
     else
     {
         // https://en.wikipedia.org/wiki/Bilinear_interpolation
-        result = field[lower_left] * (x_ceil - x) * (y_ceil - y) +
-                 field[lower_right] * (x - x_floor) * (y_ceil - y) +
-                 field[upper_left] * (x_ceil - x) * (y - x_floor) +
-                 field[upper_right] * (x - x_floor) * (y - y_floor);
+        float x_top = field[upper_left] * x_delta + field[upper_right] * (1 - x_delta);
+        float x_bot = field[lower_left] * x_delta + field[lower_right] * (1 - x_delta);
+
+        result = x_bot * y_delta + x_top * (1 - y_delta);
     }
     return result;
 }
