@@ -29,9 +29,9 @@ int Controller::begin()
 
     // toggle callbacks
     window->toggle_frozen->callback((Fl_Callback *)cb_toggle_frozen);
-    window->toggle_draw_smoke->callback((Fl_Callback *)cb_toggle_smoke, this);
+    window->toggle_draw_smoke->callback((Fl_Callback *)cb_toggle_smoke);
     window->toggle_vector_color->callback((Fl_Callback *)cb_toggle_vector_color);
-    window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs, this);
+    window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs);
     window->toggle_parametrize_color_map->callback((Fl_Callback *)cb_toggle_parametrization, this);
     window->toggle_streamline->callback((Fl_Callback *)cb_toggle_streamline);
 
@@ -93,14 +93,14 @@ void Controller::drag(int x_pixel_curr, int y_pixel_curr)
 
     y_pixel_curr = Config::win_height - y_pixel_curr;
     // Compute the array index that corresponds to the cursor location
-    x_grid_index = (int)std::floor((double)(Config::GRID_SIZE) *
+    x_grid_index = (int)std::round((double)(Config::GRID_SIZE) *
                                    ((double)x_pixel_curr / (double)Config::win_width));
-    y_grid_index = (int)std::floor((double)(Config::GRID_SIZE) *
+    y_grid_index = (int)std::round((double)(Config::GRID_SIZE) *
                                    ((double)y_pixel_curr / (double)Config::win_height));
 
     // clamp index values
-    if (x_grid_index > (Config::num_glyphs)) x_grid_index = Config::num_glyphs;
-    if (y_grid_index > (Config::num_glyphs)) y_grid_index = Config::num_glyphs;
+    if (x_grid_index > (Config::num_glyphs)) x_grid_index = Config::GRID_SIZE;
+    if (y_grid_index > (Config::num_glyphs)) y_grid_index = Config::GRID_SIZE;
     if (x_grid_index < 0) x_grid_index = 0;
     if (y_grid_index < 0) y_grid_index = 0;
 

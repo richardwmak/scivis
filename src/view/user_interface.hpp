@@ -67,6 +67,9 @@ public:
   static Fl_Menu_Item *option_hedgehog;
   static Fl_Menu_Item *option_cone;
   static Fl_Menu_Item *option_arrow_2d;
+  Fl_Box *menu_streamline_options;
+  static Fl_Menu_Item menu_[];
+  static Fl_Menu_Item *option_streamline_grid_points;
   void show();
 };
 #endif

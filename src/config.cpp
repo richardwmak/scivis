@@ -31,4 +31,6 @@ namespace Config
 
     int vector_shape = HEDGEHOG;
 
+    int streamline_options = 0;
+
 } // namespace Config

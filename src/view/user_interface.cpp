@@ -44,6 +44,12 @@ Fl_Menu_Item* UserInterface::option_hedgehog = UserInterface::menu_menu_vector_s
 Fl_Menu_Item* UserInterface::option_cone = UserInterface::menu_menu_vector_shape + 1;
 Fl_Menu_Item* UserInterface::option_arrow_2d = UserInterface::menu_menu_vector_shape + 2;
 
+Fl_Menu_Item UserInterface::menu_[] = {
+ {"Grid points", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
+Fl_Menu_Item* UserInterface::option_streamline_grid_points = UserInterface::menu_ + 0;
+
 Fl_Double_Window* UserInterface::make_window() {
   { main_window = new Fl_Double_Window(1650, 1000, "Smoke");
     main_window->user_data((void*)(this));
@@ -114,10 +120,10 @@ Fl_Double_Window* UserInterface::make_window() {
       button_scale->color(FL_GREEN);
       button_scale->deactivate();
     } // Fl_Button* button_scale
-    { value_clamp_min = new Fl_Value_Input(1187, 300, 48, 25, "min:");
+    { value_clamp_min = new Fl_Value_Input(1181, 325, 54, 20, "min:");
       value_clamp_min->hide();
     } // Fl_Value_Input* value_clamp_min
-    { value_clamp_max = new Fl_Value_Input(1287, 300, 48, 25, "max:");
+    { value_clamp_max = new Fl_Value_Input(1287, 325, 48, 20, "max:");
       value_clamp_max->value(1);
       value_clamp_max->hide();
     } // Fl_Value_Input* value_clamp_max
@@ -170,6 +176,13 @@ Fl_Double_Window* UserInterface::make_window() {
       menu_vector_shape->down_box(FL_BORDER_BOX);
       menu_vector_shape->menu(menu_menu_vector_shape);
     } // Fl_Choice* menu_vector_shape
+    { menu_streamline_options = new Fl_Box(1385, 195, 200, 20, "Streamline options");
+      menu_streamline_options->labelfont(1);
+    } // Fl_Box* menu_streamline_options
+    { Fl_Choice* o = new Fl_Choice(1385, 215, 200, 20);
+      o->down_box(FL_BORDER_BOX);
+      o->menu(menu_);
+    } // Fl_Choice* o
     main_window->end();
   } // Fl_Double_Window* main_window
   return main_window;

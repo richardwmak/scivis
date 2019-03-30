@@ -1,10 +1,89 @@
 #include "render_vector.hpp"
+#include "color_mapper.hpp"
 #include "config.hpp"
+#include "interpolate.hpp"
 #include <FL/gl.h>
 #include <math.h>
+#include <rfftw.h>
 #include <vector>
 
-void RenderVector::render_vector(coord start, coord end)
+void RenderVector::render_vector(std::vector<fftw_real> scalar_field,
+                                 std::vector<fftw_real> vector_field_x,
+                                 std::vector<fftw_real> vector_field_y)
+{
+    int x_glyph_index, y_glyph_index;
+    // this assumes width and height are the same
+    float     glyph_to_grid_ratio = (float)Config::GRID_SIZE / (float)Config::num_glyphs;
+    double    x_grid, y_grid;
+    fftw_real x_glyph_width =
+        (fftw_real)Config::win_width / (fftw_real)(Config::num_glyphs - 1); // Grid cell width
+    fftw_real y_glyph_width =
+        (fftw_real)Config::win_height / (fftw_real)(Config::num_glyphs - 1); // Grid cell height
+
+    float RGB[3] = {1, 1, 1};
+    float scalar_val, vector_x_val, vector_y_val;
+    if (Config::vector_shape == Config::HEDGEHOG)
+    {
+        glBegin(GL_LINES);
+    }
+
+    for (x_glyph_index = 0; x_glyph_index < Config::num_glyphs; x_glyph_index++)
+    {
+        for (y_glyph_index = 0; y_glyph_index < Config::num_glyphs; y_glyph_index++)
+        {
+            switch (Config::vector_shape)
+            {
+                case Config::CONE:
+                {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    glBegin(GL_TRIANGLE_FAN);
+                    break;
+                }
+                case Config::ARROW_2D:
+                {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    glBegin(GL_POLYGON);
+                    break;
+                }
+            }
+
+            x_grid = (float)x_glyph_index * glyph_to_grid_ratio;
+            y_grid = (float)y_glyph_index * glyph_to_grid_ratio;
+
+            scalar_val   = Interpolate::bilin(x_grid, y_grid, scalar_field);
+            vector_x_val = Interpolate::bilin(x_grid, y_grid, vector_field_x);
+            vector_y_val = Interpolate::bilin(x_grid, y_grid, vector_field_y);
+
+            if (Config::vector_color)
+            {
+                ColorMapper::set_colormap(scalar_val, RGB);
+            }
+            glColor3fv(RGB);
+
+            coord start, end;
+
+            start =
+                std::make_pair((GLfloat)(x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width),
+                               (GLfloat)(y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width));
+            end = std::make_pair(
+                (GLfloat)((x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width) +
+                          Config::vec_scale * vector_x_val),
+                (GLfloat)((y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width) +
+                          Config::vec_scale * vector_y_val));
+            controller(start, end);
+            if (Config::vector_shape != Config::HEDGEHOG)
+            {
+                glEnd();
+            }
+        }
+    }
+    if (Config::vector_shape == Config::HEDGEHOG)
+    {
+        glEnd();
+    }
+}
+
+void RenderVector::controller(coord start, coord end)
 {
     // scale it to the grid width
     GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);

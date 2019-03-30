@@ -60,7 +60,7 @@ class UserInterface {open
         xywh {1135 130 200 20}
       }
       Fl_Light_Button toggle_streamline {
-        label {Toggle streamlines} selected
+        label {Toggle streamlines}
         xywh {1135 150 200 20}
       }
       Fl_Box text_scalar_col {
@@ -92,11 +92,11 @@ class UserInterface {open
       }
       Fl_Value_Input value_clamp_min {
         label {min:}
-        xywh {1187 300 48 25} hide
+        xywh {1181 325 54 20} hide
       }
       Fl_Value_Input value_clamp_max {
         label {max:}
-        xywh {1287 300 48 25} value 1 hide
+        xywh {1287 325 48 20} value 1 hide
       }
       Fl_Choice menu_color_map {
         xywh {1135 270 200 20} down_box BORDER_BOX
@@ -205,6 +205,18 @@ class UserInterface {open
         }
         MenuItem option_arrow_2d {
           label {2D arrow}
+          xywh {0 0 36 21}
+        }
+      }
+      Fl_Box menu_streamline_options {
+        label {Streamline options}
+        xywh {1385 195 200 20} labelfont 1
+      }
+      Fl_Choice {} {open
+        xywh {1385 215 200 20} down_box BORDER_BOX
+      } {
+        MenuItem option_streamline_grid_points {
+          label {Grid points} selected
           xywh {0 0 36 21}
         }
       }

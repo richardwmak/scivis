@@ -90,42 +90,14 @@ void cb_toggle_frozen(Fl_Light_Button *, void *)
     Config::frozen ? Config::frozen = false : Config::frozen = true;
 }
 
-void cb_toggle_smoke(Fl_Light_Button *, void *controller)
+void cb_toggle_smoke(Fl_Light_Button *, void *)
 {
-    if (controller != NULL)
-    {
-        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
-
-        if (Config::draw_smoke)
-        {
-            Config::draw_smoke = false;
-            Config::draw_vecs  = true;
-            ptr_controller->window->toggle_draw_vecs->value(1);
-        }
-        else
-        {
-            Config::draw_smoke = true;
-        }
-    }
+    Config::draw_smoke ? Config::draw_smoke = false : Config::draw_smoke = true;
 }
 
-void cb_toggle_vecs(Fl_Light_Button *, void *controller)
+void cb_toggle_vecs(Fl_Light_Button *, void *)
 {
-    if (controller != NULL)
-    {
-        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
-
-        if (Config::draw_vecs)
-        {
-            Config::draw_vecs  = false;
-            Config::draw_smoke = true;
-            ptr_controller->window->toggle_draw_smoke->value(1);
-        }
-        else
-        {
-            Config::draw_vecs = true;
-        }
-    }
+    Config::draw_vecs ? Config::draw_vecs = false : Config::draw_vecs = true;
 }
 
 void cb_toggle_vector_color(Fl_Light_Button *, void *)
@@ -226,6 +198,11 @@ void cb_option_cone(Fl_Menu_Item *, void *)
 void cb_option_arrow_2d(Fl_Menu_Item *, void *)
 {
     Config::vector_shape = Config::ARROW_2D;
+}
+
+void cb_option_streamline_grid_points(Fl_Menu_Item *, void *)
+{
+    Config::streamline_options = Config::GLYPH_POINTS;
 }
 
 void cb_button_scale(Fl_Button *b, void *controller)

@@ -51,4 +51,7 @@ namespace Config
     const int  CONE     = 1;
     const int  ARROW_2D = 2;
 
+    // where do we seed streamlines?
+    extern int streamline_options;
+    const int  GLYPH_POINTS = 0;
 } // namespace Config

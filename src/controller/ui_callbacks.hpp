@@ -12,8 +12,8 @@ void idle_callback_sim(void *controller);
 void idle_callback_interaction(void *controller);
 
 void cb_toggle_frozen(Fl_Light_Button *, void *);
-void cb_toggle_smoke(Fl_Light_Button *, void *controller);
-void cb_toggle_vecs(Fl_Light_Button *, void *controller);
+void cb_toggle_smoke(Fl_Light_Button *, void *);
+void cb_toggle_vecs(Fl_Light_Button *, void *);
 void cb_toggle_vector_color(Fl_Light_Button *, void *);
 void cb_toggle_parametrization(Fl_Light_Button *, void *);
 void cb_toggle_streamline(Fl_Light_Button *, void *);
@@ -42,6 +42,8 @@ void cb_option_vector_gradient_velocity(Fl_Menu_Item *, void *);
 void cb_option_hedgehog(Fl_Menu_Item *, void *);
 void cb_option_cone(Fl_Menu_Item *, void *);
 void cb_option_arrow_2d(Fl_Menu_Item *, void *);
+
+void cb_option_streamline_grid_points(Fl_Menu_Item *, void *);
 
 void cb_button_scale(Fl_Button *b, void *controller);
 void cb_button_clamp(Fl_Button *b, void *controller);
