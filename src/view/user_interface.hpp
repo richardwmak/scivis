@@ -33,6 +33,7 @@ public:
   Fl_Light_Button *toggle_frozen;
   Fl_Light_Button *toggle_vector_color;
   Fl_Light_Button *toggle_streamline;
+  Fl_Light_Button *toggle_draw_slices;
   Fl_Box *text_scalar_col;
   Fl_Light_Button *toggle_parametrize_color_map;
   Fl_Counter *counter_num_bands;
@@ -70,7 +71,8 @@ public:
   Fl_Box *menu_streamline_options;
   static Fl_Menu_Item menu_[];
   static Fl_Menu_Item *option_streamline_grid_points;
-  Fl_Light_Button *toggle_draw_slices;
+  Fl_Box *text_streamline_max_length;
+  Fl_Counter *value_streamline_max_length;
   void show();
 };
 #endif

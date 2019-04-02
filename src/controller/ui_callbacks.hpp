@@ -51,3 +51,5 @@ void cb_button_clamp(Fl_Button *b, void *controller);
 
 void cb_value_clamp_min(Fl_Valuator *b, void *controller);
 void cb_value_clamp_max(Fl_Valuator *b, void *controller);
+
+void cb_value_streamline_max_length(Fl_Valuator *b, void *);

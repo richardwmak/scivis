@@ -271,3 +271,8 @@ void cb_value_clamp_max(Fl_Valuator *b, void *controller)
     b->value(new_value);
     Config::clamp_max = new_value;
 }
+
+void cb_value_streamline_max_length(Fl_Valuator *b, void *)
+{
+    Config::streamline_max_length = b->value();
+}

@@ -11,7 +11,7 @@ class UserInterface {open
   } {
     Fl_Window main_window {
       label Smoke open
-      xywh {375 175 1650 1000} type Double
+      xywh {729 135 1650 1000} type Double
       code0 {\#include "config.hpp"}
       code1 {\#include <iostream>} visible
     } {
@@ -64,7 +64,7 @@ class UserInterface {open
         xywh {1135 150 200 20}
       }
       Fl_Light_Button toggle_draw_slices {
-        label {Toggle slices} selected
+        label {Toggle slices}
         xywh {1135 170 200 20}
       }
       Fl_Box text_scalar_col {
@@ -223,6 +223,15 @@ class UserInterface {open
           label {Grid points}
           xywh {0 0 36 21}
         }
+      }
+      Fl_Box text_streamline_max_length {
+        label {Streamline max length}
+        xywh {1385 235 200 20}
+      }
+      Fl_Counter value_streamline_max_length {selected
+        xywh {1385 253 200 20} minimum 10 maximum 1000
+        code0 {value_streamline_max_length->step(10, 100);}
+        code1 {value_streamline_max_length->value(Config::streamline_max_length);}
       }
     }
   }

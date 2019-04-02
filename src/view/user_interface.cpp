@@ -100,6 +100,8 @@ Fl_Double_Window* UserInterface::make_window() {
     } // Fl_Light_Button* toggle_vector_color
     { toggle_streamline = new Fl_Light_Button(1135, 150, 200, 20, "Toggle streamlines");
     } // Fl_Light_Button* toggle_streamline
+    { toggle_draw_slices = new Fl_Light_Button(1135, 170, 200, 20, "Toggle slices");
+    } // Fl_Light_Button* toggle_draw_slices
     { text_scalar_col = new Fl_Box(1135, 195, 200, 20, "Color mapping");
       text_scalar_col->labelfont(1);
     } // Fl_Box* text_scalar_col
@@ -183,8 +185,14 @@ Fl_Double_Window* UserInterface::make_window() {
       o->down_box(FL_BORDER_BOX);
       o->menu(menu_);
     } // Fl_Choice* o
-    { toggle_draw_slices = new Fl_Light_Button(1135, 170, 200, 20, "Toggle slices");
-    } // Fl_Light_Button* toggle_draw_slices
+    { text_streamline_max_length = new Fl_Box(1385, 235, 200, 20, "Streamline max length");
+    } // Fl_Box* text_streamline_max_length
+    { value_streamline_max_length = new Fl_Counter(1385, 253, 200, 20);
+      value_streamline_max_length->minimum(10);
+      value_streamline_max_length->maximum(1000);
+      value_streamline_max_length->step(10, 100);
+      value_streamline_max_length->value(Config::streamline_max_length);
+    } // Fl_Counter* value_streamline_max_length
     main_window->end();
   } // Fl_Double_Window* main_window
   return main_window;
