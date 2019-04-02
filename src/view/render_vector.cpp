@@ -9,7 +9,8 @@
 
 void RenderVector::render_vector(std::vector<fftw_real> scalar_field,
                                  std::vector<fftw_real> vector_field_x,
-                                 std::vector<fftw_real> vector_field_y)
+                                 std::vector<fftw_real> vector_field_y,
+                                 GLfloat                height)
 {
     int x_glyph_index, y_glyph_index;
     // this assumes width and height are the same
@@ -70,7 +71,7 @@ void RenderVector::render_vector(std::vector<fftw_real> scalar_field,
                           Config::vec_scale * vector_x_val),
                 (GLfloat)((y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width) +
                           Config::vec_scale * vector_y_val));
-            controller(start, end);
+            controller(start, end, height);
             if (Config::vector_shape != Config::HEDGEHOG)
             {
                 glEnd();
@@ -83,7 +84,7 @@ void RenderVector::render_vector(std::vector<fftw_real> scalar_field,
     }
 }
 
-void RenderVector::controller(coord start, coord end)
+void RenderVector::controller(coord start, coord end, GLfloat height)
 {
     // scale it to the grid width
     GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
@@ -98,7 +99,7 @@ void RenderVector::controller(coord start, coord end)
     {
         case Config::ARROW_2D:
         {
-            render_arrow_2d(start, end);
+            render_arrow_2d(start, end, height);
             break;
         }
         case Config::CONE:
@@ -109,16 +110,16 @@ void RenderVector::controller(coord start, coord end)
         case Config::HEDGEHOG:
         default:
         {
-            render_hedgehog(start, end);
+            render_hedgehog(start, end, height);
             break;
         }
     }
 }
 
-void RenderVector::render_hedgehog(coord start, coord end)
+void RenderVector::render_hedgehog(coord start, coord end, GLfloat height)
 {
-    glVertex2f(start.first, start.second);
-    glVertex2f(end.first, end.second);
+    glVertex3f(start.first, start.second, height);
+    glVertex3f(end.first, end.second, height);
 }
 
 void RenderVector::render_cone(coord start, coord end)
@@ -161,7 +162,7 @@ void RenderVector::render_cone(coord start, coord end)
     glVertex3f(center[0] + v1[0], center[1] + v1[1], center[2] + v1[2]);
 }
 
-void RenderVector::render_arrow_2d(coord start, coord end)
+void RenderVector::render_arrow_2d(coord start, coord end, GLfloat height)
 {
     // https://www.gamedev.net/forums/topic/229253-how-to-draw-arrows-in-opengl/
     // first draw the arrow horizontally along the positive x-axis
@@ -195,14 +196,14 @@ void RenderVector::render_arrow_2d(coord start, coord end)
                          vector_angle);
     coord v7 = rotate_2d(start, start.first, start.second - 0.5 * arrow_base_width, vector_angle);
 
-    glVertex2f(v1.first, v1.second);
-    glVertex2f(v2.first, v2.second);
-    glVertex2f(v3.first, v3.second);
-    glVertex2f(v4.first, v4.second);
-    glVertex2f(v5.first, v5.second);
-    glVertex2f(v6.first, v6.second);
-    glVertex2f(v7.first, v7.second);
-    glVertex2f(v1.first, v1.second);
+    glVertex3f(v1.first, v1.second, height);
+    glVertex3f(v2.first, v2.second, height);
+    glVertex3f(v3.first, v3.second, height);
+    glVertex3f(v4.first, v4.second, height);
+    glVertex3f(v5.first, v5.second, height);
+    glVertex3f(v6.first, v6.second, height);
+    glVertex3f(v7.first, v7.second, height);
+    glVertex3f(v1.first, v1.second, height);
 
     glEnd();
     glBegin(GL_POLYGON);

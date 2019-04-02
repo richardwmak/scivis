@@ -7,7 +7,8 @@
 #include <vector>
 
 void RenderStreamline::render_streamlines(std::vector<fftw_real> velocity_x,
-                                          std::vector<fftw_real> velocity_y)
+                                          std::vector<fftw_real> velocity_y,
+                                          GLfloat                height)
 {
     float x_pixel, y_pixel;
     if (Config::streamline_options == Config::GLYPH_POINTS)
@@ -24,11 +25,24 @@ void RenderStreamline::render_streamlines(std::vector<fftw_real> velocity_x,
             {
                 x_pixel = (float)(x_glyph_width + (fftw_real)x_glyph_index * x_glyph_width);
                 y_pixel = (float)(y_glyph_width + (fftw_real)y_glyph_index * y_glyph_width);
-                if (x_pixel > Config::win_width) x_pixel = 1000;
-                if (x_pixel < 0) x_pixel = 0;
-                if (y_pixel > Config::win_height) y_pixel = 1000;
-                if (y_pixel < 0) y_pixel = 0;
-                RenderStreamline::render_streamline(x_pixel, y_pixel, velocity_x, velocity_y);
+                if (x_pixel > Config::win_width)
+                {
+                    x_pixel = 1000;
+                }
+                if (x_pixel < 0)
+                {
+                    x_pixel = 0;
+                }
+                if (y_pixel > Config::win_height)
+                {
+                    y_pixel = 1000;
+                }
+                if (y_pixel < 0)
+                {
+                    y_pixel = 0;
+                }
+                RenderStreamline::render_streamline(
+                    x_pixel, y_pixel, velocity_x, velocity_y, height);
             }
         }
     }
@@ -37,7 +51,8 @@ void RenderStreamline::render_streamlines(std::vector<fftw_real> velocity_x,
 void RenderStreamline::render_streamline(float                  x_pixel,
                                          float                  y_pixel,
                                          std::vector<fftw_real> velocity_x,
-                                         std::vector<fftw_real> velocity_y)
+                                         std::vector<fftw_real> velocity_y,
+                                         GLfloat                height)
 {
     float     RGB[3]       = {1, 1, 1};
     fftw_real sl_time_step = 1000;
@@ -46,14 +61,38 @@ void RenderStreamline::render_streamline(float                  x_pixel,
     fftw_real cur_vel_y;
     float     x_grid, y_grid;
     float     pixel_to_grid_ratio = (float)Config::GRID_SIZE / (float)Config::win_width;
+    float     length              = 0;
 
     x_grid = x_pixel * pixel_to_grid_ratio;
     y_grid = y_pixel * pixel_to_grid_ratio;
 
     glBegin(GL_LINE_STRIP);
-    glVertex2f(x_pixel, y_pixel);
+    glVertex3f(x_pixel, y_pixel, height);
     for (int i = 0; i < 10; i++)
     {
+        // check length
+        if (length > Config::streamline_max_length)
+        {
+            break;
+        }
+
+        if (x_grid > Config::GRID_SIZE)
+        {
+            x_grid = Config::GRID_SIZE;
+        }
+        if (x_grid < 0)
+        {
+            x_grid = 0;
+        }
+        if (y_grid > Config::GRID_SIZE)
+        {
+            y_grid = Config::GRID_SIZE;
+        }
+        if (y_grid < 0)
+        {
+            y_grid = 0;
+        }
+
         cur_vel_x = Interpolate::bilin(x_grid, y_grid, velocity_x);
         cur_vel_y = Interpolate::bilin(x_grid, y_grid, velocity_y);
         cur_col   = std::hypot(cur_vel_x, cur_vel_y);
@@ -61,9 +100,10 @@ void RenderStreamline::render_streamline(float                  x_pixel,
         glColor3fv(RGB);
         x_pixel += cur_vel_x * sl_time_step;
         y_pixel += cur_vel_y * sl_time_step;
-        glVertex2f(x_pixel, y_pixel);
+        glVertex3f(x_pixel, y_pixel, height);
         x_grid = x_pixel * pixel_to_grid_ratio;
         y_grid = y_pixel * pixel_to_grid_ratio;
+        length += std::hypot(cur_vel_x * sl_time_step, cur_vel_y * sl_time_step);
     }
     glEnd();
 }

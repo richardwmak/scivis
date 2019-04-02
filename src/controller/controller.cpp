@@ -34,6 +34,7 @@ int Controller::begin()
     window->toggle_draw_vecs->callback((Fl_Callback *)cb_toggle_vecs);
     window->toggle_parametrize_color_map->callback((Fl_Callback *)cb_toggle_parametrization, this);
     window->toggle_streamline->callback((Fl_Callback *)cb_toggle_streamline);
+    window->toggle_draw_slices->callback((Fl_Callback *)cb_toggle_draw_slices, this);
 
     // counter callbacks
     window->counter_num_bands->callback((Fl_Callback *)cb_counter_num_bands, this);
@@ -99,10 +100,14 @@ void Controller::drag(int x_pixel_curr, int y_pixel_curr)
                                    ((double)y_pixel_curr / (double)Config::win_height));
 
     // clamp index values
-    if (x_grid_index > (Config::num_glyphs)) x_grid_index = Config::GRID_SIZE;
-    if (y_grid_index > (Config::num_glyphs)) y_grid_index = Config::GRID_SIZE;
-    if (x_grid_index < 0) x_grid_index = 0;
-    if (y_grid_index < 0) y_grid_index = 0;
+    if (x_grid_index > (Config::num_glyphs))
+        x_grid_index = Config::GRID_SIZE;
+    if (y_grid_index > (Config::num_glyphs))
+        y_grid_index = Config::GRID_SIZE;
+    if (x_grid_index < 0)
+        x_grid_index = 0;
+    if (y_grid_index < 0)
+        y_grid_index = 0;
 
     // Add force at the cursor location
     dx  = x_pixel_curr - x_pixel_prev;

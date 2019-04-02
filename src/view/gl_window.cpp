@@ -28,38 +28,74 @@ void GlWindow::draw()
         glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
-        // gluPerspective(70, 1, -10, 10);
-        // gluLookAt(Config::win_height / 2,
-        //           Config::win_width / 2,
-        //           800,
-        //           Config::win_height / 2,
-        //           Config::win_width / 2,
-        //           0,
-        //           0,
-        //           1,
-        //           0);
+        gluPerspective(70, 1, -1000, 1000);
+        gluLookAt(Config::win_height / 2,
+                  Config::win_width / 2,
+                  1000,
+                  Config::win_height / 2,
+                  Config::win_width / 2,
+                  0,
+                  0,
+                  1,
+                  0);
+        // gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
     }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    visualize();
+    if (Config::draw_slices && buffer_scalar_field.size() >= Config::buffer_size)
+    {
+        visualize_slices();
+    }
+    else
+    {
+        visualize(0,
+                  buffer_scalar_field.front(),
+                  buffer_vector_field_x.front(),
+                  buffer_vector_field_y.front(),
+                  buffer_vel_field_x.front(),
+                  buffer_vel_field_y.front());
+    }
     glFlush();
 }
 
-// int GlWindow::handle(int event)
-// {
-//     switch (event)
-//     {
-//         case FL_PUSH:
-//         {
-//             // std::cout << Fl::event_x() << ", " << Fl::event_y() << std::endl;
-//             return 1;
-//         }
-//     }
-// }
+void GlWindow::change_perspective()
+{
+    if (Config::draw_slices)
+    {
+        make_current();
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(70, 1, -10, 10);
+        gluLookAt(Config::win_height / 2 + 100,
+                  Config::win_width / 2 + 100,
+                  1000,
+                  Config::win_height / 2,
+                  Config::win_width / 2,
+                  0,
+                  0,
+                  1,
+                  0);
+    }
+    else
+    {
+        make_current();
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(70, 1, -1000, 1000);
+        gluLookAt(Config::win_height / 2,
+                  Config::win_width / 2,
+                  1000,
+                  Config::win_height / 2,
+                  Config::win_width / 2,
+                  0,
+                  0,
+                  1,
+                  0);
+    }
+}
 
-void GlWindow::set_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar)
+void GlWindow::add_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar)
 {
     if (Config::scaling)
     {
@@ -69,37 +105,76 @@ void GlWindow::set_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_rea
         }
     }
 
-    scalar_field = new_scalar_field;
+    buffer_scalar_field.insert(buffer_scalar_field.begin(), new_scalar_field);
+    if (buffer_scalar_field.size() > Config::buffer_size)
+    {
+        buffer_scalar_field.pop_back();
+    }
 }
 
-void GlWindow::set_vector_data(std::vector<fftw_real> new_vector_field_x,
+void GlWindow::add_vector_data(std::vector<fftw_real> new_vector_field_x,
                                std::vector<fftw_real> new_vector_field_y)
 {
-    vector_field_x = new_vector_field_x;
-    vector_field_y = new_vector_field_y;
+    buffer_vector_field_x.insert(buffer_vector_field_x.begin(), new_vector_field_x);
+    buffer_vector_field_y.insert(buffer_vector_field_y.begin(), new_vector_field_y);
+    if (buffer_vector_field_x.size() > Config::buffer_size)
+    {
+        buffer_vector_field_x.pop_back();
+    }
+    if (buffer_vector_field_y.size() > Config::buffer_size)
+    {
+        buffer_vector_field_y.pop_back();
+    }
 }
 
-void GlWindow::set_vel_data(std::vector<fftw_real> new_vel_field_x,
+void GlWindow::add_vel_data(std::vector<fftw_real> new_vel_field_x,
                             std::vector<fftw_real> new_vel_field_y)
 {
-    vel_field_x = new_vel_field_x;
-    vel_field_y = new_vel_field_y;
+    buffer_vel_field_x.insert(buffer_vel_field_x.begin(), new_vel_field_x);
+    buffer_vel_field_y.insert(buffer_vel_field_y.begin(), new_vel_field_y);
+    if (buffer_vel_field_x.size() > Config::buffer_size)
+    {
+        buffer_vel_field_x.pop_back();
+    }
+    if (buffer_vel_field_y.size() > Config::buffer_size)
+    {
+        buffer_vel_field_y.pop_back();
+    }
 }
 
-void GlWindow::visualize()
+void GlWindow::visualize(GLfloat                height,
+                         std::vector<fftw_real> scalar_field,
+                         std::vector<fftw_real> vector_field_x,
+                         std::vector<fftw_real> vector_field_y,
+                         std::vector<fftw_real> vel_field_x,
+                         std::vector<fftw_real> vel_field_y)
 {
     if (Config::draw_smoke)
     {
-        RenderSmoke::render_smoke(scalar_field);
+        RenderSmoke::render_smoke(scalar_field, height);
     }
 
     if (Config::draw_vecs)
     {
-        RenderVector::render_vector(scalar_field, vector_field_x, vector_field_y);
+        RenderVector::render_vector(scalar_field, vector_field_x, vector_field_y, height);
     }
 
     if (Config::draw_streamline)
     {
-        RenderStreamline::render_streamlines(vel_field_x, vel_field_y);
+        RenderStreamline::render_streamlines(vel_field_x, vel_field_y, height);
+    }
+}
+
+void GlWindow::visualize_slices()
+{
+    GLfloat height = 0;
+    for (long unsigned int i = 0; i < Config::buffer_size; i += Config::buffer_delta, height += 20)
+    {
+        visualize(height,
+                  buffer_scalar_field[i],
+                  buffer_vector_field_x[i],
+                  buffer_vector_field_y[i],
+                  buffer_vel_field_x[i],
+                  buffer_vel_field_y[i]);
     }
 }

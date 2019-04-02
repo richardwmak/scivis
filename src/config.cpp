@@ -15,6 +15,7 @@ namespace Config
     bool frozen          = false;
     bool vector_color    = false;
     bool draw_streamline = false;
+    bool draw_slices     = false;
 
     float     vec_scale = 1000;
     bool      scaling   = true;
@@ -32,5 +33,10 @@ namespace Config
     int vector_shape = HEDGEHOG;
 
     int streamline_options = 0;
+
+    int streamline_max_length = 100;
+
+    long unsigned int buffer_size  = 200;
+    int               buffer_delta = 10;
 
 } // namespace Config

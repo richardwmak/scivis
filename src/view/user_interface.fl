@@ -63,6 +63,10 @@ class UserInterface {open
         label {Toggle streamlines}
         xywh {1135 150 200 20}
       }
+      Fl_Light_Button toggle_draw_slices {
+        label {Toggle slices} selected
+        xywh {1135 170 200 20}
+      }
       Fl_Box text_scalar_col {
         label {Color mapping}
         xywh {1135 195 200 20} labelfont 1
@@ -216,7 +220,7 @@ class UserInterface {open
         xywh {1385 215 200 20} down_box BORDER_BOX
       } {
         MenuItem option_streamline_grid_points {
-          label {Grid points} selected
+          label {Grid points}
           xywh {0 0 36 21}
         }
       }

@@ -1,4 +1,5 @@
 #pragma once
+#include <Fl/gl.h>
 #include <rfftw.h>
 #include <vector>
 
@@ -13,7 +14,8 @@ class ColorMapper
     static void black_white(float value, float RGB[3]);
     static void red_white(float value, float RGB[3]);
     static void set_colormap(float value, float RGB[3]);
-    // static void direction_to_color(float RGB[3], float x, float y);
+
+    static GLfloat set_alpha(float value);
 
     static fftw_real max_scalar;
     static fftw_real set_max_scalar(std::vector<fftw_real> scalar_field);

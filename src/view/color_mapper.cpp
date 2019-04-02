@@ -1,7 +1,6 @@
 #include "color_mapper.hpp"
 #include "config.hpp"
 #include <Fl/gl.h>
-#include <Fl/glu.h>
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -72,6 +71,37 @@ void ColorMapper::set_colormap(float value, float RGB[3])
         {
             std::cout << "Something went wrong" << std::endl;
         }
+    }
+}
+
+GLfloat ColorMapper::set_alpha(float value)
+{
+    if (!Config::draw_slices)
+    {
+        return 1;
+    }
+    else
+    {
+        if (!Config::scaling)
+        {
+            if (value < Config::clamp_min)
+            {
+                value = Config::clamp_min;
+            }
+            else if (value > Config::clamp_max)
+            {
+                value = Config::clamp_max;
+            }
+        }
+
+        if (!Config::gradient)
+        {
+            value *= Config::num_bands;
+            value = (int)value;
+            value /= Config::num_bands;
+        }
+
+        return value;
     }
 }
 

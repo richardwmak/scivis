@@ -5,9 +5,10 @@
 #include <rfftw.h>
 #include <vector>
 
-void RenderSmoke::render_smoke(std::vector<fftw_real> scalar_field)
+void RenderSmoke::render_smoke(std::vector<fftw_real> scalar_field, GLfloat height)
 {
-    int x_grid_index, y_grid_index, idx;
+    int     x_grid_index, y_grid_index, idx;
+    GLfloat alpha = 1;
     // this assumes width and height are the same
     double x_pixel, y_pixel;
 
@@ -27,9 +28,10 @@ void RenderSmoke::render_smoke(std::vector<fftw_real> scalar_field)
 
         idx = (y_grid_index * Config::GRID_SIZE) + x_grid_index;
         ColorMapper::set_colormap(scalar_field[idx], RGB);
-        glColor3fv(RGB);
+        alpha = ColorMapper::set_alpha(scalar_field[idx]);
+        glColor4f(RGB[0], RGB[1], RGB[2], alpha);
 
-        glVertex2f(x_pixel, y_pixel);
+        glVertex3f(x_pixel, y_pixel, height);
 
         for (x_grid_index = 0; x_grid_index < Config::GRID_SIZE - 1; x_grid_index++)
         {
@@ -38,17 +40,19 @@ void RenderSmoke::render_smoke(std::vector<fftw_real> scalar_field)
 
             idx = ((y_grid_index + 1) * Config::GRID_SIZE) + x_grid_index;
             ColorMapper::set_colormap(scalar_field[idx], RGB);
-            glColor3fv(RGB);
+            alpha = ColorMapper::set_alpha(scalar_field[idx]);
+            glColor4f(RGB[0], RGB[1], RGB[2], alpha);
 
-            glVertex2f(x_pixel, y_pixel);
+            glVertex3f(x_pixel, y_pixel, height);
             x_pixel = x_grid_width + (fftw_real)(x_grid_index + 1) * x_grid_width;
             y_pixel = y_grid_width + (fftw_real)y_grid_index * y_grid_width;
 
             idx = (y_grid_index * Config::GRID_SIZE) + (x_grid_index + 1);
             ColorMapper::set_colormap(scalar_field[idx], RGB);
-            glColor3fv(RGB);
+            alpha = ColorMapper::set_alpha(scalar_field[idx]);
+            glColor4f(RGB[0], RGB[1], RGB[2], alpha);
 
-            glVertex2f(x_pixel, y_pixel);
+            glVertex3f(x_pixel, y_pixel, height);
         }
 
         x_pixel = x_grid_width + (fftw_real)(Config::GRID_SIZE - 1) * x_grid_width;
@@ -56,9 +60,10 @@ void RenderSmoke::render_smoke(std::vector<fftw_real> scalar_field)
 
         idx = ((y_grid_index + 1) * Config::GRID_SIZE) + (Config::GRID_SIZE - 1);
         ColorMapper::set_colormap(scalar_field[idx], RGB);
-        glColor3fv(RGB);
+        alpha = ColorMapper::set_alpha(scalar_field[idx]);
+        glColor4f(RGB[0], RGB[1], RGB[2], alpha);
 
-        glVertex2f(x_pixel, y_pixel);
+        glVertex3f(x_pixel, y_pixel, height);
 
         glEnd();
     }

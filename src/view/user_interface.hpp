@@ -70,6 +70,7 @@ public:
   Fl_Box *menu_streamline_options;
   static Fl_Menu_Item menu_[];
   static Fl_Menu_Item *option_streamline_grid_points;
+  Fl_Light_Button *toggle_draw_slices;
   void show();
 };
 #endif

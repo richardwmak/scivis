@@ -183,6 +183,8 @@ Fl_Double_Window* UserInterface::make_window() {
       o->down_box(FL_BORDER_BOX);
       o->menu(menu_);
     } // Fl_Choice* o
+    { toggle_draw_slices = new Fl_Light_Button(1135, 170, 200, 20, "Toggle slices");
+    } // Fl_Light_Button* toggle_draw_slices
     main_window->end();
   } // Fl_Double_Window* main_window
   return main_window;

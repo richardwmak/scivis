@@ -19,6 +19,7 @@ namespace Config
     extern float vec_scale;    // scaling of hedgehogs
     extern bool  vector_color; // color the vectors according to the scalar_col or not
     extern bool  draw_streamline;
+    extern bool  draw_slices;
 
     extern bool      scaling;   // scaling if true, clamping if false;
     extern fftw_real clamp_min; // clamping values if we are clamping
@@ -54,4 +55,9 @@ namespace Config
     // where do we seed streamlines?
     extern int streamline_options;
     const int  GLYPH_POINTS = 0;
+
+    extern int streamline_max_length;
+
+    extern long unsigned int buffer_size;
+    extern int               buffer_delta; // how many timesteps between a buffer
 } // namespace Config

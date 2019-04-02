@@ -55,9 +55,9 @@ void idle_callback_sim(void *controller)
             ptr_controller->window->output_color_bar_med_val->value(med_val);
             ptr_controller->window->output_color_bar_min_val->value(min_val);
 
-            ptr_controller->window->gl_window->set_scalar_data(scalar_field, max_scalar);
-            ptr_controller->window->gl_window->set_vector_data(vector_field_x, vector_field_y);
-            ptr_controller->window->gl_window->set_vel_data(vel_field_x, vel_field_y);
+            ptr_controller->window->gl_window->add_scalar_data(scalar_field, max_scalar);
+            ptr_controller->window->gl_window->add_vector_data(vector_field_x, vector_field_y);
+            ptr_controller->window->gl_window->add_vel_data(vel_field_x, vel_field_y);
             ptr_controller->window->gl_window->redraw();
             ptr_controller->window->color_bar->redraw();
         }
@@ -113,6 +113,16 @@ void cb_toggle_parametrization(Fl_Light_Button *, void *)
 void cb_toggle_streamline(Fl_Light_Button *, void *)
 {
     Config::draw_streamline ? Config::draw_streamline = false : Config::draw_streamline = true;
+}
+
+void cb_toggle_draw_slices(Fl_Light_Button *, void *controller)
+{
+    Config::draw_slices ? Config::draw_slices = false : Config::draw_slices = true;
+    if (controller != NULL)
+    {
+        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
+        ptr_controller->window->gl_window->change_perspective();
+    }
 }
 
 void cb_counter_num_bands(Fl_Counter *w, void *)

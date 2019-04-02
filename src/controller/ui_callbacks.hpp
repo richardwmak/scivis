@@ -17,6 +17,7 @@ void cb_toggle_vecs(Fl_Light_Button *, void *);
 void cb_toggle_vector_color(Fl_Light_Button *, void *);
 void cb_toggle_parametrization(Fl_Light_Button *, void *);
 void cb_toggle_streamline(Fl_Light_Button *, void *);
+void cb_toggle_draw_slices(Fl_Light_Button *, void *controller);
 
 void cb_counter_num_bands(Fl_Counter *w, void *);
 void cb_counter_time_step(Fl_Counter *w, void *);
