@@ -28,10 +28,10 @@ void GlWindow::draw()
         glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(70, 1, -1000, 1000);
+        gluPerspective(70, 1, -1000, 500);
         gluLookAt(Config::win_height / 2,
                   Config::win_width / 2,
-                  1000,
+                  730,
                   Config::win_height / 2,
                   Config::win_width / 2,
                   0,
@@ -85,7 +85,7 @@ void GlWindow::change_perspective()
         gluPerspective(70, 1, -1000, 1000);
         gluLookAt(Config::win_height / 2,
                   Config::win_width / 2,
-                  1000,
+                  730,
                   Config::win_height / 2,
                   Config::win_width / 2,
                   0,
