@@ -34,7 +34,7 @@
 .vscode/*
 
 fftw-2.1.5/*
-bin/*
+
 
 .vscode/*
 !.vscode/settings.json
