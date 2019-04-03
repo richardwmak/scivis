@@ -18,6 +18,21 @@ GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
     Config::win_height = H;
     Config::win_width  = W;
     Config::grid_width = (float)H / (float)Config::GRID_SIZE;
+
+    eye[0] = (Config::win_height / 2);
+    eye[1] = (Config::win_width / 2);
+    eye[2] = 730;
+
+    center[0] = (Config::win_height / 2);
+    center[1] = (Config::win_width / 2);
+    center[2] = 0;
+
+    up[0] = 0;
+    up[1] = 1;
+    up[2] = 0;
+
+    angle  = 0;
+    radius = eye[2];
 }
 
 void GlWindow::draw()
@@ -28,17 +43,11 @@ void GlWindow::draw()
         glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(70, 1, -1000, 500);
-        gluLookAt(Config::win_height / 2,
-                  Config::win_width / 2,
-                  730,
-                  Config::win_height / 2,
-                  Config::win_width / 2,
-                  0,
-                  0,
-                  1,
-                  0);
-        // gluOrtho2D(0.0, (GLdouble)Config::win_width, 0.0, (GLdouble)Config::win_height);
+        gluPerspective(70, 1, -1000, 1000);
+        gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
+        // https://stackoverflow.com/questions/1617370/how-to-use-alpha-transparency-in-opengl
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
     }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
@@ -59,39 +68,34 @@ void GlWindow::draw()
     glFlush();
 }
 
-void GlWindow::change_perspective()
+int GlWindow::handle(int event)
 {
-    if (Config::draw_slices)
+    switch (event)
     {
-        make_current();
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluPerspective(70, 1, -10, 10);
-        gluLookAt(Config::win_height / 2 + 100,
-                  Config::win_width / 2 + 100,
-                  1000,
-                  Config::win_height / 2,
-                  Config::win_width / 2,
-                  0,
-                  0,
-                  1,
-                  0);
-    }
-    else
-    {
-        make_current();
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluPerspective(70, 1, -1000, 1000);
-        gluLookAt(Config::win_height / 2,
-                  Config::win_width / 2,
-                  730,
-                  Config::win_height / 2,
-                  Config::win_width / 2,
-                  0,
-                  0,
-                  1,
-                  0);
+        case FL_KEYUP:
+        {
+            // down
+            if (Fl::event_key() == 65364)
+            {
+                camera_zoom_out();
+            }
+            // up
+            if (Fl::event_key() == 65362)
+            {
+                camera_zoom_in();
+            }
+            // left
+            if (Fl::event_key() == 65361)
+            {
+                camera_rotate_left();
+            }
+            // right
+            if (Fl::event_key() == 65363)
+            {
+                camera_rotate_right();
+            }
+            return 1;
+        }
     }
 }
 
@@ -167,8 +171,14 @@ void GlWindow::visualize(GLfloat                height,
 
 void GlWindow::visualize_slices()
 {
-    GLfloat height = 0;
-    for (long unsigned int i = 0; i < Config::buffer_size; i += Config::buffer_delta, height += 20)
+    GLfloat          height = -(int)((float)Config::buffer_size / (float)Config::buffer_delta) * 20;
+    std::vector<int> iter   = {};
+    for (int i = 0; i < Config::buffer_size; i += Config::buffer_delta)
+    {
+        iter.push_back(i);
+    }
+
+    for (int i = 0; i < iter.size(); i++, height += 20)
     {
         visualize(height,
                   buffer_scalar_field[i],
@@ -177,4 +187,51 @@ void GlWindow::visualize_slices()
                   buffer_vel_field_x[i],
                   buffer_vel_field_y[i]);
     }
+}
+
+void GlWindow::camera_zoom_out()
+{
+    radius += 100;
+    make_current();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(70, 1, -1000, 1000);
+    gluLookAt(eye[0], eye[1], radius, center[0], center[1], center[2], up[0], up[1], up[2]);
+}
+
+void GlWindow::camera_zoom_in()
+{
+    radius -= 100;
+    make_current();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(70, 1, -1000, 1000);
+    gluLookAt(eye[0], eye[1], radius, center[0], center[1], center[2], up[0], up[1], up[2]);
+}
+
+void GlWindow::camera_rotate_left()
+{
+    // https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+    angle += M_PI / 12;
+    eye[0] += Config::win_width / 2 * sin(angle);
+    eye[2] = radius * cos(angle);
+
+    make_current();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(70, 1, -1000, 1000);
+    gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
+}
+
+void GlWindow::camera_rotate_right()
+{
+    angle -= M_PI / 12;
+    eye[0] += Config::win_width / 2 * sin(angle);
+    eye[2] = radius * cos(angle);
+
+    make_current();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(70, 1, -1000, 1000);
+    gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
 }

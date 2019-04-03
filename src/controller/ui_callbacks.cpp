@@ -66,8 +66,7 @@ void idle_callback_sim(void *controller)
 
 void idle_callback_interaction(void *controller)
 {
-    if (controller != NULL && Fl::event_x() <= Config::win_width &&
-        Fl::event_y() <= Config::win_height)
+    if (controller != NULL)
     {
         Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
 
@@ -75,7 +74,11 @@ void idle_callback_interaction(void *controller)
         {
             case FL_DRAG:
             {
-                ptr_controller->drag(Fl::event_x(), Fl::event_y());
+                if (Fl::event_x() <= Config::win_width && Fl::event_y() <= Config::win_height)
+                {
+                    ptr_controller->drag(Fl::event_x(), Fl::event_y());
+                }
+                return;
             }
             default:
             {
@@ -115,14 +118,9 @@ void cb_toggle_streamline(Fl_Light_Button *, void *)
     Config::draw_streamline ? Config::draw_streamline = false : Config::draw_streamline = true;
 }
 
-void cb_toggle_draw_slices(Fl_Light_Button *, void *controller)
+void cb_toggle_draw_slices(Fl_Light_Button *, void *)
 {
     Config::draw_slices ? Config::draw_slices = false : Config::draw_slices = true;
-    if (controller != NULL)
-    {
-        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
-        ptr_controller->window->gl_window->change_perspective();
-    }
 }
 
 void cb_counter_num_bands(Fl_Counter *w, void *)

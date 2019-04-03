@@ -12,7 +12,11 @@ typedef std::pair<GLfloat, GLfloat> coord;
 class GlWindow : public Fl_Gl_Window
 {
   public:
-    int X, Y, W, H;
+    int      X, Y, W, H;
+    GLdouble eye[3];
+    GLdouble center[3];
+    GLdouble up[3];
+    GLdouble angle, radius;
 
     GlWindow(int X, int Y, int W, int H);
 
@@ -25,14 +29,18 @@ class GlWindow : public Fl_Gl_Window
                    std::vector<fftw_real> vel_field_y);
 
     void draw();
-
-    void change_perspective();
+    int  handle(int);
 
     void add_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar);
     void add_vector_data(std::vector<fftw_real> new_vector_field_x,
                          std::vector<fftw_real> new_vector_field_y);
     void add_vel_data(std::vector<fftw_real> new_vel_field_x,
                       std::vector<fftw_real> new_vel_field_y);
+
+    void camera_zoom_out();
+    void camera_zoom_in();
+    void camera_rotate_right();
+    void camera_rotate_left();
 
   private:
     std::vector<std::vector<fftw_real>> buffer_scalar_field;
