@@ -43,7 +43,7 @@ void GlWindow::draw()
         glViewport(0.0f, 0.0f, (GLfloat)Config::win_width, (GLfloat)Config::win_height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(70, 1, -1000, 1000);
+        gluPerspective(70, 1, 0, 2000);
         gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
         // https://stackoverflow.com/questions/1617370/how-to-use-alpha-transparency-in-opengl
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -78,22 +78,53 @@ int GlWindow::handle(int event)
             if (Fl::event_key() == 65364)
             {
                 camera_zoom_out();
+                return 1;
             }
             // up
             if (Fl::event_key() == 65362)
             {
                 camera_zoom_in();
+                return 1;
             }
             // left
             if (Fl::event_key() == 65361)
             {
                 camera_rotate_left();
+                return 1;
             }
             // right
             if (Fl::event_key() == 65363)
             {
                 camera_rotate_right();
+                return 1;
             }
+            // a
+            if (Fl::event_key() == 97)
+            {
+                eye[0] -= 100;
+            }
+            // w
+            if (Fl::event_key() == 119)
+            {
+                eye[2] += 100;
+            }
+
+            // d
+            if (Fl::event_key() == 100)
+            {
+                eye[0] += 100;
+            }
+
+            // s
+            if (Fl::event_key() == 115)
+            {
+                eye[2] -= 100;
+            }
+            make_current();
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(70, 1, 0, 2000);
+            gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
             return 1;
         }
     }
@@ -178,7 +209,7 @@ void GlWindow::visualize_slices()
         iter.push_back(i);
     }
 
-    for (int i = 0; i < iter.size(); i++, height += 20)
+    for (int i = 0; i < iter.size(); i++, height -= 20)
     {
         visualize(height,
                   buffer_scalar_field[i],
@@ -192,21 +223,27 @@ void GlWindow::visualize_slices()
 void GlWindow::camera_zoom_out()
 {
     radius += 100;
+    eye[0] = eye[1] = Config::win_height / 2;
+    eye[2]          = radius;
     make_current();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(70, 1, -1000, 1000);
-    gluLookAt(eye[0], eye[1], radius, center[0], center[1], center[2], up[0], up[1], up[2]);
+    gluPerspective(70, 1, 0, 2000);
+    // gluPerspective(70, 1, -1000, 1000);
+    gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
 }
 
 void GlWindow::camera_zoom_in()
 {
     radius -= 100;
+    eye[0] = eye[1] = Config::win_height / 2;
+    eye[2]          = radius;
     make_current();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(70, 1, -1000, 1000);
-    gluLookAt(eye[0], eye[1], radius, center[0], center[1], center[2], up[0], up[1], up[2]);
+    gluPerspective(70, 1, 0, 2000);
+    // gluPerspective(70, 1, -1000, 1000);
+    gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
 }
 
 void GlWindow::camera_rotate_left()
@@ -219,7 +256,8 @@ void GlWindow::camera_rotate_left()
     make_current();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(70, 1, -1000, 1000);
+    gluPerspective(70, 1, 0, 2000);
+    // gluPerspective(70, 1, -1000, 1000);
     gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
 }
 
@@ -232,6 +270,7 @@ void GlWindow::camera_rotate_right()
     make_current();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(70, 1, -1000, 1000);
+    gluPerspective(70, 1, 0, 2000);
+    // gluPerspective(70, 1, -1000, 1000);
     gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
 }
