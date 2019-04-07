@@ -16,8 +16,9 @@ void cb_toggle_smoke(Fl_Light_Button *, void *);
 void cb_toggle_vecs(Fl_Light_Button *, void *);
 void cb_toggle_vector_color(Fl_Light_Button *, void *);
 void cb_toggle_parametrization(Fl_Light_Button *, void *);
-void cb_toggle_streamline(Fl_Light_Button *, void *);
+void cb_toggle_streamline(Fl_Light_Button *, void *controller);
 void cb_toggle_draw_slices(Fl_Light_Button *, void *controller);
+void cb_toggle_streamline_grid(Fl_Light_Button *, void *);
 
 void cb_counter_num_bands(Fl_Counter *w, void *);
 void cb_counter_time_step(Fl_Counter *w, void *);
@@ -43,8 +44,6 @@ void cb_option_vector_gradient_velocity(Fl_Menu_Item *, void *);
 void cb_option_hedgehog(Fl_Menu_Item *, void *);
 void cb_option_cone(Fl_Menu_Item *, void *);
 void cb_option_arrow_2d(Fl_Menu_Item *, void *);
-
-void cb_option_streamline_grid_points(Fl_Menu_Item *, void *);
 
 void cb_button_scale(Fl_Button *b, void *controller);
 void cb_button_clamp(Fl_Button *b, void *controller);

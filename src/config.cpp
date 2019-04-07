@@ -16,6 +16,7 @@ namespace Config
     bool vector_color    = false;
     bool draw_streamline = false;
     bool draw_slices     = false;
+    bool streamline_grid = false;
 
     float     vec_scale = 1000;
     bool      scaling   = true;
@@ -36,7 +37,6 @@ namespace Config
 
     int streamline_max_length = 100;
 
-    long unsigned int buffer_size  = 200;
-    int               buffer_delta = 10;
-
+    int buffer_size  = 200;
+    int buffer_delta = 10;
 } // namespace Config

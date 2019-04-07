@@ -44,12 +44,6 @@ Fl_Menu_Item* UserInterface::option_hedgehog = UserInterface::menu_menu_vector_s
 Fl_Menu_Item* UserInterface::option_cone = UserInterface::menu_menu_vector_shape + 1;
 Fl_Menu_Item* UserInterface::option_arrow_2d = UserInterface::menu_menu_vector_shape + 2;
 
-Fl_Menu_Item UserInterface::menu_[] = {
- {"Grid points", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
- {0,0,0,0,0,0,0,0,0}
-};
-Fl_Menu_Item* UserInterface::option_streamline_grid_points = UserInterface::menu_ + 0;
-
 Fl_Double_Window* UserInterface::make_window() {
   { main_window = new Fl_Double_Window(1650, 1000, "Smoke");
     main_window->user_data((void*)(this));
@@ -98,27 +92,29 @@ Fl_Double_Window* UserInterface::make_window() {
     } // Fl_Light_Button* toggle_frozen
     { toggle_vector_color = new Fl_Light_Button(1135, 130, 200, 20, "Toggle vector coloring");
     } // Fl_Light_Button* toggle_vector_color
-    { toggle_streamline = new Fl_Light_Button(1135, 150, 200, 20, "Toggle streamlines");
+    { toggle_streamline = new Fl_Light_Button(1135, 150, 200, 20, "Toggle stream objects");
     } // Fl_Light_Button* toggle_streamline
     { toggle_draw_slices = new Fl_Light_Button(1135, 170, 200, 20, "Toggle slices");
     } // Fl_Light_Button* toggle_draw_slices
-    { text_scalar_col = new Fl_Box(1135, 195, 200, 20, "Color mapping");
+    { toggle_streamline_grid = new Fl_Light_Button(1135, 190, 200, 20, "Streamline grid");
+    } // Fl_Light_Button* toggle_streamline_grid
+    { text_scalar_col = new Fl_Box(1135, 230, 200, 20, "Color mapping");
       text_scalar_col->labelfont(1);
     } // Fl_Box* text_scalar_col
-    { toggle_parametrize_color_map = new Fl_Light_Button(1135, 215, 200, 20, "Parametrize color map");
+    { toggle_parametrize_color_map = new Fl_Light_Button(1135, 250, 200, 20, "Parametrize color map");
     } // Fl_Light_Button* toggle_parametrize_color_map
-    { counter_num_bands = new Fl_Counter(1135, 252, 200, 21, "Number of bands");
+    { counter_num_bands = new Fl_Counter(1135, 287, 200, 21, "Number of bands");
       counter_num_bands->align(Fl_Align(FL_ALIGN_TOP));
       counter_num_bands->step(1, 10);
       counter_num_bands->value(Config::num_bands);
       counter_num_bands->bounds(2,256);
     } // Fl_Counter* counter_num_bands
-    { Fl_Box* o = new Fl_Box(1135, 290, 200, 17, "Clamp or scale value?");
+    { Fl_Box* o = new Fl_Box(1135, 325, 200, 17, "Clamp or scale value?");
       o->labelfont(1);
     } // Fl_Box* o
-    { button_clamp = new Fl_Button(1135, 305, 100, 20, "Clamp");
+    { button_clamp = new Fl_Button(1135, 340, 100, 20, "Clamp");
     } // Fl_Button* button_clamp
-    { button_scale = new Fl_Button(1235, 305, 100, 20, "Scale");
+    { button_scale = new Fl_Button(1235, 340, 100, 20, "Scale");
       button_scale->color(FL_GREEN);
       button_scale->deactivate();
     } // Fl_Button* button_scale
@@ -129,33 +125,33 @@ Fl_Double_Window* UserInterface::make_window() {
       value_clamp_max->value(1);
       value_clamp_max->hide();
     } // Fl_Value_Input* value_clamp_max
-    { menu_color_map = new Fl_Choice(1135, 270, 200, 20);
+    { menu_color_map = new Fl_Choice(1135, 305, 200, 20);
       menu_color_map->down_box(FL_BORDER_BOX);
       menu_color_map->menu(menu_menu_color_map);
     } // Fl_Choice* menu_color_map
-    { text_increase_decrease = new Fl_Box(1135, 375, 200, 16, "Increase/decrease values");
+    { text_increase_decrease = new Fl_Box(1135, 410, 200, 16, "Increase/decrease values");
       text_increase_decrease->labelfont(1);
     } // Fl_Box* text_increase_decrease
-    { counter_time_step = new Fl_Counter(1135, 409, 200, 21, "Time step");
+    { counter_time_step = new Fl_Counter(1135, 444, 200, 21, "Time step");
       counter_time_step->align(Fl_Align(FL_ALIGN_TOP));
       counter_time_step->step(0.001, 0.01);
       counter_time_step->value(Config::time_step);
       counter_time_step->bounds(0.001,1);
     } // Fl_Counter* counter_time_step
-    { counter_visc = new Fl_Counter(1135, 449, 200, 21, "Viscosity");
+    { counter_visc = new Fl_Counter(1135, 484, 200, 21, "Viscosity");
       counter_visc->type(1);
       counter_visc->align(Fl_Align(FL_ALIGN_TOP));
       counter_visc->value(Config::visc);
       counter_visc->step(0.00025);
       counter_visc->bounds(0.0001,0.02);
     } // Fl_Counter* counter_visc
-    { counter_vec_scale = new Fl_Counter(1135, 489, 200, 21, "Vector scaling");
+    { counter_vec_scale = new Fl_Counter(1135, 524, 200, 21, "Vector scaling");
       counter_vec_scale->type(1);
       counter_vec_scale->align(Fl_Align(FL_ALIGN_TOP));
       counter_vec_scale->value(Config::vec_scale);
       counter_vec_scale->step(200);
     } // Fl_Counter* counter_vec_scale
-    { counter_num_glyphs = new Fl_Counter(1135, 529, 200, 21, "Number of glyphs");
+    { counter_num_glyphs = new Fl_Counter(1135, 564, 200, 21, "Number of glyphs");
       counter_num_glyphs->align(Fl_Align(FL_ALIGN_TOP));
       counter_num_glyphs->step(1, 10);
       counter_num_glyphs->value(Config::num_glyphs);
@@ -178,16 +174,12 @@ Fl_Double_Window* UserInterface::make_window() {
       menu_vector_shape->down_box(FL_BORDER_BOX);
       menu_vector_shape->menu(menu_menu_vector_shape);
     } // Fl_Choice* menu_vector_shape
-    { menu_streamline_options = new Fl_Box(1385, 195, 200, 20, "Streamline options");
+    { menu_streamline_options = new Fl_Box(1385, 210, 200, 20, "Streamline options");
       menu_streamline_options->labelfont(1);
     } // Fl_Box* menu_streamline_options
-    { Fl_Choice* o = new Fl_Choice(1385, 215, 200, 20);
-      o->down_box(FL_BORDER_BOX);
-      o->menu(menu_);
-    } // Fl_Choice* o
-    { text_streamline_max_length = new Fl_Box(1385, 235, 200, 20, "Streamline max length");
+    { text_streamline_max_length = new Fl_Box(1385, 232, 200, 20, "Streamline max length");
     } // Fl_Box* text_streamline_max_length
-    { value_streamline_max_length = new Fl_Counter(1385, 253, 200, 20);
+    { value_streamline_max_length = new Fl_Counter(1385, 250, 200, 20);
       value_streamline_max_length->minimum(10);
       value_streamline_max_length->maximum(1000);
       value_streamline_max_length->step(10, 100);

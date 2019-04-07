@@ -113,14 +113,24 @@ void cb_toggle_parametrization(Fl_Light_Button *, void *)
     Config::gradient ? Config::gradient = false : Config::gradient = true;
 }
 
-void cb_toggle_streamline(Fl_Light_Button *, void *)
+void cb_toggle_streamline(Fl_Light_Button *, void *controller)
 {
     Config::draw_streamline ? Config::draw_streamline = false : Config::draw_streamline = true;
+    if (controller != NULL && !Config::draw_streamline)
+    {
+        Controller *ptr_controller = reinterpret_cast<Controller *>(controller);
+        ptr_controller->window->gl_window->clear_seeds();
+    }
 }
 
 void cb_toggle_draw_slices(Fl_Light_Button *, void *)
 {
     Config::draw_slices ? Config::draw_slices = false : Config::draw_slices = true;
+}
+
+void cb_toggle_streamline_grid(Fl_Light_Button *, void *)
+{
+    Config::streamline_grid ? Config::streamline_grid = false : Config::streamline_grid = true;
 }
 
 void cb_counter_num_bands(Fl_Counter *w, void *)
@@ -206,11 +216,6 @@ void cb_option_cone(Fl_Menu_Item *, void *)
 void cb_option_arrow_2d(Fl_Menu_Item *, void *)
 {
     Config::vector_shape = Config::ARROW_2D;
-}
-
-void cb_option_streamline_grid_points(Fl_Menu_Item *, void *)
-{
-    Config::streamline_options = Config::GLYPH_POINTS;
 }
 
 void cb_button_scale(Fl_Button *b, void *controller)

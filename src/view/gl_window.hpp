@@ -4,6 +4,7 @@
 #include "config.hpp"
 #include <FL/gl.h>
 #include <Fl/Fl_Gl_Window.H>
+#include <queue>
 #include <rfftw.h>
 #include <vector>
 
@@ -12,11 +13,12 @@ typedef std::pair<GLfloat, GLfloat> coord;
 class GlWindow : public Fl_Gl_Window
 {
   public:
-    int      X, Y, W, H;
-    GLdouble eye[3];
-    GLdouble center[3];
-    GLdouble up[3];
-    GLdouble angle, radius;
+    int                X, Y, W, H;
+    GLdouble           eye[3];
+    GLdouble           center[3];
+    GLdouble           up[3];
+    GLdouble           angle, radius;
+    std::vector<coord> seeds;
 
     GlWindow(int X, int Y, int W, int H);
 
@@ -36,6 +38,9 @@ class GlWindow : public Fl_Gl_Window
                          std::vector<fftw_real> new_vector_field_y);
     void add_vel_data(std::vector<fftw_real> new_vel_field_x,
                       std::vector<fftw_real> new_vel_field_y);
+
+    void add_seed(GLfloat seed_x, GLfloat seed_y);
+    void clear_seeds();
 
     void camera_zoom_out();
     void camera_zoom_in();

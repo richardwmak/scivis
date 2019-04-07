@@ -8,10 +8,11 @@
 
 void RenderStreamline::render_streamlines(std::vector<fftw_real> velocity_x,
                                           std::vector<fftw_real> velocity_y,
+                                          std::vector<coord>     seeds,
                                           GLfloat                height)
 {
     float x_pixel, y_pixel;
-    if (Config::streamline_options == Config::GLYPH_POINTS)
+    if (Config::streamline_grid)
     {
         fftw_real x_glyph_width =
             (fftw_real)Config::win_width / (fftw_real)(Config::num_glyphs - 1); // Grid cell width
@@ -41,9 +42,15 @@ void RenderStreamline::render_streamlines(std::vector<fftw_real> velocity_x,
                 {
                     y_pixel = 0;
                 }
-                RenderStreamline::render_streamline(
-                    x_pixel, y_pixel, velocity_x, velocity_y, height);
+                render_streamline(x_pixel, y_pixel, velocity_x, velocity_y, height);
             }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < seeds.size(); i++)
+        {
+            render_streamline(seeds[i].first, seeds[i].second, velocity_x, velocity_y, height);
         }
     }
 }
@@ -62,13 +69,16 @@ void RenderStreamline::render_streamline(float                  x_pixel,
     float     x_grid, y_grid;
     float     pixel_to_grid_ratio = (float)Config::GRID_SIZE / (float)Config::win_width;
     float     length              = 0;
+    int       max_iter;
 
     x_grid = x_pixel * pixel_to_grid_ratio;
     y_grid = y_pixel * pixel_to_grid_ratio;
 
     glBegin(GL_LINE_STRIP);
     glVertex3f(x_pixel, y_pixel, height);
-    for (int i = 0; i < 10; i++)
+    Config::streamline_grid ? max_iter = 10
+                            : max_iter = 30; // allow more iterations if we have less points
+    for (int i = 0; i < max_iter; i++)
     {
         // check length
         if (length > Config::streamline_max_length)
@@ -104,6 +114,52 @@ void RenderStreamline::render_streamline(float                  x_pixel,
         x_grid = x_pixel * pixel_to_grid_ratio;
         y_grid = y_pixel * pixel_to_grid_ratio;
         length += std::hypot(cur_vel_x * sl_time_step, cur_vel_y * sl_time_step);
+    }
+    glEnd();
+}
+
+void RenderStreamline::render_streamsurf(std::vector<std::vector<fftw_real>> buffer_velocity_x,
+                                         std::vector<std::vector<fftw_real>> buffer_velocity_y,
+                                         std::vector<coord>                  seeds)
+{
+    if (seeds.size() < 2)
+    {
+        return;
+    }
+
+    GLfloat max_height = buffer_velocity_x.size();
+    GLfloat time_step  = 1000;
+    GLfloat cur_x1, cur_y1, cur_x2, cur_y2;
+    GLfloat cur_vel_x1, cur_vel_y1, cur_vel_x2, cur_vel_y2;
+    float   pixel_to_grid_ratio = (float)Config::GRID_SIZE / (float)Config::win_width;
+
+    cur_x1 = seeds[0].first;
+    cur_y1 = seeds[0].second;
+    cur_x2 = seeds[1].first;
+    cur_y2 = seeds[1].second;
+
+    glBegin(GL_LINE_STRIP);
+    glVertex3f(cur_x1, cur_y1, 0);
+    glVertex3f(cur_x2, cur_y2, 0);
+
+    for (GLfloat height = 0; height < max_height; height++)
+    {
+        cur_vel_x1 = Interpolate::bilin(
+            cur_x1 * pixel_to_grid_ratio, cur_y1 * pixel_to_grid_ratio, buffer_velocity_x[height]);
+        cur_vel_x2 = Interpolate::bilin(
+            cur_x2 * pixel_to_grid_ratio, cur_y2 * pixel_to_grid_ratio, buffer_velocity_x[height]);
+        cur_vel_y1 = Interpolate::bilin(
+            cur_x1 * pixel_to_grid_ratio, cur_y1 * pixel_to_grid_ratio, buffer_velocity_y[height]);
+        cur_vel_y2 = Interpolate::bilin(
+            cur_x2 * pixel_to_grid_ratio, cur_y2 * pixel_to_grid_ratio, buffer_velocity_y[height]);
+
+        cur_x1 += cur_vel_x1 * time_step;
+        cur_x2 += cur_vel_x2 * time_step;
+        cur_y1 += cur_vel_y1 * time_step;
+        cur_y2 += cur_vel_y2 * time_step;
+
+        glVertex3f(cur_x1, cur_y1, -1 * (height + 1));
+        glVertex3f(cur_x2, cur_y2, -1 * (height + 1));
     }
     glEnd();
 }

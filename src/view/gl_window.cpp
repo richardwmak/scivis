@@ -15,6 +15,9 @@
 
 GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
 {
+    // set double buffered
+    mode(FL_RGB | FL_ALPHA | FL_DEPTH | FL_DOUBLE);
+
     Config::win_height = H;
     Config::win_width  = W;
     Config::grid_width = (float)H / (float)Config::GRID_SIZE;
@@ -72,6 +75,14 @@ int GlWindow::handle(int event)
 {
     switch (event)
     {
+        case FL_PUSH:
+        {
+            if (Fl::event_ctrl() && Config::draw_streamline)
+            {
+                add_seed(Fl::event_x(), Config::win_height - Fl::event_y());
+            }
+            return 1;
+        }
         case FL_KEYUP:
         {
             // down
@@ -128,6 +139,7 @@ int GlWindow::handle(int event)
             return 1;
         }
     }
+    return 0;
 }
 
 void GlWindow::add_scalar_data(std::vector<fftw_real> new_scalar_field, fftw_real max_scalar)
@@ -177,6 +189,22 @@ void GlWindow::add_vel_data(std::vector<fftw_real> new_vel_field_x,
     }
 }
 
+void GlWindow::add_seed(GLfloat seed_x, GLfloat seed_y)
+{
+    coord new_seed;
+    new_seed = std::make_pair(seed_x, seed_y);
+    if (Config::draw_slices && seeds.size() >= 2)
+    {
+        seeds.pop_back();
+    }
+    seeds.insert(seeds.begin(), new_seed);
+}
+
+void GlWindow::clear_seeds()
+{
+    seeds.clear();
+}
+
 void GlWindow::visualize(GLfloat                height,
                          std::vector<fftw_real> scalar_field,
                          std::vector<fftw_real> vector_field_x,
@@ -194,9 +222,14 @@ void GlWindow::visualize(GLfloat                height,
         RenderVector::render_vector(scalar_field, vector_field_x, vector_field_y, height);
     }
 
-    if (Config::draw_streamline)
+    if (Config::draw_streamline && !Config::draw_slices)
     {
-        RenderStreamline::render_streamlines(vel_field_x, vel_field_y, height);
+        RenderStreamline::render_streamlines(vel_field_x, vel_field_y, seeds, height);
+    }
+
+    if (Config::draw_streamline && Config::draw_slices)
+    {
+        RenderStreamline::render_streamsurf(buffer_vel_field_x, buffer_vel_field_y, seeds);
     }
 }
 
