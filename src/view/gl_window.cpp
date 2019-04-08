@@ -36,6 +36,10 @@ GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
 
     angle  = 0;
     radius = eye[2];
+
+    // these variable determine the angle relative to the origin, these then will get translated
+    relative_x = 0;
+    relative_z = eye[2];
 }
 
 void GlWindow::draw()
@@ -109,28 +113,43 @@ int GlWindow::handle(int event)
                 camera_rotate_right();
                 return 1;
             }
-            // a
-            if (Fl::event_key() == 97)
-            {
-                eye[0] -= 100;
-            }
-            // w
-            if (Fl::event_key() == 119)
-            {
-                eye[2] += 100;
-            }
 
             // d
             if (Fl::event_key() == 100)
             {
                 eye[0] += 100;
+                center[0] += 100;
             }
 
-            // s
-            if (Fl::event_key() == 115)
+            // a
+            if (Fl::event_key() == 97)
             {
-                eye[2] -= 100;
+                eye[0] -= 100;
+                center[0] -= 100;
             }
+
+            // r -> reset
+            if (Fl::event_key() == 114)
+            {
+                eye[0] = (Config::win_height / 2);
+                eye[1] = (Config::win_width / 2);
+                eye[2] = 730;
+
+                center[0] = (Config::win_height / 2);
+                center[1] = (Config::win_width / 2);
+                center[2] = 0;
+
+                up[0] = 0;
+                up[1] = 1;
+                up[2] = 0;
+
+                angle  = 0;
+                radius = eye[2];
+
+                relative_x = 0;
+                relative_z = eye[2];
+            }
+
             make_current();
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
@@ -256,8 +275,9 @@ void GlWindow::visualize_slices()
 void GlWindow::camera_zoom_out()
 {
     radius += 100;
-    eye[0] = eye[1] = Config::win_height / 2;
-    eye[2]          = radius;
+    eye[0] = -radius * sin(angle);
+    eye[2] = radius * cos(angle);
+
     make_current();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -269,8 +289,9 @@ void GlWindow::camera_zoom_out()
 void GlWindow::camera_zoom_in()
 {
     radius -= 100;
-    eye[0] = eye[1] = Config::win_height / 2;
-    eye[2]          = radius;
+    eye[0] = -radius * sin(angle);
+    eye[2] = radius * cos(angle);
+
     make_current();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -282,8 +303,8 @@ void GlWindow::camera_zoom_in()
 void GlWindow::camera_rotate_left()
 {
     // https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
-    angle += M_PI / 12;
-    eye[0] += Config::win_width / 2 * sin(angle);
+    angle -= M_PI / 12;
+    eye[0] = -radius * sin(angle);
     eye[2] = radius * cos(angle);
 
     make_current();
@@ -296,8 +317,8 @@ void GlWindow::camera_rotate_left()
 
 void GlWindow::camera_rotate_right()
 {
-    angle -= M_PI / 12;
-    eye[0] += Config::win_width / 2 * sin(angle);
+    angle += M_PI / 12;
+    eye[0] = -radius * sin(angle);
     eye[2] = radius * cos(angle);
 
     make_current();

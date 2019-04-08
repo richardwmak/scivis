@@ -18,6 +18,7 @@ class GlWindow : public Fl_Gl_Window
     GLdouble           center[3];
     GLdouble           up[3];
     GLdouble           angle, radius;
+    GLdouble           relative_x, relative_z;
     std::vector<coord> seeds;
 
     GlWindow(int X, int Y, int W, int H);
