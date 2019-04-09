@@ -90,11 +90,11 @@ void RenderVector::controller(coord start, coord end, GLfloat height)
     GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
     GLfloat glyph_width   = Config::win_height / Config::num_glyphs;
 
-    if (vector_length > glyph_width)
-    {
-        end.first  = start.first + (end.first - start.first) * glyph_width / vector_length;
-        end.second = start.second + (end.second - start.second) * glyph_width / vector_length;
-    }
+    // if (vector_length > glyph_width)
+    // {
+    //     end.first  = start.first + (end.first - start.first) * glyph_width / vector_length;
+    //     end.second = start.second + (end.second - start.second) * glyph_width / vector_length;
+    // }
     switch (Config::vector_shape)
     {
         case Config::ARROW_2D:

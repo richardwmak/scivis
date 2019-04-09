@@ -4,8 +4,8 @@ CXX_FLAGS := -Wall -Wextra -Wpedantic -std=c++17 -ggdb
 BIN		:= bin
 SRC_DIR	:= src src/controller src/model src/view
 SRC     := $(foreach d, $(SRC_DIR), $d/*.cpp)
-INCLUDE	:= /usr/local/include /usr/include $(SRC_DIR)
-LIB		:= /usr/local/lib
+INCLUDE	:= $(SRC_DIR) lib/fftw lib/fltk
+LIB		:= lib/fftw
 
 LIBRARIES	:= -lrfftw -lfftw $(shell fltk-config --use-gl --ldstaticflags)
 EXECUTABLE	:= smoke

@@ -118,10 +118,10 @@ Fl_Double_Window* UserInterface::make_window() {
       button_scale->color(FL_GREEN);
       button_scale->deactivate();
     } // Fl_Button* button_scale
-    { value_clamp_min = new Fl_Value_Input(1181, 325, 54, 20, "min:");
+    { value_clamp_min = new Fl_Value_Input(1181, 360, 54, 20, "min:");
       value_clamp_min->hide();
     } // Fl_Value_Input* value_clamp_min
-    { value_clamp_max = new Fl_Value_Input(1287, 325, 48, 20, "max:");
+    { value_clamp_max = new Fl_Value_Input(1287, 360, 48, 20, "max:");
       value_clamp_max->value(1);
       value_clamp_max->hide();
     } // Fl_Value_Input* value_clamp_max

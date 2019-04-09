@@ -10,7 +10,7 @@ class UserInterface {open
   Function {make_window()} {open
   } {
     Fl_Window main_window {
-      label Smoke open selected
+      label Smoke open
       xywh {729 135 1650 1000} type Double
       code0 {\#include "config.hpp"}
       code1 {\#include <iostream>} visible
@@ -100,11 +100,11 @@ class UserInterface {open
       }
       Fl_Value_Input value_clamp_min {
         label {min:}
-        xywh {1181 325 54 20} hide
+        xywh {1181 360 54 20} hide
       }
       Fl_Value_Input value_clamp_max {
         label {max:}
-        xywh {1287 325 48 20} value 1 hide
+        xywh {1287 360 48 20} value 1 hide
       }
       Fl_Choice menu_color_map {
         xywh {1135 305 200 20} down_box BORDER_BOX
@@ -142,7 +142,7 @@ class UserInterface {open
         code2 {counter_visc->bounds(0.0001,0.02);}
       }
       Fl_Counter counter_vec_scale {
-        label {Vector scaling}
+        label {Vector scaling} selected
         xywh {1135 524 200 21} type Simple align 1
         code0 {counter_vec_scale->value(Config::vec_scale);}
         code1 {counter_vec_scale->step(200);}

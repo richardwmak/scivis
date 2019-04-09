@@ -38,7 +38,7 @@ void ColorBar::draw_rectangle_gradient()
     float sec_height = bar_height / (sections);
 
     float value_increment = 1 / (float)(sections);
-    float cur_value       = 0;
+    float cur_value       = value_increment;
 
     for (int i = 0; i < sections; i++, cur_value += value_increment)
     {
