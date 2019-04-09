@@ -88,12 +88,12 @@ void RenderVector::controller(coord start, coord end, GLfloat height)
 {
     // scale it to the grid width
     GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
+    GLfloat glyph_width   = Config::win_height / Config::num_glyphs;
 
-    if (vector_length > Config::grid_width)
+    if (vector_length > glyph_width)
     {
-        end.first = start.first + (end.first - start.first) * Config::grid_width / vector_length;
-        end.second =
-            start.second + (end.second - start.second) * Config::grid_width / vector_length;
+        end.first  = start.first + (end.first - start.first) * glyph_width / vector_length;
+        end.second = start.second + (end.second - start.second) * glyph_width / vector_length;
     }
     switch (Config::vector_shape)
     {
@@ -169,7 +169,7 @@ void RenderVector::render_arrow_2d(coord start, coord end, GLfloat height)
     // then rotate it
 
     GLfloat vector_length     = std::hypot(end.first - start.first, end.second - start.second);
-    GLfloat vector_width      = 0.1 * vector_length;
+    GLfloat vector_width      = 0.5 * vector_length;
     GLfloat arrow_base_length = 0.7 * vector_length;
     GLfloat arrow_base_width  = 0.4 * vector_width;
     GLfloat arrow_head_width  = vector_width;
