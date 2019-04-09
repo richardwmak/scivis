@@ -22,7 +22,7 @@ int Controller::begin()
 {
     Fl::gl_visual(FL_RGB);
     window->make_window();
-    window->gl_window->mode(FL_DOUBLE);
+    window->gl_window->mode(FL_DOUBLE | FL_DEPTH);
     window->show();
     // display the OpenGL windows
     window->gl_window->show();

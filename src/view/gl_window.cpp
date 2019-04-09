@@ -15,9 +15,6 @@
 
 GlWindow::GlWindow(int X, int Y, int W, int H) : Fl_Gl_Window(X, Y, W, H)
 {
-    // set double buffered
-    mode(FL_RGB | FL_ALPHA | FL_DEPTH | FL_DOUBLE);
-
     Config::win_height = H;
     Config::win_width  = W;
     Config::grid_width = (float)H / (float)Config::GRID_SIZE;

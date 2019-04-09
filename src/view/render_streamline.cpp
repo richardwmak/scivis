@@ -128,7 +128,7 @@ void RenderStreamline::render_streamsurf(std::vector<std::vector<fftw_real>> buf
     }
 
     GLfloat max_height = buffer_velocity_x.size();
-    GLfloat time_step  = 1000;
+    GLfloat time_step  = 100;
     GLfloat cur_x1, cur_y1, cur_x2, cur_y2;
     GLfloat cur_vel_x1, cur_vel_y1, cur_vel_x2, cur_vel_y2;
     float   pixel_to_grid_ratio = (float)Config::GRID_SIZE / (float)Config::win_width;
@@ -158,8 +158,8 @@ void RenderStreamline::render_streamsurf(std::vector<std::vector<fftw_real>> buf
         cur_y1 += cur_vel_y1 * time_step;
         cur_y2 += cur_vel_y2 * time_step;
 
-        glVertex3f(cur_x1, cur_y1, -1 * (height + 1));
-        glVertex3f(cur_x2, cur_y2, -1 * (height + 1));
+        glVertex3f(cur_x1, cur_y1, (height + 1));
+        glVertex3f(cur_x2, cur_y2, (height + 1));
     }
     glEnd();
 }
