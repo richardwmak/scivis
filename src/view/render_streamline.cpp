@@ -61,8 +61,7 @@ void RenderStreamline::render_streamline(float                  x_pixel,
                                          std::vector<fftw_real> velocity_y,
                                          GLfloat                height)
 {
-    float     RGB[3]       = {1, 1, 1};
-    fftw_real sl_time_step = 1000;
+    float     RGB[3] = {1, 1, 1};
     float     cur_col;
     fftw_real cur_vel_x;
     fftw_real cur_vel_y;
@@ -70,6 +69,7 @@ void RenderStreamline::render_streamline(float                  x_pixel,
     float     pixel_to_grid_ratio = (float)Config::GRID_SIZE / (float)Config::win_width;
     float     length              = 0;
     int       max_iter;
+    float     sl_time_step = 1000;
 
     x_grid = x_pixel * pixel_to_grid_ratio;
     y_grid = y_pixel * pixel_to_grid_ratio;
@@ -92,6 +92,7 @@ void RenderStreamline::render_streamline(float                  x_pixel,
         cur_vel_x = Interpolate::bilin(x_grid, y_grid, velocity_x);
         cur_vel_y = Interpolate::bilin(x_grid, y_grid, velocity_y);
         cur_col   = std::hypot(cur_vel_x, cur_vel_y);
+
         ColorMapper::set_colormap(1 - cur_col, RGB);
         glColor3fv(RGB);
         x_pixel += cur_vel_x * sl_time_step;

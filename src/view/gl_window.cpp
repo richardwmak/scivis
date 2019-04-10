@@ -1,5 +1,3 @@
-// http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
-
 #include "gl_window.hpp"
 #include "interpolate.hpp"
 #include "render_smoke.hpp"

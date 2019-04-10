@@ -17,7 +17,6 @@ Controller::Controller()
     window     = new UserInterface();
 }
 
-// http://webcache.googleusercontent.com/search?q=cache:MsCYe9ordKkJ:www.fltk.org/strfiles/2590/glut_with_fltk2.cxx
 int Controller::begin()
 {
     Fl::gl_visual(FL_RGB);
@@ -130,16 +129,4 @@ void Controller::drag(int x_pixel_curr, int y_pixel_curr)
 
     x_pixel_prev = x_pixel_curr;
     y_pixel_prev = y_pixel_curr;
-}
-
-// http://seriss.com/people/erco/fltk/opengl-sphere-with-light-old.cxx
-// todo: implement
-void Controller::reshape(int w, int h)
-{
-    glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
-    Config::win_width  = w;
-    Config::win_height = h;
 }
