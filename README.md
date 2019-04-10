@@ -12,9 +12,9 @@ This code was compiled and tested on a VM running Xubuntu 18.10. Required softwa
 * `libxft-dev`
 * `libxinerama-dev`
 
-i.e. on Ubuntu or Debian, run `sudo apt install make g++ libx11-dev pkg-config libfltk1.3-dev libxrender-dev libxcursor-dev libxft-dev libxinerama-dev`
+i.e. on Ubuntu or Debian, execute `sudo apt install make g++ libx11-dev pkg-config libfltk1.3-dev libxrender-dev libxcursor-dev libxft-dev libxinerama-dev`
 
-In the root directory, run `make run`.
+In the root directory, execute `make run`.
 
 # Controls
 
