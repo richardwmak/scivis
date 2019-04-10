@@ -14,7 +14,7 @@ This code was compiled and tested on a VM running Xubuntu 18.10. Required softwa
 
 i.e. on Ubuntu or Debian, execute `sudo apt install make g++ libx11-dev pkg-config libfltk1.3-dev libxrender-dev libxcursor-dev libxft-dev libxinerama-dev`
 
-In the root directory, execute `make run`.
+In the root directory of the project, execute `make run`. This compiles and launches the program.
 
 # Controls
 
