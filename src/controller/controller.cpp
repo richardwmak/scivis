@@ -73,6 +73,7 @@ int Controller::begin()
     window->value_clamp_max->callback((Fl_Callback *)cb_value_clamp_max, this);
 
     window->value_streamline_max_length->callback((Fl_Callback *)cb_value_streamline_max_length);
+    window->value_streamline_max_iter->callback((Fl_Callback *)cb_value_streamline_max_iter);
 
     Fl::add_idle(idle_callback_sim, this);
     Fl::add_idle(idle_callback_interaction, this);

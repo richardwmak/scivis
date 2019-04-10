@@ -279,3 +279,8 @@ void cb_value_streamline_max_length(Fl_Valuator *b, void *)
 {
     Config::streamline_max_length = b->value();
 }
+
+void cb_value_streamline_max_iter(Fl_Valuator *b, void *)
+{
+    Config::streamline_max_iter = b->value();
+}

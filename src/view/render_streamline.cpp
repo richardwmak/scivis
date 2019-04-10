@@ -76,9 +76,7 @@ void RenderStreamline::render_streamline(float                  x_pixel,
 
     glBegin(GL_LINE_STRIP);
     glVertex3f(x_pixel, y_pixel, height);
-    Config::streamline_grid ? max_iter = 10
-                            : max_iter = 30; // allow more iterations if we have less points
-    for (int i = 0; i < max_iter; i++)
+    for (int i = 0; i < Config::streamline_max_iter; i++)
     {
         // check length
         if (length > Config::streamline_max_length)
@@ -86,21 +84,9 @@ void RenderStreamline::render_streamline(float                  x_pixel,
             break;
         }
 
-        if (x_grid > Config::GRID_SIZE)
+        if (x_grid > Config::GRID_SIZE || y_grid > Config::GRID_SIZE || x_grid < 0 || y_grid < 0)
         {
-            x_grid = Config::GRID_SIZE;
-        }
-        if (x_grid < 0)
-        {
-            x_grid = 0;
-        }
-        if (y_grid > Config::GRID_SIZE)
-        {
-            y_grid = Config::GRID_SIZE;
-        }
-        if (y_grid < 0)
-        {
-            y_grid = 0;
+            break;
         }
 
         cur_vel_x = Interpolate::bilin(x_grid, y_grid, velocity_x);

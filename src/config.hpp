@@ -54,6 +54,7 @@ namespace Config
     const int  ARROW_2D = 2;
 
     extern int streamline_max_length;
+    extern int streamline_max_iter;
 
     extern int buffer_size;
     extern int buffer_delta; // how many timesteps between a buffer

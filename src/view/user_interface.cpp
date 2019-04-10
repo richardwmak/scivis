@@ -92,7 +92,7 @@ Fl_Double_Window* UserInterface::make_window() {
     } // Fl_Light_Button* toggle_frozen
     { toggle_vector_color = new Fl_Light_Button(1135, 130, 200, 20, "Toggle vector coloring");
     } // Fl_Light_Button* toggle_vector_color
-    { toggle_streamline = new Fl_Light_Button(1135, 150, 200, 20, "Toggle stream objects");
+    { toggle_streamline = new Fl_Light_Button(1135, 150, 200, 20, "Toggle streamlines");
     } // Fl_Light_Button* toggle_streamline
     { toggle_draw_slices = new Fl_Light_Button(1135, 170, 200, 20, "Toggle slices");
     } // Fl_Light_Button* toggle_draw_slices
@@ -104,6 +104,7 @@ Fl_Double_Window* UserInterface::make_window() {
     { toggle_parametrize_color_map = new Fl_Light_Button(1135, 250, 200, 20, "Parametrize color map");
     } // Fl_Light_Button* toggle_parametrize_color_map
     { counter_num_bands = new Fl_Counter(1135, 287, 200, 21, "Number of bands");
+      counter_num_bands->minimum(2);
       counter_num_bands->align(Fl_Align(FL_ALIGN_TOP));
       counter_num_bands->step(1, 10);
       counter_num_bands->value(Config::num_bands);
@@ -133,6 +134,7 @@ Fl_Double_Window* UserInterface::make_window() {
       text_increase_decrease->labelfont(1);
     } // Fl_Box* text_increase_decrease
     { counter_time_step = new Fl_Counter(1135, 444, 200, 21, "Time step");
+      counter_time_step->minimum(0);
       counter_time_step->align(Fl_Align(FL_ALIGN_TOP));
       counter_time_step->step(0.001, 0.01);
       counter_time_step->value(Config::time_step);
@@ -140,6 +142,7 @@ Fl_Double_Window* UserInterface::make_window() {
     } // Fl_Counter* counter_time_step
     { counter_visc = new Fl_Counter(1135, 484, 200, 21, "Viscosity");
       counter_visc->type(1);
+      counter_visc->minimum(0);
       counter_visc->align(Fl_Align(FL_ALIGN_TOP));
       counter_visc->value(Config::visc);
       counter_visc->step(0.00025);
@@ -147,11 +150,13 @@ Fl_Double_Window* UserInterface::make_window() {
     } // Fl_Counter* counter_visc
     { counter_vec_scale = new Fl_Counter(1135, 524, 200, 21, "Vector scaling");
       counter_vec_scale->type(1);
+      counter_vec_scale->minimum(0);
       counter_vec_scale->align(Fl_Align(FL_ALIGN_TOP));
       counter_vec_scale->value(Config::vec_scale);
       counter_vec_scale->step(200);
     } // Fl_Counter* counter_vec_scale
     { counter_num_glyphs = new Fl_Counter(1135, 564, 200, 21, "Number of glyphs");
+      counter_num_glyphs->minimum(0);
       counter_num_glyphs->align(Fl_Align(FL_ALIGN_TOP));
       counter_num_glyphs->step(1, 10);
       counter_num_glyphs->value(Config::num_glyphs);
@@ -185,6 +190,14 @@ Fl_Double_Window* UserInterface::make_window() {
       value_streamline_max_length->step(10, 100);
       value_streamline_max_length->value(Config::streamline_max_length);
     } // Fl_Counter* value_streamline_max_length
+    { text_streamline_max_iter = new Fl_Box(1385, 270, 200, 20, "Streamline max iterations");
+    } // Fl_Box* text_streamline_max_iter
+    { value_streamline_max_iter = new Fl_Counter(1385, 290, 200, 23);
+      value_streamline_max_iter->minimum(0);
+      value_streamline_max_iter->step(1);
+      value_streamline_max_iter->value(30);
+      value_streamline_max_iter->step(1, 10);
+    } // Fl_Counter* value_streamline_max_iter
     main_window->end();
   } // Fl_Double_Window* main_window
   return main_window;

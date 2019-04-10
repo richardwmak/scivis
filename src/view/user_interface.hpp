@@ -72,6 +72,8 @@ public:
   Fl_Box *menu_streamline_options;
   Fl_Box *text_streamline_max_length;
   Fl_Counter *value_streamline_max_length;
+  Fl_Box *text_streamline_max_iter;
+  Fl_Counter *value_streamline_max_iter;
   void show();
 };
 #endif

@@ -52,3 +52,4 @@ void cb_value_clamp_min(Fl_Valuator *b, void *controller);
 void cb_value_clamp_max(Fl_Valuator *b, void *controller);
 
 void cb_value_streamline_max_length(Fl_Valuator *b, void *);
+void cb_value_streamline_max_iter(Fl_Valuator *b, void *);

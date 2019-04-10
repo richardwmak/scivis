@@ -36,6 +36,7 @@ namespace Config
     int streamline_options = 0;
 
     int streamline_max_length = 100;
+    int streamline_max_iter   = 30;
 
     int buffer_size  = 200;
     int buffer_delta = 10;
