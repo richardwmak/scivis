@@ -1,5 +1,5 @@
 CXX		  := g++
-CXX_FLAGS := -Wall -Wextra -Wpedantic -std=c++17 -ggdb
+CXX_FLAGS := -std=c++17 -ggdb
 
 BIN		:= bin
 SRC_DIR	:= src src/controller src/model src/view

@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include "interpolate.hpp"
 #include <FL/gl.h>
+#include <Fl/glu.h>
 #include <math.h>
 #include <rfftw.h>
 #include <vector>
@@ -36,14 +37,10 @@ void RenderVector::render_vector(std::vector<fftw_real> scalar_field,
             {
                 case Config::CONE:
                 {
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                    glBegin(GL_TRIANGLE_FAN);
                     break;
                 }
                 case Config::ARROW_2D:
                 {
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                    glBegin(GL_POLYGON);
                     break;
                 }
             }
@@ -90,11 +87,11 @@ void RenderVector::controller(coord start, coord end, GLfloat height)
     GLfloat vector_length = std::hypot(end.first - start.first, end.second - start.second);
     GLfloat glyph_width   = Config::win_height / Config::num_glyphs;
 
-    // if (vector_length > glyph_width)
-    // {
-    //     end.first  = start.first + (end.first - start.first) * glyph_width / vector_length;
-    //     end.second = start.second + (end.second - start.second) * glyph_width / vector_length;
-    // }
+    if (vector_length > glyph_width)
+    {
+        end.first  = start.first + (end.first - start.first) * glyph_width / vector_length;
+        end.second = start.second + (end.second - start.second) * glyph_width / vector_length;
+    }
     switch (Config::vector_shape)
     {
         case Config::ARROW_2D:
@@ -126,6 +123,9 @@ void RenderVector::render_cone(coord start, coord end)
 {
     // https://math.stackexchange.com/questions/1184038/what-is-the-equation-of-a-general-circle-in-3-d-space
     // in the above notation, v1 is (0,0,1), v2 is (y, -x, 0) where (x, y) is end - start
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBegin(GL_TRIANGLE_FAN);
 
     glVertex3f(end.first, end.second, 0);
     GLfloat cone_length = std::hypot(end.first - start.first, end.second - start.second);
@@ -160,6 +160,8 @@ void RenderVector::render_cone(coord start, coord end)
 
     // draw starting point again to complete the cone
     glVertex3f(center[0] + v1[0], center[1] + v1[1], center[2] + v1[2]);
+
+    glEnd();
 }
 
 void RenderVector::render_arrow_2d(coord start, coord end, GLfloat height)
@@ -176,6 +178,8 @@ void RenderVector::render_arrow_2d(coord start, coord end, GLfloat height)
 
     GLfloat vector_angle = std::acos((end.first - start.first) / vector_length);
 
+    // since OpenGL only renders convex polygons we need to split up the base and the head
+
     coord v1 = rotate_2d(start, start.first, start.second + 0.5 * arrow_base_width, vector_angle);
     coord v2 = rotate_2d(start,
                          start.first + arrow_base_length,
@@ -183,30 +187,33 @@ void RenderVector::render_arrow_2d(coord start, coord end, GLfloat height)
                          vector_angle);
     coord v3 = rotate_2d(start,
                          start.first + arrow_base_length,
+                         start.second - 0.5 * arrow_base_width,
+                         vector_angle);
+    coord v4 = rotate_2d(start, start.first, start.second - 0.5 * arrow_base_width, vector_angle);
+
+    coord v5 = rotate_2d(start,
+                         start.first + arrow_base_length,
                          start.second + 0.5 * arrow_head_width,
                          vector_angle);
-    coord v4 = rotate_2d(start, start.first + vector_length, start.second, vector_angle);
-    coord v5 = rotate_2d(start,
+    coord v6 = rotate_2d(start, start.first + vector_length, start.second, vector_angle);
+    coord v7 = rotate_2d(start,
                          start.first + arrow_base_length,
                          start.second - 0.5 * arrow_head_width,
                          vector_angle);
-    coord v6 = rotate_2d(start,
-                         start.first + arrow_base_length,
-                         start.second - 0.5 * arrow_base_width,
-                         vector_angle);
-    coord v7 = rotate_2d(start, start.first, start.second - 0.5 * arrow_base_width, vector_angle);
-
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBegin(GL_QUADS);
     glVertex3f(v1.first, v1.second, height);
     glVertex3f(v2.first, v2.second, height);
     glVertex3f(v3.first, v3.second, height);
     glVertex3f(v4.first, v4.second, height);
+
+    glEnd();
+    glBegin(GL_TRIANGLES);
     glVertex3f(v5.first, v5.second, height);
     glVertex3f(v6.first, v6.second, height);
     glVertex3f(v7.first, v7.second, height);
-    glVertex3f(v1.first, v1.second, height);
 
     glEnd();
-    glBegin(GL_POLYGON);
 }
 
 coord RenderVector::rotate_2d(coord center, GLfloat x_vertex, GLfloat y_vertex, GLfloat angle)
